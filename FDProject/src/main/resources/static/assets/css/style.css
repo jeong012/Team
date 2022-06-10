@@ -2102,25 +2102,24 @@ select.list-dt:focus {
 }
 
 .join-form-wrap{
-  width: 620px;
-  margin: 0 auto;
+  width: 500px;
+  margin: 50px auto;
 }
 .form-group{
+  position: relative;
+}
+.verify-box{
   width: 500px;
   position: relative;
 }
-.id-check-box{
-  width: 500px;
-  position: relative;
-}
-.btn-idcheck{
+.btn-verify{
   position: absolute;
   top: 43%;
   left: 500px;
   width: 120px;
   margin-left: 10px;
 }
-.form-group .next-btn{
+.form-group .btn-join{
   margin-top: 35px;
 }
 
