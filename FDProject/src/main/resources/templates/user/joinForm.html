@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/basic">
+
+	<div layout:fragment="content">
+	  <main id="main" data-aos="fade-up">
+	
+	    <section class="bg-light">
+	      <div class="container">
+	
+	        <div class="join-form-wrap">
+	          <!-- 회원가입 폼 -->
+	          <form class="join-form" method="post" action="/user/joinForm2">
+	            <h4>- 필수 항목 입력</h4>
+	            <input type="hidden" id="" name="" value="">
+	            <div class="form-group id-check-box">
+	              <label for="inputId" class="form-label mt-4">아이디</label>
+	              <input type="text" class="form-control" id="inputId" aria-describedby="emailHelp">
+	              <button type="submit" class="btn btn-primary btn-idcheck">중복확인</button>
+	              <span class="error_next_box" id="idMsg" style aria-live="assertive">필수 정보입니다.</span>
+	            </div>
+	            <div class="form-group has-success">
+	              <label for="inputValid" class="form-label mt-4">비밀번호</label>
+	              <input type="password" class="form-control is-valid" id="inputValid">
+	              <div class="valid-feedback"></div>
+	              <span class="error_next_box" id="pwd1Msg" style aria-live="assertive">필수 정보입니다.</span>
+	            </div>
+	            <div class="form-group has-danger">
+	              <label for="inputValid" class="form-label mt-4">비밀번호 재확인</label>
+	              <input type="password" class="form-control is-valid" id="inputValid">
+	              <span class="error_next_box" id="pwd2Msg" style aria-live="assertive">필수 정보입니다.</span>
+	              <div class="invalid-feedback">비밀번호가 일치하지 않습니다</div>
+	            </div>
+	
+	            <div class="form-group">
+	              <label for="exampleInputEmail1" class="form-label mt-4">이름</label>
+	              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+	              <span class="error_next_box" id="nameMsg" style aria-live="assertive">필수 정보입니다.</span>
+	            </div>
+	
+	            <div class="form-group bir_wrap">
+	              <label class="form-label mt-4">생년월일</label>
+	              <div class="bir_yy">
+	                <span class="ps_box">
+	                  <input type="text" class="form-control" id="yy" placeholder="년(4자)" maxlength="4">
+	                </span>
+	              </div>
+	              <div class="bir_mm">
+	                <span class="ps_box focus">
+	                  <select class="form-select form-control" id="mm" aria-label="Default select example">
+	                    <option selected>월</option>
+	                    <option value="1">1</option>
+	                    <option value="2">2</option>
+	                    <option value="3">3</option>
+	                    <option value="4">4</option>
+	                    <option value="5">5</option>
+	                    <option value="6">6</option>
+	                    <option value="7">7</option>
+	                    <option value="8">8</option>
+	                    <option value="9">9</option>
+	                    <option value="10">10</option>
+	                    <option value="11">11</option>
+	                    <option value="12">12</option>
+	                  </select>
+	                </span>
+	              </div>
+	              <div class="bir_dd">
+	                <span class="ps_box">
+	                  <input type="text" class="form-control" id="dd" placeholder="일" maxlength="2">
+	                </span>
+	              </div>
+	              <span class="error_next_box" id="birthdayMsg" style aria-live="assertive">태어난 년도 4자리를 정확하게 입력하세요.</span>
+	            </div>
+	
+	            <div class="form-group">
+	              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
+	              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요">
+	              <span class="error_next_box" id="nameMsg" style aria-live="assertive">필수 정보입니다.</span>
+	            </div>
+	            
+	            <div class="form-group">
+	              <label for="exampleSelect1" class="form-label mt-4">성별</label>
+	              <div class="check-box">
+	                <div class="form-check form-check-inline">
+	                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+	                  <label class="form-check-label" for="inlineRadio1">남자</label>
+	                </div>
+	                <div class="form-check form-check-inline">
+	                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+	                  <label class="form-check-label" for="inlineRadio2">여자</label>
+	                </div>
+	              </div>
+	              <div class="d-grid gap-2">
+	                <button type="submit" class="btn btn-primary next-btn">다음</button>
+	              </div>
+	            </div>
+	          </form>
+	        </div>
+	      </div>
+	    </section>
+	
+	  </main><!-- End #main -->
+	</div>
+
+</html>
