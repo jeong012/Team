@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fdproject.mapper.ReceipeMapper">
+
+	<sql id="receipeColumns">
+		receipe_No,
+		disease_Field,
+		title,
+		writer,
+		food_Ingredients,
+		step,
+		img_File,
+		reg_Date,
+		hit,
+		recommended_Number,
+		delete_Yn
+	</sql> 
+	
+	<select id ="selectReceipeList" resultType="ReceipeDTO">
+		SELECT 
+			<include refid="receipeColumns" />							
+		FROM receipes				
+	</select>
+	
+	<select id ="selectReceipeListByDiseaseField" resultType="ReceipeDTO">
+		SELECT 
+			<include refid="receipeColumns" />							
+		FROM receipes
+		
+		WHERE disease_field = #{disease_Field}				
+	</select>
+	
+</mapper>

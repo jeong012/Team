@@ -1,5 +1,12 @@
 package com.fdproject.mapper;
 
-public interface DiseaseMapper {
+import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
+import com.fdproject.domain.DiseaseDTO;
+
+@Mapper
+public interface DiseaseMapper {
+	public List<DiseaseDTO> selectDiseaseListFive();	
 }
