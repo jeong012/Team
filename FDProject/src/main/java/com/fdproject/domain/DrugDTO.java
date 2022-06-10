@@ -1,5 +1,8 @@
 package com.fdproject.domain;
 
+import lombok.Data;
+
+@Data
 public class DrugDTO {
 
 	/** 번호 (PK) */
