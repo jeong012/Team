@@ -1,5 +1,5 @@
 package com.fdproject.mapper;
 
-public interface ReceipeMapper {
+public interface RecipeMapper {
 
 }

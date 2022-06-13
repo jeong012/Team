@@ -9,7 +9,7 @@ public class CommentDTO {
 	private int commentNo;
 	
 	/** 레시피 번호 */
-	private int receipeNo;
+	private int recipeNo;
 	
 	/** 작성자 */
 	private String writer;
