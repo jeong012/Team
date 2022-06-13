@@ -11,9 +11,11 @@ public interface DrugMapper {
 
     List<DrugDTO> drugList(DrugDTO drugDTO);
 
-    List<DrugDTO> riskDrugList(DrugDTO drugDTO);
-
     List<String> selectKeyword();
+
+    List<String> selectKeywords(List<UserDrugDTO> userDrugList);
+
+    List<UserDrugDTO> getUserDrug(UserDrugDTO userDrug);
 
     int selectDrugTotalCount(DrugDTO drugDTO);
 
