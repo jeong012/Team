@@ -2322,18 +2322,18 @@ select.list-dt:focus {
 }
 
 /*--------------------------------------------------------------
-# Receipe Image
+# Recipe Image
 --------------------------------------------------------------*/
-#receipe-image{
+#recipe-image{
 	width:230px;
 	height:240px;
 	margin: 19px;
 }
 
 /*--------------------------------------------------------------
-# Receipe Post
+# Recipe Post
 --------------------------------------------------------------*/
-.receipe-post{
+.recipe-post{
 	margin-bottom:30px;
 }
 

@@ -5,21 +5,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/receipe")
-public class ReceipeController {
+@RequestMapping("/recipe")
+public class RecipeController {
 	
 	@GetMapping(value="/list")
-	public String getReceipeList(){
-		return "receipe/list";
+	public String getRecipeList(){
+		return "recipe/list";
 	}
 
 	@GetMapping(value="/view")
-	public String getReceipe(){
-		return "receipe/view";
+	public String getRecipe(){
+		return "recipe/view";
 	}
 
 	@GetMapping(value="/writeForm")
-	public String getReceipeForm(){
-		return "receipe/writeForm";
+	public String getRecipeForm(){
+		return "recipe/writeForm";
 	}
 }

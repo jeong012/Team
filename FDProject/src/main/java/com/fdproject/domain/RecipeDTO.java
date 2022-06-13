@@ -3,10 +3,10 @@ package com.fdproject.domain;
 import lombok.Data;
 
 @Data
-public class ReceipeDTO {
+public class RecipeDTO {
 
 	/** 번호 (PK) */
-	private int receipeNo;
+	private int recipeNo;
 	
 	/** 질병 필드명 */
 	private String diseaseField;
