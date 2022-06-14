@@ -11,28 +11,29 @@
 	      <div class="container" data-aos="fade-up">
 	
 	        <div class="section-title">
-	          <h3><span>내 주변 약국</span></h3>
-	          <h5><span>지도를 이동하면 더 많은 약국을 확인할 수 있습니다.</span></h5>
+	          <h3><span>상비약 리스트</span></h3>
+	          <!-- <h5><span>지도를 이동하면 더 많은 편의점을 확인할 수 있습니다.</span></h5> -->
 	        </div>
 	
 	        <div class="find-content-wrap row">
-	          <div class="find-map col-lg-13" data-aos="fade-right" data-aos-delay="100">
+	          <div class="find-map col-lg-13" style="width:50%;height:610px" data-aos="fade-right" data-aos-delay="100">
+	          
 				<!--	            
 	            <iframe class="mb-4 mb-lg-0" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" style="border:0; width: 100%; height: 384px;" allowfullscreen></iframe>
 	            -->
 			    <ul id="category" hidden> 
-			        <li id="PM9" data-order="2"> 
-			            <span class="category_bg pharmacy"></span>
-			            약국
+			        <li id="CS2" data-order="2"> 
+			            <span class="category_bg store"></span>
+			             편의점
 			        </li>  
 			    </ul>
 				
-	            <div id="map" style="border:0; width: 100%; height: 600px;"></div> 
+	            <div id="map" class="mb-4 mb-lg-0" style="border:0; width: 100%; height: 100%;"></div> 
 	            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=614d5d6d914194616868e3b3593ad3e3&libraries=services"></script>
 	   			<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 	   			<script>
 	   			$(document).ready(function(){
-	   				$("#PM9").trigger('click');
+	   				$("#CS2").trigger('click');
 	   				// 또는 $("#tmpBtn").click();
 	   			});
 				// 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
@@ -110,11 +111,6 @@
 				    // 지도 중심좌표를 접속위치로 변경합니다
 				    map.setCenter(locPosition);      
 				}    
-				
-				
-				
-				
-				
 				
 				// 장소 검색 객체를 생성합니다
 				var ps = new kakao.maps.services.Places(map); 
@@ -294,12 +290,91 @@
 				} 
 				</script>
 				
-	          </div>
-	        </div>
-	        
-	      </div>
-	    </section><!-- End find-pharmacy Section -->
-	
+	          </div> <!-- map -->
+	          
+	          
+	          
+	          
+	          		<div class="cslist col-lg-7 mx-auto">
+			            <!-- List group-->
+			            <ul class="list-group">
+			                <!-- list group item-->
+			                <li class="list-group-item">
+			                    <!-- Custom content-->
+			                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+			                        <div class="media-body order-2 order-lg-1">
+			                        	<img src="https://i.imgur.com/KFojDGa.jpg" alt="Generic placeholder image" id="drug-image">
+			                            <h5 class="mt-0 font-weight-bold mb-2">Apple iPhone XR (Red, 128 GB)</h5>
+			                            <p class="font-italic text-muted mb-0 small">128 GB ROM | 15.49 cm (6.1 inch) Display 12MP Rear Camera | 7MP Front Camera A12 Bionic Chip Processor</p>
+			                            <div class="d-flex align-items-center justify-content-between mt-1">
+			                                <h6 class="font-weight-bold my-2">₹64,999</h6>
+			                                <ul class="list-inline small">
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star-o text-gray"></i></li>
+			                                </ul>
+			                            </div>
+			                        </div>
+			                    </div> <!-- End -->
+			                </li> <!-- End -->
+			                <!-- list group item-->
+			                <li class="list-group-item">
+			                    <!-- Custom content-->
+			                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+			                        <div class="media-body order-2 order-lg-1">
+			                            <img src="https://i.imgur.com/KFojDGa.jpg" alt="Generic placeholder image" id="drug-image">
+			                            <h5 class="mt-0 font-weight-bold mb-2">Apple iPhone XS (Silver, 64 GB)</h5>
+			                            <p class="font-italic text-muted mb-0 small">64 GB ROM | 14.73 cm (5.8 inch) Super Retina HD Display 12MP + 12MP | 7MP Front Camera A12 Bionic Chip Processor</p>
+			                            <div class="d-flex align-items-center justify-content-between mt-1">
+			                                <h6 class="font-weight-bold my-2">₹99,900</h6>
+			                                <ul class="list-inline small">
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                </ul>
+			                            </div>
+			                        </div>
+			                    </div> <!-- End -->
+			                </li> <!-- End -->
+			                <!-- list group item -->
+			                <li class="list-group-item">
+			                    <!-- Custom content-->
+			                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+			                        <div class="media-body order-2 order-lg-1">
+			                            <img src="https://i.imgur.com/KFojDGa.jpg" alt="Generic placeholder image" id="drug-image">
+			                            <h5 class="mt-0 font-weight-bold mb-2">Apple iPhone XS Max (Gold, 64 GB)</h5>
+			                            <p class="font-italic text-muted mb-0 small">64 GB ROM | 16.51 cm (6.5 inch) Super Retina HD Display 12MP + 12MP | 7MP Front Camera A12 Bionic Chip Processor</p>
+			                            <div class="d-flex align-items-center justify-content-between mt-1">
+			                                <h6 class="font-weight-bold my-2">₹1,09,900</h6>
+			                                <ul class="list-inline small">
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+			                                    <li class="list-inline-item m-0"><i class="fa fa-star-o text-gray"></i></li>
+			                                </ul>
+			                            </div>
+			                        </div>
+			                    </div> <!-- End -->
+			                </li> <!-- End -->
+			                <!-- list group item -->
+			            </ul> <!-- End -->
+			        </div>
+	          
+	          
+	          
+	          
+	          
+	          
+	          
+	          
+	        </div> 
+	       </div>
+	    </section><!-- End find-pharmacy Section -->	
 	  </main><!-- End #main -->
 	</div>
 
