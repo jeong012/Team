@@ -34,20 +34,23 @@
 </nav>
 
 <div th:fragment="search" class="sub-search-box">
-    <input type="text" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" placeholder="증상 / 약"/>
-    <form id="searchForm" th:action="@{/board/list.do}" method="get" th:onsubmit="return searchBoard(this)" class=""
+<!--    <input type="text" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" placeholder=""/>-->
+    <form id="searchForm" th:action="@{/drug/list.do}" method="get" th:onsubmit="return searchDrug(this)" class=""
           role="form">
         <input type="hidden" name="currentPageNo" value="1"/>
         <input type="hidden" name="recordsPerPage" th:value="${params.recordsPerPage}"/>
         <input type="hidden" name="pageSize" th:value="${params.pageSize}"/>
-        <div class="">
-            <select name="searchType" class="">
+        <div class="" style="">
+            <select name="searchType" class="btn btn-primary btn-search">
                 <option value="" th:selected="${#strings.isEmpty( params.searchType )}">전체</option>
                 <option value="drugName" th:selected="${#strings.equals( params.searchType, 'drugName' )}">약</option>
                 <option value="effect" th:selected="${#strings.equals( params.searchType, 'effect' )}">증상</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary btn-search">검색</button>
+        <div>
+        <input type="text" name="searchKeyword" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" />
+        </div>
+        <button type="submit" class="btn btn-primary" onclick="searchDrug(null)">검색</button>
     </form>
 </div>
 

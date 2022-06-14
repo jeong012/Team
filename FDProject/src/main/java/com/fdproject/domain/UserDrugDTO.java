@@ -9,7 +9,7 @@ public class UserDrugDTO {
 	private int userDrugNo;
 	
 	/** 약 번호 */
-	private int drugName;
+	private String drugName;
 	
 	/** 사용자 아이디 */
 	private String userId;
