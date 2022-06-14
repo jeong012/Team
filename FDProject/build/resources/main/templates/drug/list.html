@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/basic">
+
+<div layout:fragment="content">
+    <section id="list-page">
+        <div class="container">
+
+            <th:block layout:fragment="search">
+                <div th:replace="fragments/common :: search">
+                </div>
+            </th:block>
+
+            <div class="container py-3">
+                <div class="row list-page">
+                    <div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
+                        <ul class="border-top"></ul>
+                        <ul class="list-unstyled ps-0">
+                            <li class="mb-1">
+                                <form method="get" action="/drug/list">
+                                    <button class="dropdown-none-toggle" type="submit">
+                                        모든 약
+                                    </button>
+                                </form>
+                            </li>
+
+                            <li class="mb-1">
+                                <button class="dropdown-toggle" data-bs-toggle="collapse"
+                                        data-bs-target="#userDiseases-collapse" aria-expanded="false">
+                                    내 맞춤
+                                </button>
+                                <div class="collapse" id="userDiseases-collapse">
+                                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                        <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">복용
+                                            가능 약</a></li>
+                                        <li><a th:href="|@{/drug/list.do}${params.makeQueryString(params.currentPageNo)}&id=test|" class="link-dark d-inline-flex text-decoration-none rounded">복용
+                                            금지 약</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-10 mx-auto" style="margin-top: 15px;">
+                        <!-- List group-->
+                        <ul class="list-group shadow">
+                            <!-- list group item-->
+                            <li class="list-group-item" th:if="${not #lists.isEmpty(drugList)}"
+                                th:each="item : ${drugList}">
+                                <!-- Custom content-->
+                                <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+                                    <div class="media-body order-2 order-lg-1">
+                                        <img th:src="${item.imgFile}" id="drug-image">
+                                        <div>
+                                            <h5 class="mt-0 font-weight-bold mb-2" th:text="${item.drugName}" style="display: inline"></h5>
+                                            <p class="font-italic text-muted mb-0 small" style="display: inline-block"
+                                               th:text="${item.manufacturer}"></p>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between mt-1">
+<!--                                            <h6 class="font-weight-bold my-2"></h6>-->
+                                            <ul class="list-inline small">
+                                                <li class="list-inline-item m-0">효능: <i class="fa fa-star text-success"
+                                                                                    th:text="${item.effect}"></i></li>
+                                                <li class="list-inline-item m-0">복용밥법: <i class="fa fa-star text-success"
+                                                                                    th:text="${item.method}"></i>
+                                                </li>
+                                                <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i>
+                                                </li>
+                                                <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i>
+                                                </li>
+                                                <li class="list-inline-item m-0"><i class="fa fa-star-o text-gray"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div> <!-- End -->
+                            </li> <!-- End -->
+                        </ul> <!-- End -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <th:block layout:fragment="paging">
+        <nav th:replace="fragments/common :: pagination">
+        </nav>
+    </th:block>
+
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            function movePage(uri, queryString) {
+                location.href = uri + queryString;
+            }
+
+            function searchDrug(form) {
+                /*[- 드롭다운이 아닌 메인 검색 키워드로 검색했을 때 -]*/
+                    var searchKeyword = document.getElementById("sub-searchForm");
+                    if (isEmpty(searchKeyword.value) == true) {
+                        alert("키워드를 입력해 주세요.");
+                        searchKeyword.focus();
+                        return false;
+                    }
+
+                    form = document.getElementById("searchForm");
+                    form.searchKeyword.value = searchKeyword.value;
+                    form.submit();
+
+            }
+
+            /*]]>*/
+        </script>
+    </th:block>
+</div>
+</html>
