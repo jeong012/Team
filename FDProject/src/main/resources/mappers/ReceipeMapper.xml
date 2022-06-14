@@ -22,7 +22,7 @@
 		FROM recipes				
 	</select>
 	
-	<select id ="selectRecipeListByDiseaseField" resultType="RecipeDTO">
+	<select id ="selectRecipeListByDiseaseField" parameterType = "String" resultType="RecipeDTO">
 		SELECT 
 			<include refid="recipeColumns" />							
 		FROM recipes
@@ -30,4 +30,20 @@
 		WHERE disease_field = #{disease_Field}				
 	</select>
 	
+	 <select id = "selectRecipeInfo" parameterType = "String" resultType = "RecipeDTO">
+	 	SELECT
+	 		<include refid="recipeColumns" />
+	 	FROM recipes
+	 	
+	 	WHERE Recipe_no = #{Recipe_no}	 	
+	</select>
+	
+	<select id = "UpdateUphit" parameterType = "String" resultType = "Integer">
+		UPDATE recipes	 		
+		
+	 	SET hit = hit + 1    
+	 	
+	 	WHERE Recipe_no = #{Recipe_no}
+			
+	</select>
 </mapper>

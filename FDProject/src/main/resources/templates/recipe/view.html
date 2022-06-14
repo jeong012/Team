@@ -1,97 +1,73 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layout/basic">
-	
-	<div layout:fragment="content">
-	    <section class="breadcrumbs">
-	      <div class="container">
-	        <div class="d-flex justify-content-between align-items-center">
-	          <h2>부대 찌개</h2>
-	          <ol> <!-- 이전단계 링크로 넣어줘야함 -->
-	            <li><a th:href="@{/}">Home</a></li> <!--  홈 링크 -->
-	            <li><a th:href="@{/recipe/list}">Recipe</a></li> <!--  레시피 리스트링크 -->
-	            <li>Recipe_detail</li>
-	          </ol>
-	        </div>
-	      </div>
-	    </section><!-- Breadcrumbs Section -->
-	
-	    <!-- ======= Portfolio Details Section ======= -->
-	    <section id="portfolio-details" class="portfolio-details">
-	      <div class="container">
-	        <div class="row gy-4">
-	          <div class="col-lg-8">
-	            <div class="portfolio-details-slider swiper">            
-	              <div class="swiper-wrapper align-items-center">                
-	                  <img src="/assets/img/portfolio/portfolio-details-1.jpg" alt="" style="width:1200px; height:400px;">                                              
-	              </div>   
-	  			  <section id="about" class="about section-bg" style = "padding: 10px">
-				      <div class="container" data-aos="fade-up">       
-				        <div class="row">          
-				          <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="100">           
-				            <ul>
-				              <li>
-				                <i class="bx bx-store"></i>
-				                <div>
-				                  <h5>음식 보관법 </h5>
-				                  <p>통조림 음식은 유리그릇이나 다른 용기에 담아 두는게 환경 호르몬 영향이 적다</p>
-				                </div>
-				              </li>
-				              <li>
-				                <i class="bx bx-food-menu"></i>
-				                <div>
-				                  <h5>First</h5>
-				                  <p>소세지를 해동해주세요</p> 
-				                </div>
-				              </li>
-				              <li>
-				                <i class="bx bx-food-menu"></i>
-				                <div>
-				                  <h5>Second</h5>
-				                  <p>고추장 2T, 고춧가루 2T, 다진 마늘 1T, 간장 3T, 설탕 1T 물은 600~700ml</p> 
-				                </div>
-				              </li>
-				              <li>
-				                <i class="bx bxl-apple"></i>
-				                <div>
-				                  <h5>Third</h5>
-				                  <p>고추와 두부를 한입 크기로 썰어주세요</p> 
-				                </div>
-				              </li>
-				            </ul>
-				            <p>
-				             어쩌구 저쩌구 하면 풍부한 맛을 느낄 수 있습니다.
-				            </p>
-				          </div>
-				        </div>
-		     		 </div>
-	  			  </section><!-- End About Section -->
-	            </div>
-	          </div>
-	          <div class="col-lg-4">
-	            <div class="portfolio-info">
-	            <img src="/assets/img/empty_star.jpg" alt="" style="width:27px; height:27px;">
-	              <h3>&nbsp;구성 재료 &amp; 조리 영상 </h3>		              	              
-	              <ul> <!-- 컨트롤러에서 값 받아와서 순서대로 뿌려 주면 될듯 -->
-	                <li><strong>1.</strong> 물 1L</li>
-	                <li><strong>2.</strong> 양파 1/2</li>
-	                <li><strong>3.</strong> 돼지고기 300g</li>
-	                <li><strong>4.</strong> 유튜브 링크 <br><a href="https://www.youtube.com/watch?v=8uwmFQH614M" style="color:#0000EE;">https://www.youtube.com/watch?v=8uwmFQH614M</a></li>
-	                <li><strong>3.</strong> 돼지고기 300g</li>
-	                <li><strong>3.</strong> 돼지고기 300g</li>
-	                <li><strong>3.</strong> 돼지고기 300g</li>
-	                <li><strong>3.</strong> 돼지고기 300g</li>
-	                <li><strong>3.</strong> 돼지고기 300g</li>              
-	              </ul>
-	            </div> 
-	            
-	            <!-- 들어가야할곳 -->
-	          	<!--  -->       
-	          </div>
-	        </div>
-	      </div>
-	    </section><!-- End Portfolio Details Section -->
-	</div>
-	
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/layout/basic">
+
+<div layout:fragment="content">
+	<section class="breadcrumbs">
+		<div class="container">
+			<div class="d-flex justify-content-between align-items-center">
+				<h2 th:text="${Recipe_info.title}"></h2>
+				<ol>
+					<!-- 이전단계 링크로 넣어줘야함 -->
+					<li><a th:href="@{/}">Home</a></li> <!--  홈 링크 -->
+					<li><a th:href="@{/recipe/list}">Recipe</a></li> <!--  레시피 리스트링크 -->
+					<li>Recipe_detail</li>
+				</ol>
+			</div>
+		</div>
+	</section><!-- Breadcrumbs Section -->
+
+	<!-- ======= Portfolio Details Section ======= -->
+	<section id="portfolio-details" class="portfolio-details">
+		<div class="container">
+			<div class="row gy-4">
+				<div class="col-lg-8">
+					<div class="portfolio-details-slider swiper">
+						<div class="swiper-wrapper align-items-center">
+							<img src="/assets/img/portfolio/portfolio-details-1.jpg" alt=""
+								style="width:1200px; height:400px;">
+						</div>
+						<section id="about" class="about section-bg" style="padding: 10px">
+							<div class="container" data-aos="fade-up">
+								<div class="row">
+									<div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center"
+										data-aos="fade-up" data-aos-delay="100">
+										<ul>
+											<th:block th:each="recipe_step, status : ${AL_rs_split}">
+												<li>
+													<i class="bx bx-food-menu"></i>
+													<div>
+														<h5 th:text="${status.index + 1}"></h5>
+														<p th:text="${recipe_step}"></p>
+													</div>
+												</li>
+											</th:block>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</section><!-- End About Section -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="portfolio-info">
+					<div>
+						<img src="/assets/img/empty_star.jpg" alt="" style="width:27px; height:27px;">
+						<h3 style="display:inline-block;">&nbsp;구성 재료 &amp; 조리 영상 </h3>
+					</div>	
+						<ul>
+							<th:block th:each="split : ${AL_ri_split}">
+								<li th:text="${split}"></li>
+							</th:block>
+						</ul>
+					</div> <!-- portfolio-info -->
+
+					<!-- 들어가야할곳 -->
+					<!--  -->
+				</div>
+			</div>
+		</div>
+	</section><!-- End Portfolio Details Section -->
+</div>
+
 </html>

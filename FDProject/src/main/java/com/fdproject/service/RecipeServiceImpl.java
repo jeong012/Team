@@ -22,6 +22,16 @@ public class RecipeServiceImpl implements RecipeService {
 	@Override
 	public List<RecipeDTO> getRecipeListByDiseaseField(String disease_Field) {		
 		return recipeMapper.selectRecipeListByDiseaseField(disease_Field);
+	}
+
+	@Override
+	public RecipeDTO getRecipeInfo(String Recipe_no) {		
+		return recipeMapper.selectRecipeInfo(Recipe_no);
+	}
+
+	@Override
+	public Integer uphit(String Recipe_No) {		
+		return recipeMapper.UpdateUphit(Recipe_No);
 	};
 	
 	

@@ -1,9 +1,10 @@
 package com.fdproject.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.RecipeDTO;
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.RecipeService;
+   
 
 @Controller
 @RequestMapping("/recipe")
@@ -54,8 +56,53 @@ public class RecipeController {
 		return "recipe/list";
 	}
 
-	@GetMapping(value="/view")
-	public String getRecipe(){
+	@GetMapping(value="/view") 
+	public String getRecipe(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Model model){
+		
+		//recipe_info
+		RecipeDTO Recipe_info = recipeService.getRecipeInfo(Recipe_No);
+		model.addAttribute("Recipe_info", Recipe_info);
+		
+		//foodIngredients split해서 배열에 차곡차곡 넣음 
+		String recipe_ingredients = Recipe_info.getFoodIngredients();		
+		String[] ri_split = recipe_ingredients.split("\n");		
+		ArrayList<String> AL_ri_split = new ArrayList<>();				
+		for(int i=0; i<ri_split.length; i++){
+			AL_ri_split.add(ri_split[i]);			
+		}				
+		model.addAttribute("AL_ri_split", AL_ri_split);
+		
+		//step '][' 기준으로 자르기		
+		//recipe_step 가져오기
+		String recipe_step = Recipe_info.getStep();
+		//model로 넘길 arrayList 생성		
+		ArrayList<String> AL_rs_split = new ArrayList<>();
+		//System.out.println(recipe_step); 
+		String temp = recipe_step;
+		boolean run = true;
+		while(run) {
+			String data = "";
+			
+			if (temp.indexOf("\n[") != -1) {
+				int startIndex = temp.indexOf("] ") + "] ".length();
+				int endIndex = temp.indexOf("\n[");
+				
+				data = temp.substring(startIndex, endIndex);
+				temp = temp.substring(endIndex+1);	
+			} else {
+				data = temp.substring(temp.indexOf("] ") + "] ".length());
+				run = false;
+			}
+			
+			System.out.println(data);
+			//data arraylist에 넣기
+			AL_rs_split.add(data);
+		}		
+		model.addAttribute("AL_rs_split", AL_rs_split);
+		
+		
+		//조회수 관련 - 구현 완료
+		recipeService.uphit(Recipe_No);
 		return "recipe/view";
 	}
 
