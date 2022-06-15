@@ -1,5 +1,6 @@
 package com.fdproject.paging;
 
+import com.fdproject.domain.DrugDTO;
 import lombok.Data;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,6 +25,11 @@ public class Criteria {
     /** 검색 유형 */
     private String searchType;
 
+    /**
+     * 복용 가능 여부
+     */
+    private String takeYn;
+
     public Criteria() {
         this.currentPageNo = 1;
         this.recordsPerPage = 10;
@@ -41,9 +47,11 @@ public class Criteria {
     			.queryParam("pageSize", pageSize)
     			.queryParam("searchType", searchType)
     			.queryParam("searchKeyword", searchKeyword)
+                .queryParam("takeYn", takeYn)
     			.build()
     			.encode();
     	
     	return uriComponents.toUriString();
     }
+
 }

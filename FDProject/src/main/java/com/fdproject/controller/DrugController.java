@@ -1,6 +1,7 @@
 package com.fdproject.controller;
 
 import com.fdproject.domain.DrugDTO;
+import com.fdproject.paging.Criteria;
 import com.fdproject.service.DrugService;
 import com.fdproject.util.GrammerUtils;
 import com.fdproject.util.UiUtils;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "drug")
@@ -22,13 +25,13 @@ public class DrugController extends UiUtils {
     private final DrugService drugService;
 
     @GetMapping(value = "/list.do")
-    public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
+    public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "takeYn", required = false) String takeYn, Model model) {
         if (GrammerUtils.isStringEmpty(id) == true) {
-            List<DrugDTO> drugList = drugService.getDrugList(id, params);
+            List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
             model.addAttribute("drugList", drugList);
             return "drug/list";
         } else {
-            List<DrugDTO> drugList = drugService.getDrugList(id, params);
+            List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
             model.addAttribute("drugList", drugList);
         }
 
@@ -51,4 +54,5 @@ public class DrugController extends UiUtils {
 	public String getFindStore(){
 		return "drug/find_store";
 	}
+
 }

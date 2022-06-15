@@ -20,7 +20,7 @@ public class DrugServiceImpl implements DrugService {
 
     private final DrugMapper drugMapper;
 
-    public List<DrugDTO> getDrugList(String id, DrugDTO params) {
+    public List<DrugDTO> getDrugList(String id, DrugDTO params, String takeYn) {
         List<DrugDTO> drugList = Collections.emptyList();
 
         int drugTotalCount = drugMapper.selectDrugTotalCount(params);
@@ -39,7 +39,13 @@ public class DrugServiceImpl implements DrugService {
             String[] strArr = keywords.split(",");
             String result = StringUtils.join(strArr, "|");
             params.setParams(result);
+            System.out.println(takeYn);
+            if (GrammerUtils.isStringEmpty(takeYn) == false && takeYn.equals("Y")) {
+                System.out.println(takeYn);
+                params.setTakeYn(takeYn);
+            }
             drugList = drugMapper.drugList(params);
+
 
             return drugList;
         } else {

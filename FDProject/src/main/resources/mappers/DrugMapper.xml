@@ -18,31 +18,31 @@
     </resultMap>
 
     <sql id="drugColumns">
-        DRUG_NO,
-        DRUG_NAME,
-        MANUFACTURER,
-        BASIS,
-        EFFECT,
-        METHOD,
-        WARNING1,
-        WARNING2,
-        SIDE_EFFECT,
-        STORAGE,
-        HOUSE_YN,
-        IMG_FILE,
-        KEYWORD
+        d.DRUG_NO,
+        d.DRUG_NAME,
+        d.MANUFACTURER,
+        d.BASIS,
+        d.EFFECT,
+        d.METHOD,
+        d.WARNING1,
+        d.WARNING2,
+        d.SIDE_EFFECT,
+        d.STORAGE,
+        d.HOUSE_YN,
+        d.IMG_FILE,
+        d.KEYWORD
     </sql>
 
     <sql id="riskDrug">
         <if test="params != null and params != ''">
             <choose>
-                <when test="takeYn = 'Y'">
-                    and REGEXP_LIKE(warning1, #{params})
-                    or REGEXP_LIKE(warning2, #{params})
+                <when test="takeYn != null and takeYn != ''">
+                    <if test="takeYn.equals(takeYn)">
+                        and NOT REGEXP_LIKE(temp.WARNING, #{params})
+                    </if>
                 </when>
                 <otherwise>
-                    and REGEXP_LIKE(warning1, #{params})
-                    or REGEXP_LIKE(warning2, #{params})
+                    and REGEXP_LIKE(temp.WARNING, #{params})
                 </otherwise>
             </choose>
         </if>
@@ -50,10 +50,13 @@
 
     <select id="drugList" parameterType="DrugDTO" resultMap="drug">
         <include refid="CommonMapper.pagingHeader"/>
-        select
-        <include refid="drugColumns"/>
+        select temp.*
         from
-        drugs
+        (select
+        <include refid="drugColumns"/>
+        ,d.WARNING1 || d.WARNING2 WARNING
+        from
+        drugs d) temp
         where
         1=1
         <include refid="riskDrug"/>
