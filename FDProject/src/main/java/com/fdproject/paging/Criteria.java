@@ -1,13 +1,13 @@
 package com.fdproject.paging;
 
+import lombok.Data;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class Criteria {
 	/** 현재 페이지 번호 */
 	private int currentPageNo;
