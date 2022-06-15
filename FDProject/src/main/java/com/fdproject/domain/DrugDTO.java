@@ -1,15 +1,18 @@
 package com.fdproject.domain;
 
+import com.fdproject.paging.Criteria;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class DrugDTO {
+public class DrugDTO extends CommonDTO {
 
 	/** 번호 (PK) */
 	private int drugNo;
 
 	/** 이름 */
-	private String name;
+	private String drugName;
 
 	/** 제조업체 */
 	private String manufacturer;
@@ -43,5 +46,7 @@ public class DrugDTO {
 	
 	/** 키워드 (질병 분류) */
 	private String keyword;
+
+	private String params;
 	
 }
