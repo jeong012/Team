@@ -47,6 +47,10 @@ public class DrugDTO extends CommonDTO {
 	/** 키워드 (질병 분류) */
 	private String keyword;
 
+	/** 금지 약물 조회 조건 */
 	private String params;
-	
+
+	/** 복용 가능 여부 */
+	private String takeYn;
+
 }

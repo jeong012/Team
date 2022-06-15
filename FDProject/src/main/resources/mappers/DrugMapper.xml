@@ -18,10 +18,9 @@
     </resultMap>
 
     <sql id="drugColumns">
-        <![CDATA[
         DRUG_NO,
         DRUG_NAME,
-        MANUFACTUTER,
+        MANUFACTURER,
         BASIS,
         EFFECT,
         METHOD,
@@ -32,13 +31,20 @@
         HOUSE_YN,
         IMG_FILE,
         KEYWORD
-        ]]>
     </sql>
-    
+
     <sql id="riskDrug">
         <if test="params != null and params != ''">
-            and REGEXP_LIKE(warning1, #{params})
-            or REGEXP_LIKE(warning2, #{params})
+            <choose>
+                <when test="takeYn = 'Y'">
+                    and REGEXP_LIKE(warning1, #{params})
+                    or REGEXP_LIKE(warning2, #{params})
+                </when>
+                <otherwise>
+                    and REGEXP_LIKE(warning1, #{params})
+                    or REGEXP_LIKE(warning2, #{params})
+                </otherwise>
+            </choose>
         </if>
     </sql>
 
@@ -54,15 +60,6 @@
         <include refid="CommonMapper.search_o"/>
         order by drug_name asc
         <include refid="CommonMapper.pagingFooter"/>
-    </select>
-
-    <select id="selectKeyword" resultType="String">
-        select
-        keyword
-        from
-        drugs
-        where
-        drug_no <![CDATA[<=]]> 5
     </select>
 
     <select id="selectDrugTotalCount" parameterType="DrugDTO" resultType="int">
