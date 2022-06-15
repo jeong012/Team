@@ -14,7 +14,7 @@ public class UserController {
 		return "user/joinForm";
 	}
 
-	@PostMapping(value="/joinForm2")
+	@GetMapping(value="/joinForm2")
 	public String getJoinForm2(){
 		return "user/joinForm2";
 	}
@@ -22,6 +22,11 @@ public class UserController {
 	@GetMapping(value="/loginForm")
 	public String getLoginForm(){
 		return "user/loginForm";
+	}
+	
+	@GetMapping(value="/myPage")
+	public String getMyPage(){
+		return "user/myPage";
 	}
 
 }

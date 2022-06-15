@@ -505,7 +505,19 @@ body {
   border-color: #4bb7e2;
 }
 
-/* 메인 검색 폼 */
+/*마이페이지 버튼*/
+.btn-secondary {
+  color: #fff;
+  background-color: #767979;
+  border-color: #767979;
+}
+.btn-secondary:hover {
+  color: #fff;
+  background-color: #575858;
+  border-color: #575858;
+}
+
+/* 메인 검색 폼 main search form */
 .form-control {
   display: block;
   width: 100%;
@@ -2129,6 +2141,8 @@ select.list-dt:focus {
 }
 .join-form2 .input-box{
   position: relative;
+  float: right;
+  width: 150px;
 }
 .join-form2 .btn-add{
   border-radius: 100%;
@@ -2137,7 +2151,7 @@ select.list-dt:focus {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  right: -40px;
+  right: -45px;
   text-align: center;
   border: none;
 }
@@ -2145,6 +2159,7 @@ select.list-dt:focus {
   float: left;
   margin-right: 10px;
   color: #666;
+  margin-bottom: 10px;
 }
 .join-form2 ul{
   float: left;
@@ -2154,11 +2169,13 @@ select.list-dt:focus {
   text-align: center;
 }
 .join-form2 ul li span{
+  display: inline-block;
   font-weight: 600;
   border-bottom: 1px solid #666;
+  margin-bottom: 10px;
 }
 
-.agree-content{
+.join-form2 .agree-content{
   overflow: auto;
   height: 130px;
   margin-top: 10px;
@@ -2167,19 +2184,51 @@ select.list-dt:focus {
   color: #454545;
   letter-spacing: -0.2px;
 }
-.btn-join{
+.join-form2 .btn-join{
   width: 100%;
   margin: 0 auto;
 }
 
-@media (max-width:500px){
-  .btn-join{
-    
-  }
+.join-form2 .form-addInput {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.join-form2 .label-title{
+  font-size: 18px;
+  padding-top: 10px;
+}
+.join-form2 .label-title span{
+  font-size: 20px;
+}
+.join-form2 .form-check{
+  margin-top: 10px;
+}
+.join-form2 .agree-toggle{
+  margin-left: 10px;
 }
 
 /*===============================================================================================*/
 /*약 리스트 페이지*/
+ul{
+  list-style: none;
+  padding-left: 0;
+}
+li{
+  float: left;
+}
 #list-page{
   width: 100%;
 }

@@ -10,36 +10,39 @@
 	      <div class="container">
 	
 	        <div class="join-form-wrap">
+	        
 	          <!-- 회원가입 폼 -->
 	          <form class="join-form" method="post" action="/user/joinForm2">
 	            <h4>- 필수 항목 입력</h4>
 	            <input type="hidden" id="" name="" value="">
-	            <div class="form-group id-check-box">
+	            
+	            <fieldset class="form-group id-check-box">
 	              <label for="inputId" class="form-label mt-4">아이디</label>
-	              <input type="text" class="form-control" id="inputId" aria-describedby="emailHelp">
+	              <input type="text" class="form-control" id="inputId" aria-describedby="emailHelp" autofocus>
 	              <button type="submit" class="btn btn-primary btn-verify">중복확인</button>
 	              <span class="error_next_box" id="idMsg" style aria-live="assertive">필수 정보입니다.</span>
-	            </div>
-	            <div class="form-group has-success">
-	              <label for="inputValid" class="form-label mt-4">비밀번호</label>
-	              <input type="password" class="form-control is-valid" id="inputValid">
+	            </fieldset>
+	            
+	            <fieldset class="form-group has-success">
+	              <label for="inputPwd" class="form-label mt-4">비밀번호</label>
+	              <input type="password" class="form-control is-valid" id="inputPwd">
 	              <div class="valid-feedback"></div>
 	              <span class="error_next_box" id="pwd1Msg" style aria-live="assertive">필수 정보입니다.</span>
-	            </div>
-	            <div class="form-group has-danger">
-	              <label for="inputValid" class="form-label mt-4">비밀번호 재확인</label>
-	              <input type="password" class="form-control is-valid" id="inputValid">
+	            </fieldset>
+	            <fieldset class="form-group has-danger">
+	              <label for="inputPwd2" class="form-label mt-4">비밀번호 재확인</label>
+	              <input type="password" class="form-control is-valid" id="inputPwd2">
 	              <span class="error_next_box" id="pwd2Msg" style aria-live="assertive">필수 정보입니다.</span>
 	              <div class="invalid-feedback">비밀번호가 일치하지 않습니다</div>
-	            </div>
+	            </fieldset>
 	
-	            <div class="form-group">
-	              <label for="exampleInputEmail1" class="form-label mt-4">이름</label>
-	              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+	            <fieldset class="form-group">
+	              <label for="inputName" class="form-label mt-4">이름</label>
+	              <input type="text" class="form-control" id="inputName" aria-describedby="emailHelp">
 	              <span class="error_next_box" id="nameMsg" style aria-live="assertive">필수 정보입니다.</span>
-	            </div>
+	            </fieldset>
 	
-	            <div class="form-group bir_wrap">
+	            <fieldset class="form-group bir_wrap">
 	              <label class="form-label mt-4">생년월일</label>
 	              <div class="bir_yy">
 	                <span class="ps_box">
@@ -71,16 +74,16 @@
 	                </span>
 	              </div>
 	              <span class="error_next_box" id="birthdayMsg" style aria-live="assertive">태어난 년도 4자리를 정확하게 입력하세요.</span>
-	            </div>
+	            </fieldset>
 	
-	            <div class="form-group verify-box">
+	            <fieldset class="form-group verify-box">
 	              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
-	              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요">
+	              <input type="text" class="form-control" id="inputHp" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요" maxlength="11">
 	              <button type="submit" class="btn btn-primary btn-verify">인증</button>
 	              <span class="error_next_box" id="nameMsg" style aria-live="assertive">필수 정보입니다.</span>
-	            </div>
+	            </fieldset>
 	            
-	            <div class="form-group">
+	            <fieldset class="form-group">
 	              <label for="exampleSelect1" class="form-label mt-4">성별</label>
 	              <div class="check-box">
 	                <div class="form-check form-check-inline">
@@ -95,9 +98,12 @@
 	              <div class="d-grid gap-2">
 	                <button type="submit" class="btn btn-primary next-btn">다음</button>
 	              </div>
-	            </div>
-	          </form>
+	            </fieldset>
+	            
+	          </form><!-- End form -->
+	          
 	        </div>
+	        
 	      </div>
 	    </section>
 	
