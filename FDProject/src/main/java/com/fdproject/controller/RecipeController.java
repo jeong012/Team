@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fdproject.domain.DiseaseDTO;
+import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.RecipeDTO;
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.RecipeService;
@@ -31,28 +33,17 @@ public class RecipeController {
 	private DiseaseService diseaseService;
 	
 	@GetMapping(value="/list")
-	public String getRecipeList(@RequestParam(value = "recipe_type", required = false) String recipe_type,
-			Model model,
-			// disease_Name으로 recipe disease column 조회해서 리스트로 불러오기.
-			@RequestParam(value = "diseaseField", required = false) String diseaseField){		
+	public String getRecipeList(@ModelAttribute("params") RecipeDTO params, @RequestParam(value = "recipe_type", required = false) String recipe_type,
+			Model model){					 				
+		// 레시피 리스트 뽑아오기	
+		List<RecipeDTO> Recipe_List = recipeService.getRecipeList(params);		
+		model.addAttribute("Recipe_List", Recipe_List);
 		
-		// 질병 이름 선택했을 경우 레시피 리스트 뽑아오기
-		if(diseaseField != null) {
-			List<RecipeDTO> Recipe_List_By_DField = recipeService.getRecipeListByDiseaseField(diseaseField);
-			model.addAttribute("Recipe_List", Recipe_List_By_DField);
-		}
-		//Recipe_List 전부 가져오는 객체
-		else {
-			List<RecipeDTO> Recipe_List = recipeService.getRecipeList();		
-			model.addAttribute("Recipe_List", Recipe_List);
-		}
 		//disease_list 전부 가져오는 객체
 		List<DiseaseDTO> Disease_List_Five = diseaseService.getDiseaseListFive();
 		model.addAttribute("Disease_List_Five", Disease_List_Five);		
 		//System.out.println("Disease_List_Five:" + Disease_List_Five);
-		
-		
-		
+						
 		return "recipe/list";
 	}
 
