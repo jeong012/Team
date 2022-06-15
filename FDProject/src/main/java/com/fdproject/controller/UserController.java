@@ -14,7 +14,7 @@ public class UserController {
 		return "user/joinForm";
 	}
 
-	@PostMapping(value="/joinForm2")
+	@GetMapping(value="/joinForm2")
 	public String getJoinForm2(){
 		return "user/joinForm2";
 	}
