@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value="mypage")
 public class MyPageController {
 
-	@GetMapping(value="/disease")
+	@GetMapping(value="/disease.do")
 	public String getDiseaseList(){
 		return "mypage/diseaselist";
 	}
 	
-	@GetMapping(value="/drug")
+	@GetMapping(value="/drug.do")
 	public String getDrugList(){
 		return "mypage/druglist";
 	}

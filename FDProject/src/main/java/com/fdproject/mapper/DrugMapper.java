@@ -18,5 +18,7 @@ public interface DrugMapper {
     List<UserDrugDTO> getUserDrug(UserDrugDTO userDrug);
 
     int selectDrugTotalCount(DrugDTO drugDTO);
+    
+    List<DrugDTO> housedrugList(DrugDTO drugDTO);
 
 }

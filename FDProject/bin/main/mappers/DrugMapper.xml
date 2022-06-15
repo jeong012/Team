@@ -94,4 +94,15 @@
             #{item.drugName}
         </foreach>
     </select>
+    
+    <select id="housedrugList" parameterType="DrugDTO" resultMap="drug">
+        select
+        <include refid="drugColumns"/>
+        from
+        drugs
+        where
+        HOUSE_YN = 'Y'
+        order by drug_name asc
+    </select>
+    
 </mapper>

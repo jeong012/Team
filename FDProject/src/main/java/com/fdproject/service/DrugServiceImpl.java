@@ -47,4 +47,16 @@ public class DrugServiceImpl implements DrugService {
         }
         return drugList;
     }
+    
+    public List<DrugDTO> getHouseDrugList(DrugDTO params){
+    	List<DrugDTO> housedrugList = Collections.emptyList();
+    	
+    	int drugTotalCount = drugMapper.selectDrugTotalCount(params);
+    	
+    	if(drugTotalCount>0) {
+    		housedrugList = drugMapper.housedrugList(params);
+    	}
+    	
+    	return housedrugList;
+    }
 }

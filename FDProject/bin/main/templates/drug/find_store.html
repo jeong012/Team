@@ -18,9 +18,6 @@
 	        <div class="find-content-wrap row">
 	          <div class="find-map col-lg-13" style="width:50%;height:610px" data-aos="fade-right" data-aos-delay="100">
 	          
-				<!--	            
-	            <iframe class="mb-4 mb-lg-0" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" style="border:0; width: 100%; height: 384px;" allowfullscreen></iframe>
-	            -->
 			    <ul id="category" hidden> 
 			        <li id="CS2" data-order="2"> 
 			            <span class="category_bg store"></span>
@@ -30,9 +27,8 @@
 				
 	            <div id="map" class="mb-4 mb-lg-0" style="border:0; width: 100%; height: 100%;"></div> 
 	            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=614d5d6d914194616868e3b3593ad3e3&libraries=services"></script>
-	   			<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 	   			<script>
-	   			$(document).ready(function(){
+	   			$(document).ready(function(){ 
 	   				$("#CS2").trigger('click');
 	   				// 또는 $("#tmpBtn").click();
 	   			});
@@ -290,88 +286,33 @@
 				} 
 				</script>
 				
-	          </div> <!-- map -->
-	          
-	          
-	          
-	          
-	          		<div class="cslist col-lg-7 mx-auto">
+	          	</div> <!-- map -->
+
+	          		<div class="cslist col-lg-7 mx-auto" style="height: 610px; overflow: auto">
 			            <!-- List group-->
 			            <ul class="list-group">
 			                <!-- list group item-->
-			                <li class="list-group-item">
+			                <li class="list-group-item" th:if="${not #lists.isEmpty(housedrugList)}"
+			                	th:each="item : ${housedrugList}">
 			                    <!-- Custom content-->
-			                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+			                    <div class="media align-items-lg-center flex-column flex-lg-row p-1">
 			                        <div class="media-body order-2 order-lg-1">
-			                        	<img src="https://i.imgur.com/KFojDGa.jpg" alt="Generic placeholder image" id="drug-image">
-			                            <h5 class="mt-0 font-weight-bold mb-2">Apple iPhone XR (Red, 128 GB)</h5>
-			                            <p class="font-italic text-muted mb-0 small">128 GB ROM | 15.49 cm (6.1 inch) Display 12MP Rear Camera | 7MP Front Camera A12 Bionic Chip Processor</p>
-			                            <div class="d-flex align-items-center justify-content-between mt-1">
-			                                <h6 class="font-weight-bold my-2">₹64,999</h6>
-			                                <ul class="list-inline small">
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star-o text-gray"></i></li>
-			                                </ul>
-			                            </div>
+			                        	<!--<img class="m-2" th:src="${item.imgFile}" id="drug-image"> -->
+                                        <div class="mt-2">
+                                        <img style="width:100px; height:100px;"class="m-2" th:src="${item.imgFile}" id="drug-image">
+                                            <h5 class="font-weight-bold mb-2" th:text="${item.drugName}" style="display: inline"></h5>
+                                            <p class="font-italic text-muted mb-0 small" style="display: inline-block"
+                                               th:text="${item.manufacturer}"></p>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between mt-1">
+                                        	<p class="fa fa-star text-success list-inline small" th:text="${item.effect}"></p>       
+                                        </div>
 			                        </div>
 			                    </div> <!-- End -->
-			                </li> <!-- End -->
-			                <!-- list group item-->
-			                <li class="list-group-item">
-			                    <!-- Custom content-->
-			                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
-			                        <div class="media-body order-2 order-lg-1">
-			                            <img src="https://i.imgur.com/KFojDGa.jpg" alt="Generic placeholder image" id="drug-image">
-			                            <h5 class="mt-0 font-weight-bold mb-2">Apple iPhone XS (Silver, 64 GB)</h5>
-			                            <p class="font-italic text-muted mb-0 small">64 GB ROM | 14.73 cm (5.8 inch) Super Retina HD Display 12MP + 12MP | 7MP Front Camera A12 Bionic Chip Processor</p>
-			                            <div class="d-flex align-items-center justify-content-between mt-1">
-			                                <h6 class="font-weight-bold my-2">₹99,900</h6>
-			                                <ul class="list-inline small">
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                </ul>
-			                            </div>
-			                        </div>
-			                    </div> <!-- End -->
-			                </li> <!-- End -->
-			                <!-- list group item -->
-			                <li class="list-group-item">
-			                    <!-- Custom content-->
-			                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
-			                        <div class="media-body order-2 order-lg-1">
-			                            <img src="https://i.imgur.com/KFojDGa.jpg" alt="Generic placeholder image" id="drug-image">
-			                            <h5 class="mt-0 font-weight-bold mb-2">Apple iPhone XS Max (Gold, 64 GB)</h5>
-			                            <p class="font-italic text-muted mb-0 small">64 GB ROM | 16.51 cm (6.5 inch) Super Retina HD Display 12MP + 12MP | 7MP Front Camera A12 Bionic Chip Processor</p>
-			                            <div class="d-flex align-items-center justify-content-between mt-1">
-			                                <h6 class="font-weight-bold my-2">₹1,09,900</h6>
-			                                <ul class="list-inline small">
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star-o text-gray"></i></li>
-			                                </ul>
-			                            </div>
-			                        </div>
-			                    </div> <!-- End -->
-			                </li> <!-- End -->
-			                <!-- list group item -->
+			                </li> <!-- End -->	
 			            </ul> <!-- End -->
 			        </div>
-	          
-	          
-	          
-	          
-	          
-	          
-	          
-	          
+
 	        </div> 
 	       </div>
 	    </section><!-- End find-pharmacy Section -->	
