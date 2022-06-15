@@ -47,9 +47,4 @@ public class DrugController extends UiUtils {
         return "drug/find_pharmacy";
     }
 
-    @GetMapping(value="/find_store")
-    public String getFindStore(){
-        return "drug/find_store";
-    }
-
 }
