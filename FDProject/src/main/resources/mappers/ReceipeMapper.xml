@@ -43,7 +43,10 @@
 		
 	 	SET hit = hit + 1    
 	 	
-	 	WHERE Recipe_no = #{Recipe_no}
-			
+	 	WHERE Recipe_no = #{Recipe_no}			
 	</select>
+	
+	
+	
+	
 </mapper>
