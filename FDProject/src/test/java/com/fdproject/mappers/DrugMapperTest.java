@@ -35,7 +35,7 @@ public class DrugMapperTest {
         drugDTO.setPaginationInfo(paginationInfo);
         drugDTO.setParams("");
 
-        List<DrugDTO> drugList = drugMapper.riskDrugList(drugDTO);
+        List<DrugDTO> drugList = drugMapper.drugList(drugDTO);
 
     }
 
@@ -67,6 +67,6 @@ public class DrugMapperTest {
 
         drugDTO.setParams(params);
 
-        List<DrugDTO> drugList = drugMapper.riskDrugList(drugDTO);
+        List<DrugDTO> drugList = drugMapper.drugList(drugDTO);
     }
 }
