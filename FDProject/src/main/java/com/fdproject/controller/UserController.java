@@ -9,19 +9,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/user")
 public class UserController {
 
-	@GetMapping(value="/joinForm")
+	@GetMapping(value="/joinForm.do")
 	public String getJoinForm(){
 		return "user/joinForm";
 	}
 
-	@PostMapping(value="/joinForm2")
+	@PostMapping(value="/joinForm2.do")
 	public String getJoinForm2(){
 		return "user/joinForm2";
 	}
 	
-	@GetMapping(value="/loginForm")
+	@GetMapping(value="/loginForm.do")
 	public String getLoginForm(){
 		return "user/loginForm";
+	}
+	
+	@GetMapping(value="/myPage.do")
+	public String getMyPage(){
+		return "user/myPage";
 	}
 
 }

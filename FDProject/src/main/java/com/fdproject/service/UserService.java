@@ -6,7 +6,7 @@ public interface UserService {
 	
 	public boolean registerUser(UserDTO users);
 	
-	public UserDTO getFindById(Long userId);
+	public UserDTO getUserDetail(Long userId);
 	
 	public boolean deleteUser(UserDTO users);
 	

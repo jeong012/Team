@@ -11,7 +11,7 @@
 		,SEX
 		,BIRTH_DATE
 	</sql>
-	
+	<!-- 
 	<insert id="insertUser" parameterType="UserDTO">
 		INSERT INTO users (
 			<include refid="userColumns" />
@@ -29,5 +29,5 @@
 			, NULL
 		)
 	</insert>
-
+ 	-->
 </mapper>
