@@ -33,6 +33,7 @@ public class DrugController extends UiUtils {
         } else {
             List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
             model.addAttribute("drugList", drugList);
+            model.addAttribute("id", id);
         }
 
         return "drug/list";

@@ -37,20 +37,35 @@
         <if test="params != null and params != ''">
             <choose>
                 <when test="takeYn != null and takeYn != ''">
-                    <if test="takeYn.equals(takeYn)">
-                        and NOT REGEXP_LIKE(temp.WARNING, #{params})
-                    </if>
+                    <choose>
+                        <when test='takeYn.equals("Y")'>
+                            and NOT REGEXP_LIKE(temp.WARNING, #{params})
+                        </when>
+                        <when test='takeYn.equals("N")'>
+                            and REGEXP_LIKE(temp.WARNING, #{params})
+                        </when>
+                    </choose>
                 </when>
-                <otherwise>
-                    and REGEXP_LIKE(temp.WARNING, #{params})
-                </otherwise>
             </choose>
         </if>
     </sql>
 
     <select id="drugList" parameterType="DrugDTO" resultMap="drug">
         <include refid="CommonMapper.pagingHeader"/>
-        select temp.*
+        select
+        temp.DRUG_NO,
+        temp.DRUG_NAME,
+        temp.MANUFACTURER,
+        temp.BASIS,
+        temp.EFFECT,
+        temp.METHOD,
+        temp.WARNING1,
+        temp.WARNING2,
+        temp.SIDE_EFFECT,
+        temp.STORAGE,
+        temp.HOUSE_YN,
+        temp.IMG_FILE,
+        temp.KEYWORD
         from
         (select
         <include refid="drugColumns"/>
@@ -66,14 +81,17 @@
     </select>
 
     <select id="selectDrugTotalCount" parameterType="DrugDTO" resultType="int">
-        <![CDATA[
-        	SELECT
-	        COUNT(*)
-	        FROM
-	        drugs
-	        where
-	        1=1
-	    ]]>
+        select
+        COUNT(<![CDATA[*]]>)
+        from
+        (select
+        <include refid="drugColumns"/>
+        ,d.WARNING1 || d.WARNING2 WARNING
+        from
+        drugs d) temp
+        where
+        1=1
+        <include refid="riskDrug"/>
 	    <include refid="CommonMapper.search_o"/>
     </select>
 

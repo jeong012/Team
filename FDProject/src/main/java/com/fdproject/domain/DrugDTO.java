@@ -80,4 +80,9 @@ public class DrugDTO extends CommonDTO {
      */
     private String params;
 
+    /**
+     * 복용 가능 여부
+     */
+    private String takeYn;
+
 }

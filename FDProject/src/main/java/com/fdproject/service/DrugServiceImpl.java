@@ -30,7 +30,7 @@ public class DrugServiceImpl implements DrugService {
 
         params.setPaginationInfo(paginationInfo);
 
-        if (GrammerUtils.isStringEmpty(id) == false) {
+        if (GrammerUtils.isStringEmpty(id) == false && !id.equals("null")) {
             UserDrugDTO userDrug = new UserDrugDTO();
             userDrug.setUserId(id);
             List<UserDrugDTO> userDrugList = drugMapper.getUserDrug(userDrug);
@@ -39,18 +39,28 @@ public class DrugServiceImpl implements DrugService {
             String[] strArr = keywords.split(",");
             String result = StringUtils.join(strArr, "|");
             params.setParams(result);
-            System.out.println(takeYn);
             if (GrammerUtils.isStringEmpty(takeYn) == false && takeYn.equals("Y")) {
                 System.out.println(takeYn);
+                System.out.println("==================================================");
                 params.setTakeYn(takeYn);
+                System.out.println(params.getTakeYn());
+            } else if (GrammerUtils.isStringEmpty(takeYn) == false && takeYn.equals("N")) {
+                System.out.println(takeYn);
+                System.out.println("==================================================");
+                params.setTakeYn(takeYn);
+                System.out.println(params.getTakeYn());
             }
+            drugTotalCount = drugMapper.selectDrugTotalCount(params);
+
+            paginationInfo.setTotalRecordCount(drugTotalCount);
+
+            params.setPaginationInfo(paginationInfo);
             drugList = drugMapper.drugList(params);
-
-
             return drugList;
-        } else {
-            drugList = drugMapper.drugList(params);
         }
+        params.setTakeYn("");
+        drugList = drugMapper.drugList(params);
+
         return drugList;
     }
 }
