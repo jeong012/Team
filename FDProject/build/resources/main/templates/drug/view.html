@@ -2,9 +2,154 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/basic">
-    
-    <div layout:fragment="content">
-    	
-	</div>
-	
+
+<div layout:fragment="content">
+    <section id="about" class="about section-bg">
+        <div th:class="container" data-aos="fade-up">
+
+            <div class="section-title">
+                <h2>About</h2>
+                <h3> <span></span></h3>
+                <p></p>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
+                    <img src="/assets/img/about.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up"
+                     data-aos-delay="100">
+                    <div>
+                        <h3 style="display: inline" th:text="${drug.drugName}"></h3>
+                        <button class="btn btn-primary ajax" style="display: inline-block;" ><img style="position: relative; top: -2px;" src="/assets/img/star.svg" /></button>
+                    </div>
+                    <ul>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
+                                            data-bs-target="#manufacturer-collapse" aria-expanded="false">
+                                    제조사
+                                </button></h5>
+                                <p class="collapse" id="manufacturer-collapse" th:text="${drug.manufacturer}"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
+                                            data-bs-target="#basis-collapse" aria-expanded="false">
+                                    주성분
+                                </button></h5>
+                                <p class="collapse" id="basis-collapse" th:text="${drug.basis}"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
+                                            data-bs-target="#effect-collapse" aria-expanded="false">
+                                    효능
+                                </button></h5>
+                                <p class="collapse" id="effect-collapse" th:text="${drug.effect}"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
+                                            data-bs-target="#method-collapse" aria-expanded="false">
+                                    복용방법
+                                </button></h5>
+                                <p class="collapse" id="method-collapse" th:text="${drug.method}"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
+                                            data-bs-target="#warning1-collapse" aria-expanded="false">
+                                    주의사항1
+                                </button></h5>
+                                <p class="collapse" id="warning1-collapse" th:text="${drug.warning1}"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
+                                            data-bs-target="#warning2-collapse" aria-expanded="false">
+                                    주의사항2
+                                </button></h5>
+                                <p class="collapse" id="warning2-collapse" th:text="${drug.warning2}"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5><h5><button class="dropdown-toggle" data-bs-toggle="collapse"
+                                                data-bs-target="#sideEffect-collapse" aria-expanded="false">
+                                    부작용
+                                </button></h5></h5>
+                                <p class="collapse" id="sideEffect-collapse" th:text="${drug.sideEffect}"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5><h5><button class="dropdown-toggle" data-bs-toggle="collapse"
+                                                data-bs-target="#storage-collapse" aria-expanded="false">
+                                    보관방법
+                                </button></h5></h5>
+                                <p class="collapse" id="storage-collapse" th:text="${drug.storage}"></p>
+                            </div>
+                        </li>
+                    </ul>
+                    <p>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <th:block layout:fragment="script">
+        <script>
+            /*<![CDATA[*/
+
+           /* var i = 0;
+            $('img').on('click',function(){
+                if(i==0){
+                    $(this).attr('src','/assets/img/star-fill.svg');
+                    i++;
+                }else if(i==1){
+                    $(this).attr('src','/assets/img/star.svg');
+                    i--;
+                }
+
+            });*/
+
+            /*]]>*/
+        </script>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            var i = 0;
+            $('img').on('click',function(){
+                if(i==0){
+                    $(this).attr('src','/assets/img/star-fill.svg');
+                    i++;
+                }else if(i==1){
+                    $(this).attr('src','/assets/img/star.svg');
+                    i--;
+                }
+
+            });
+
+            /*]]>*/
+        </script>
+    </th:block>
+</div>
+
 </html>
