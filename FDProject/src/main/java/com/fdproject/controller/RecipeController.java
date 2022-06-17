@@ -38,7 +38,7 @@ public class RecipeController {
 		// 레시피 리스트 뽑아오기	
 		List<RecipeDTO> Recipe_List = recipeService.getRecipeList(params);		
 		model.addAttribute("Recipe_List", Recipe_List);
-		
+		System.out.println("Recipe_List:" + Recipe_List);
 		//disease_list 전부 가져오는 객체
 		List<DiseaseDTO> Disease_List_Five = diseaseService.getDiseaseListFive();
 		model.addAttribute("Disease_List_Five", Disease_List_Five);		

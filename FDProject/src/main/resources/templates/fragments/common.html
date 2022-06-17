@@ -41,7 +41,7 @@
         <input type="hidden" name="recordsPerPage" th:value="${params.recordsPerPage}"/>
         <input type="hidden" name="pageSize" th:value="${params.pageSize}"/>
         <div class="" style="">
-            <select name="searchType" class="btn btn-primary btn-search">
+            <select name="searchType" class="btn btn-primary btn-search" style = "text-align : justify">
                 <option value="" th:selected="${#strings.isEmpty( params.searchType )}">전체</option>
                 <option value="drugName" th:selected="${#strings.equals( params.searchType, 'drugName' )}">약</option>
                 <option value="effect" th:selected="${#strings.equals( params.searchType, 'effect' )}">증상</option>
@@ -63,10 +63,10 @@
         <input type="hidden" name="recordsPerPage" th:value="${params.recordsPerPage}"/>
         <input type="hidden" name="pageSize" th:value="${params.pageSize}"/>
         <div class="" style="">
-            <select name="searchType" class="btn btn-primary btn-search">
+            <select name="searchType" class="btn btn-primary btn-search" style = "text-align : justify">
                 <option value="" th:selected="${#strings.isEmpty( params.searchType )}">전체</option>
                 <option value="title" th:selected="${#strings.equals( params.searchType, 'title' )}">요리 이름</option>
-                <option value="diseaseField" th:selected="${#strings.equals( params.searchType, 'diseaseField' )}">병에 따른 추천검색</option>
+                <option value="diseaseField" th:selected="${#strings.equals( params.searchType, 'diseaseField' )}">아픈 부위</option>
             </select>
         </div>
         <div>
