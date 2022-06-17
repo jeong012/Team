@@ -41,7 +41,7 @@
         <input type="hidden" name="recordsPerPage" th:value="${params.recordsPerPage}"/>
         <input type="hidden" name="pageSize" th:value="${params.pageSize}"/>
         <input type="hidden" name="takeYn" th:value="${params.takeYn}"/>
-        <input type="hidden" name="id" th:value="${id}"/>
+        <input type="hidden" name="id" th:value="${#strings.equals( id, 'null') ? '' : id}"/>
         <div>
             <select name="searchType" class="btn btn-primary btn-search">
                 <option value="" th:selected="${#strings.isEmpty( params.searchType )}">전체</option>

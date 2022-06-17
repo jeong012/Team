@@ -1,5 +1,6 @@
 package com.fdproject.controller;
 
+import com.fdproject.constant.Method;
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.paging.Criteria;
 import com.fdproject.service.DrugService;
@@ -39,8 +40,14 @@ public class DrugController extends UiUtils {
         return "drug/list";
     }
 
-    @GetMapping(value = "/view")
-    public String getDrug() {
+    @GetMapping(value = "/view.do")
+    public String getDrug(@ModelAttribute(value = "params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "takeYn", required = false) String takeYn, @RequestParam(value = "no", required = false) int drugNo, Model model) {
+        if (GrammerUtils.isStringEmpty(id) == true) {
+            return showMessageWithRedirect("접근 권한이 없습니다.", "/drug/list.do", Method.GET, null, model);
+        }
+
+        DrugDTO drug = drugService.getDrug(drugNo);
+        model.addAttribute("drug", drug);
 
         return "drug/view";
     }
@@ -50,10 +57,10 @@ public class DrugController extends UiUtils {
 
         return "drug/find_pharmacy";
     }
-    
-    @GetMapping(value="/find_store")
-	public String getFindStore(){
-		return "drug/find_store";
-	}
+
+    @GetMapping(value = "/find_store")
+    public String getFindStore() {
+        return "drug/find_store";
+    }
 
 }

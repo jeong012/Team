@@ -9,4 +9,6 @@ public interface DrugService {
 
     List<DrugDTO> getDrugList(String id, DrugDTO params, String takeYn);
 
+    DrugDTO getDrug(int drugNo);
+
 }

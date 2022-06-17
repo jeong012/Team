@@ -19,4 +19,6 @@ public interface DrugMapper {
 
     int selectDrugTotalCount(DrugDTO drugDTO);
 
+    DrugDTO getDrugDetail(int drugNo);
+
 }

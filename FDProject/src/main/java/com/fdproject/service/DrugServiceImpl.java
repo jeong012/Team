@@ -63,4 +63,9 @@ public class DrugServiceImpl implements DrugService {
 
         return drugList;
     }
+
+    public DrugDTO getDrug(int drugNo) {
+        DrugDTO drug = drugMapper.getDrugDetail(drugNo);
+        return  drug;
+    }
 }

@@ -5,9 +5,8 @@
       layout:decorate="/layout/basic">
 
 <div layout:fragment="content">
-    <main id="main" data-aos="fade-up">
     <section id="list-page">
-        <div class="container">
+        <div class="container" data-aos="fade-up">
 
             <th:block layout:fragment="search">
                 <div th:replace="fragments/common :: search">
@@ -16,7 +15,7 @@
 
             <div class="container py-3">
                 <div class="row list-page">
-                    <div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
+                    <div class="flex-shrink-0 p-3 bg-white" style="width: 200px; float: left;"  data-aos="fade-right">
                         <ul class="border-top"></ul>
                         <ul class="list-unstyled ps-0">
                             <li class="mb-1">
@@ -30,10 +29,10 @@
 
                             <li class="mb-1">
                                 <button class="dropdown-toggle" data-bs-toggle="collapse"
-                                        data-bs-target="#userDiseases-collapse" aria-expanded="false">
+                                        data-bs-target="#userDrug-collapse" aria-expanded="false">
                                     내 맞춤
                                 </button>
-                                <div class="collapse" id="userDiseases-collapse">
+                                <div class="collapse" id="userDrug-collapse">
                                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                         <li><a th:href="|@{/drug/list.do}?id=test&takeYn=Y|" class="link-dark d-inline-flex text-decoration-none rounded">복용
                                             가능 약</a></li>
@@ -52,11 +51,11 @@
                             <li class="list-group-item" th:if="${not #lists.isEmpty(drugList)}"
                                 th:each="item : ${drugList}">
                                 <!-- Custom content-->
-                                <div class="media align-items-lg-center flex-column flex-lg-row p-2">
+                                <div class="media align-items-lg-center flex-column flex-lg-row p-2" data-aos="zoom-in">
                                     <div class="media-body order-2 order-lg-1">
-                                        <img th:src="${item.imgFile}" id="drug-image">
+                                        <img src="https://i.imgur.com/KFojDGa.jpg" id="drug-image">
                                         <div>
-                                            <h5 class="mt-0 font-weight-bold mb-2" th:text="${item.drugName}" style="display: inline"></h5>
+                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a th:href="|@{/drug/view.do}${params.makeQueryString(params.currentPageNo)}&id=${not #strings.isEmpty(id) ? id : ''}&takeYn=${params.takeYn}&no=${item.drugNo}|" th:text="${item.drugName}"></a></h5>
                                             <p class="font-italic text-muted mb-0 small" style="display: inline-block"
                                                th:text="${item.manufacturer}"></p>
                                         </div>
@@ -96,6 +95,10 @@
             /*<![CDATA[*/
 
             function movePage(uri, queryString, id, takeYn) {
+                if (id == null) {
+                    id = "";
+                    location.href = uri + queryString + "&id=" + id + "&takeYn=" + takeYn;
+                }
                 location.href = uri + queryString + "&id=" + id + "&takeYn=" + takeYn;
             }
 
@@ -117,6 +120,5 @@
             /*]]>*/
         </script>
     </th:block>
-    </main>
 </div>
 </html>
