@@ -21,7 +21,7 @@
                      data-aos-delay="100">
                     <div>
                         <h3 style="display: inline" th:text="${drug.drugName}"></h3>
-                        <button class="btn btn-primary ajax" style="display: inline-block;"><i class="bx bx-label"></i></button>
+                        <button class="btn btn-primary ajax" style="display: inline-block;" ><img style="position: relative; top: -2px;" src="/assets/img/star.svg" /></button>
                     </div>
                     <ul>
                         <li>
@@ -112,6 +112,44 @@
 
         </div>
     </section>
+
+    <th:block layout:fragment="script">
+        <script>
+            /*<![CDATA[*/
+
+           /* var i = 0;
+            $('img').on('click',function(){
+                if(i==0){
+                    $(this).attr('src','/assets/img/star-fill.svg');
+                    i++;
+                }else if(i==1){
+                    $(this).attr('src','/assets/img/star.svg');
+                    i--;
+                }
+
+            });*/
+
+            /*]]>*/
+        </script>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            var i = 0;
+            $('img').on('click',function(){
+                if(i==0){
+                    $(this).attr('src','/assets/img/star-fill.svg');
+                    i++;
+                }else if(i==1){
+                    $(this).attr('src','/assets/img/star.svg');
+                    i--;
+                }
+
+            });
+
+            /*]]>*/
+        </script>
+    </th:block>
 </div>
 
 </html>
