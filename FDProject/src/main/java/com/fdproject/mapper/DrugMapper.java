@@ -21,4 +21,6 @@ public interface DrugMapper {
     
     List<DrugDTO> housedrugList(DrugDTO drugDTO);
 
+    DrugDTO getDrugDetail(int drugNo);
+
 }
