@@ -8,12 +8,14 @@
   </sql>
   
   <!-- Oracle Paging Header -->
-  <sql id="pagingHeader"> 
+  <sql id="pagingHeader">
     <if test="paginationInfo.firstRecordIndex != null and paginationInfo.lastRecordIndex != null">
+      <![CDATA[
       SELECT *
       FROM (
         SELECT rownum rnum, m.*
         FROM (
+      ]]>
     </if>
   </sql>
 

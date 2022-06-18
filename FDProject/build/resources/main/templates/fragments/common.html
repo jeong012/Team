@@ -9,24 +9,24 @@
     <div class="paging">
         <ul class="pagination justify-content-center">
             <li th:if="*{hasPreviousPage == true}"
-                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(1)} ]])">
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(1)} ]], [[${id}]], [[ ${params.takeYn}]])">
                 <a href="javascript:void(0)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
             </li>
             <li th:if="*{hasPreviousPage == true}"
-                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.firstPage - 1)} ]])">
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.firstPage - 1)} ]], [[${id}]], [[ ${params.takeYn}]])">
                 <a href="javascript:void(0)" aria-label="Previous"><span aria-hidden="true">&lsaquo;</span></a>
             </li>
             <li th:each="pageNo : *{#numbers.sequence( firstPage, lastPage )}"
                 th:class="${pageNo == params.currentPageNo} ? 'active'">
                 <a href="javascript:void(0)" th:text="${pageNo}"
-                   th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(pageNo)} ]])"></a>
+                   th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(pageNo)} ]], [[${id}]], [[ ${params.takeYn}]])"></a>
             </li>
             <li th:if="*{hasNextPage == true}"
-                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.lastPage + 1)} ]])">
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.lastPage + 1)} ]], [[${id}]], [[ ${params.takeYn}]])">
                 <a href="javascript:void(0)" aria-label="Next"><span aria-hidden="true">&rsaquo;</span></a>
             </li>
             <li th:if="*{hasNextPage == true}"
-                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.totalPageCount)} ]])">
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.totalPageCount)} ]], [[${id}]], [[ ${params.takeYn}]])">
                 <a href="javascript:void(0)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
             </li>
         </ul>
@@ -34,13 +34,15 @@
 </nav>
 
 <div th:fragment="search" class="sub-search-box">
-<!--    <input type="text" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" placeholder=""/>-->
+<!--    <input type="text" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" placeholder=""/> -->
     <form id="searchForm" th:action="@{/drug/list.do}" method="get" th:onsubmit="return searchDrug(this)" class=""
           role="form">
         <input type="hidden" name="currentPageNo" value="1"/>
         <input type="hidden" name="recordsPerPage" th:value="${params.recordsPerPage}"/>
         <input type="hidden" name="pageSize" th:value="${params.pageSize}"/>
-        <div class="" style="">
+        <input type="hidden" name="takeYn" th:value="${params.takeYn}"/>
+        <input type="hidden" name="id" th:value="${not #strings.isEmpty(id) ? id : ''}"/>
+        <div>
             <select name="searchType" class="btn btn-primary btn-search">
                 <option value="" th:selected="${#strings.isEmpty( params.searchType )}">전체</option>
                 <option value="drugName" th:selected="${#strings.equals( params.searchType, 'drugName' )}">약</option>
