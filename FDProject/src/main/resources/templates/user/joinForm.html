@@ -2,6 +2,47 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/layout/basic">
+      
+<th:block layout:fragment="script">
+	<script>
+	$(function(){
+			$('#userId').change(function(){
+				$('#check-button').show();
+				$('#check-image').hide();
+			});
+		$('#check-button').click(function(){
+			var userId = $('#userId').val();
+			if(userId == ''){
+				return;
+			}
+			// ajax 통신
+			$.ajax({
+				url : "${pageContext.servletContext.contextPath }/user/api/checkemail?email="+email, //문자열로 인식이 되는게 아니라 서버에서 el값으로 먼저 치환후 js통신을 한다.
+				type : "GET",
+				dataType : "json",
+				data : "", //post방식일때 값을 여기에 넣어줌
+				success:function(response){
+					if(response.result != "success"){
+						console.error(response.message);
+						return;
+					}
+					if(response.data == true){
+						alert('이미 존재하는 아이디 입니다.\n 다른 아이디를 사용해 주세요');
+						$('#userId').focus();
+						$('#userId').val("");
+						return;
+					}
+					$('#check-button').hide();
+					$('#check-image').show();
+				},
+				error : function(xhr, error){ //xmlHttpRequest?
+						console.error("error : "+error);
+				}
+			});
+		})
+	});
+</script>
+</th:block>
 
 	<div layout:fragment="content">
 	  <main id="main" data-aos="fade-up">

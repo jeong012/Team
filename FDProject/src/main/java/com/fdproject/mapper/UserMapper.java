@@ -4,12 +4,16 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.fdproject.domain.UserDTO;
 
+import lombok.RequiredArgsConstructor;
+
 @Mapper
 public interface UserMapper {
 	
-	int insertUser(UserDTO users); //회원정보 저장
+//	public static final SqlSession sqlSession = null;
 	
-	UserDTO selectUserDetail(Long UserId); //UserId로 찾기
+	boolean insertUser(UserDTO users); //회원정보 저장
+	
+	UserDTO selectUserDetail(String UserId); //UserId로 찾기
 	
 	int updateUser(UserDTO users); //회원정보 수정
 	
