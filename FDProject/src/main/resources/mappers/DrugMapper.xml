@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fdproject.mapper.DrugMapper">
     <resultMap id="drug" type="DrugDTO">
-        <result property="drugNo" column="drug_no"/>
+        <id property="drugNo" column="drug_no"/>
         <result property="drugName" column="drug_name"/>
         <result property="manufacturer" column="manufacturer"/>
         <result property="basis" column="basis"/>
@@ -58,14 +58,7 @@
         temp.MANUFACTURER,
         temp.BASIS,
         temp.EFFECT,
-        temp.METHOD,
-        temp.WARNING1,
-        temp.WARNING2,
-        temp.SIDE_EFFECT,
-        temp.STORAGE,
-        temp.HOUSE_YN,
-        temp.IMG_FILE,
-        temp.KEYWORD
+        temp.METHOD
         from
         (select
         <include refid="drugColumns"/>
@@ -95,22 +88,13 @@
 	    <include refid="CommonMapper.search_o"/>
     </select>
 
-    <select id="getUserDrug" parameterType="UserDrugDTO" resultType="UserDrugDTO">
+    <select id="selectKeywords" parameterType="UserDrugDTO" resultType="String">
         select
-        drug_name as drugName
-        from USER_DRUGS
-        where USER_ID = #{userId}
-    </select>
-
-    <select id="selectKeywords" resultType="String">
-        select
-        keyword
+        d.KEYWORD
         from
-        drugs
-        where drug_name in
-        <foreach collection="userDrugList" item="item" index="index" open="(" separator="," close=")">
-            #{item.drugName}
-        </foreach>
+        DRUGS d, USER_DRUGS u
+        where d.DRUG_NO = u.DRUG_NO
+        and u.USER_ID = #{userId}
     </select>
 
     <select id="getDrugDetail" parameterType="DrugDTO" resultMap="drug">
@@ -119,7 +103,28 @@
         from
         drugs d
         where
-        1=1
-        and d.DRUG_NO = #{drugNo}
+        d.DRUG_NO = #{drugNo}
     </select>
+
+    <select id="getMyDrugList" parameterType="DrugsCartDTO" resultMap="drug">
+        <include refid="CommonMapper.pagingHeader"/>
+        select
+        c.DRUG_CART_NO
+        <include refid="drugColumns"/>
+        from
+        DRUGS d, DRUGS_CART c
+        where d.DRUG_NO = c.DRUG_NO
+        and c.USER_ID = #{userId}
+        <include refid="CommonMapper.search_o"/>
+        order by drug_name asc
+        <include refid="CommonMapper.pagingFooter"/>
+    </select>
+
+    <insert id="addCart">
+        <selectKey keyProperty="userDrugNo" resultType="int" order="BEFORE">
+            select SEQ_DRUGS_CART_NO_NO.NEXTVAL from dual
+        </selectKey>
+        insert into DRUGS_CART (DRUG_CART_NO, DRUG_NO , USER_ID)
+        values (#{userDrugNo}, #{drugNO}, #{userId})
+    </insert>
 </mapper>

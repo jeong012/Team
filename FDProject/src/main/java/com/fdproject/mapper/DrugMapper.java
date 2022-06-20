@@ -1,6 +1,7 @@
 package com.fdproject.mapper;
 
 import com.fdproject.domain.DrugDTO;
+import com.fdproject.domain.DrugsCartDTO;
 import com.fdproject.domain.UserDrugDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,14 +12,14 @@ public interface DrugMapper {
 
     List<DrugDTO> drugList(DrugDTO drugDTO);
 
-    List<String> selectKeyword();
-
-    List<String> selectKeywords(List<UserDrugDTO> userDrugList);
-
-    List<UserDrugDTO> getUserDrug(UserDrugDTO userDrug);
+    List<String> selectKeywords(UserDrugDTO userDrugDTO);
 
     int selectDrugTotalCount(DrugDTO drugDTO);
 
     DrugDTO getDrugDetail(int drugNo);
+
+    List<DrugDTO> getMyDrugList(DrugDTO drugDTO);
+
+    int addCart(DrugsCartDTO drugsCartDTO);
 
 }
