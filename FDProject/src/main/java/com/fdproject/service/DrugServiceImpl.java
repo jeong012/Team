@@ -1,10 +1,11 @@
 package com.fdproject.service;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.fdproject.domain.DrugsCartDTO;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.UserDrugDTO;
@@ -20,6 +21,7 @@ public class DrugServiceImpl implements DrugService {
 
     private final DrugMapper drugMapper;
 
+    @Transactional(readOnly = true)
     public List<DrugDTO> getDrugList(String id, DrugDTO params, String takeYn) {
         List<DrugDTO> drugList = Collections.emptyList();
 
@@ -30,25 +32,25 @@ public class DrugServiceImpl implements DrugService {
 
         params.setPaginationInfo(paginationInfo);
 
-        if (GrammerUtils.isStringEmpty(id) == false && !id.equals("null")) {
+        if (GrammerUtils.isStringEmpty(id) == false) {
             UserDrugDTO userDrug = new UserDrugDTO();
             userDrug.setUserId(id);
-            List<UserDrugDTO> userDrugList = drugMapper.getUserDrug(userDrug);
-            List<String> value = drugMapper.selectKeywords(userDrugList);
-            String keywords = StringUtils.join(value, ",");
+            List<String> value = drugMapper.selectKeywords(userDrug);
+            System.out.println(value);
+            String keywords = GrammerUtils.str(value);
             String[] strArr = keywords.split(",");
-            String result = StringUtils.join(strArr, "|");
-            params.setParams(result);
+            HashSet<String> arr = new HashSet<String>(Arrays.asList(strArr));
+            List<String> result = new ArrayList<String>(arr);
+            String str = GrammerUtils.str(result);
+            System.out.println(str);
+            str = str.replaceAll(",", "|");
+            params.setParams(str);
             if (GrammerUtils.isStringEmpty(takeYn) == false && takeYn.equals("Y")) {
-                System.out.println(takeYn);
-                System.out.println("==================================================");
                 params.setTakeYn(takeYn);
-                System.out.println(params.getTakeYn());
             } else if (GrammerUtils.isStringEmpty(takeYn) == false && takeYn.equals("N")) {
-                System.out.println(takeYn);
-                System.out.println("==================================================");
                 params.setTakeYn(takeYn);
-                System.out.println(params.getTakeYn());
+            } else {
+                System.out.println("errorMessage!");
             }
             drugTotalCount = drugMapper.selectDrugTotalCount(params);
 
@@ -76,8 +78,15 @@ public class DrugServiceImpl implements DrugService {
     	return housedrugList;
     }
 
+    @Transactional(readOnly = true)
     public DrugDTO getDrug(int drugNo) {
         DrugDTO drug = drugMapper.getDrugDetail(drugNo);
         return  drug;
+    }
+
+    public String addDrugCart(DrugsCartDTO cartDTO) {
+        cartDTO.setUserId("test");
+        int count = drugMapper.addCart(cartDTO);
+        return (count == 1) ? "true" : "false" ;
     }
 }
