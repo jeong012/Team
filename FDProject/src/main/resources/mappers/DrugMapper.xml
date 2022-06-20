@@ -97,6 +97,16 @@
         and u.USER_ID = #{userId}
     </select>
 
+    <select id="housedrugList" parameterType="DrugDTO" resultMap="drug">
+        select
+        <include refid="drugColumns"/>
+        from
+        drugs d
+        where
+        d.HOUSE_YN = 'Y'
+    </select>
+    
+
     <select id="getDrugDetail" parameterType="DrugDTO" resultMap="drug">
         select
         <include refid="drugColumns"/>

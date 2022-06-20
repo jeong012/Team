@@ -8,9 +8,10 @@ import java.util.List;
 
 public interface DrugService {
 
-    List<DrugDTO> getDrugList(String id, DrugDTO params, String takeYn);
 
+    List<DrugDTO> getDrugList(String id, DrugDTO params, String takeYn);
     DrugDTO getDrug(int drugNo);
+    List<DrugDTO> getHouseDrugList(DrugDTO params);
 
     String addDrugCart(DrugsCartDTO cartDTO);
 

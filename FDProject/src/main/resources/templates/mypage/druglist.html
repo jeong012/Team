@@ -13,14 +13,14 @@
 		     	 		<ul class="border-top"></ul>
 	    				<ul class="list-unstyled ps-0">
 	      					<li class="mb-1">
-		       					<form method="get" action="/mypage/disease">
+		       					<form method="get" th:action="@{/mypage/disease.do}">
 			       					<button class="dropdown-none-toggle" type="submit">
 			         					질병 관리
 			       					</button>
 		       					</form>
 		     				</li>
 		     				<li class="mb-1">
-		       					<form method="get" action="/mypage/drug">
+		       					<form method="get" th:action="@{/mypage/drug.do}">
 			       					<button class="dropdown-none-toggle" style="color:blue;" type="submit">
 			         					약 관리
 			       					</button>

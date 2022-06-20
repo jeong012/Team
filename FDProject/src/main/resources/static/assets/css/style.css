@@ -2386,6 +2386,7 @@ select.list-dt:focus {
 .placeinfo .tel {color:#0f7833;}
 .placeinfo .jibun {color:#999;font-size:11px;margin-top:0;}
 
+.pagetitle{font-weight:bold; font-size:30px}
 /*--------------------------------------------------------------
 # list-page
 --------------------------------------------------------------*/
@@ -2404,8 +2405,3 @@ select.list-dt:focus {
   border-color: #106eea;
   background-color: #106eea;
 }
-
-
-
-
-
