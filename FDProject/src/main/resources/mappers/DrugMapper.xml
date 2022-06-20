@@ -117,10 +117,9 @@
         select
         <include refid="drugColumns"/>
         from
-        drugs
+        drugs d
         where
-        HOUSE_YN = 'Y'
-        order by drug_name asc
+        d.HOUSE_YN = 'Y'
     </select>
     
 
