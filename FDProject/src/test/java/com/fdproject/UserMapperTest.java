@@ -19,12 +19,12 @@ class UserMapperTest {
 		users.setUserId("userTest1");
 		users.setPw("1234");
 		users.setName("userTest1");
-		users.setPhoneNumber("01011111111");
-		users.setSex("");
-		users.setBirthDate(null);
-		
-		int result = userMapper.insertUser(users);
-	    System.out.println("결과는 " + result + "입니다.");
+//		users.setPhoneNumber("010-1111-1111");
+//		users.setSex("");
+//		users.setBirthDate(null);
+//		
+//		int result = userMapper.insertUser(users);
+//	    System.out.println("결과는 " + result + "입니다.");
 	}
 	
 }

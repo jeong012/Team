@@ -17,9 +17,9 @@
 			<include refid="userColumns" />
 		) VALUES (
 			  seq_users_no.nextval
-			, #{title}
-			, #{content}
-			, #{writer}
+			, #{userId}
+			, #{pw}
+			, #{name}
 			, 0
 			, NVL(#{noticeYn, jdbcType=VARCHAR}, 'N')
 			, NVL(#{secretYn, jdbcType=VARCHAR}, 'N')
