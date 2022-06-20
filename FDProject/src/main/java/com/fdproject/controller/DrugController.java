@@ -2,17 +2,16 @@ package com.fdproject.controller;
 
 import com.fdproject.constant.Method;
 import com.fdproject.domain.DrugDTO;
+import com.fdproject.domain.DrugsCartDTO;
 import com.fdproject.paging.Criteria;
 import com.fdproject.service.DrugService;
 import com.fdproject.util.GrammerUtils;
 import com.fdproject.util.UiUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,11 +30,10 @@ public class DrugController extends UiUtils {
             List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
             model.addAttribute("drugList", drugList);
             return "drug/list";
-        } else {
-            List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
-            model.addAttribute("drugList", drugList);
-            model.addAttribute("id", id);
         }
+        List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
+        model.addAttribute("drugList", drugList);
+        model.addAttribute("id", id);
 
         return "drug/list";
     }
@@ -45,7 +43,6 @@ public class DrugController extends UiUtils {
         if (GrammerUtils.isStringEmpty(id) == true) {
             return showMessageWithRedirect("접근 권한이 없습니다.", "/drug/list.do", Method.GET, null, model);
         }
-
         DrugDTO drug = drugService.getDrug(drugNo);
         model.addAttribute("drug", drug);
 
