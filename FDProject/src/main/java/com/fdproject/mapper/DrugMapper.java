@@ -1,5 +1,6 @@
 package com.fdproject.mapper;
 
+import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.DrugsCartDTO;
 import com.fdproject.domain.UserDrugDTO;
@@ -23,5 +24,11 @@ public interface DrugMapper {
     List<DrugDTO> getMyDrugList(DrugDTO drugDTO);
 
     int addCart(DrugsCartDTO drugsCartDTO);
+
+	List<UserDrugDTO> getUserDrug(UserDrugDTO userDrug);
+
+	List<DrugDTO> userdrugList(DrugDTO params);
+    
+    
 
 }

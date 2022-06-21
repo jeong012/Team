@@ -31,29 +31,34 @@
 	  				</div>
 			    
 			        <div class="col-lg-10 mx-auto" style="margin-top: 15px;">
+			        <div class="pagetitle m-2">투약 관리 페이지</div>
 			            <!-- List group-->
 			            <ul class="list-group shadow">
 			                <!-- list group item-->
-			                <li class="list-group-item">
-			                    <!-- Custom content-->
-			                    <div class="media align-items-lg-center flex-column flex-lg-row p-3">
-			                        <div class="media-body order-2 order-lg-1">
-			                            <img src="https://i.imgur.com/KFojDGa.jpg" alt="Generic placeholder image" id="drug-image">
-			                            <h5 class="mt-0 font-weight-bold mb-2">Apple iPhone XS (Silver, 64 GB)</h5>
-			                            <p class="font-italic text-muted mb-0 small">64 GB ROM | 14.73 cm (5.8 inch) Super Retina HD Display 12MP + 12MP | 7MP Front Camera A12 Bionic Chip Processor</p>
-			                            <div class="d-flex align-items-center justify-content-between mt-1">
-			                                <h6 class="font-weight-bold my-2">₹99,900</h6>
-			                                <ul class="list-inline small">
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                    <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
-			                                </ul>
-			                            </div>
-			                        </div>
-			                    </div> <!-- End -->
-			                </li> <!-- End -->
+			                <li class="list-group-item" th:if="${not #lists.isEmpty(userdrugList)}"
+                                th:each="item : ${userdrugList}">
+                                <!-- Custom content-->
+                                <div class="media align-items-lg-center flex-column flex-lg-row p-2">
+                                    <div class="media-body order-2 order-lg-1">
+                                        <img src="https://i.imgur.com/KFojDGa.jpg" id="drug-image">
+                                        <div>
+                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline" th:text="${item.drugName}"></h5>
+                                            <p class="font-italic text-muted mb-0 small" style="display: inline-block"
+                                               th:text="${item.manufacturer}"></p>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between mt-1">
+<!--                                            <h6 class="font-weight-bold my-2"></h6>-->
+                                            <ul class="list-inline small">
+                                                <li class="list-inline-item m-0">효능: <i class="fa fa-star text-start"
+                                                                                    th:text="${item.effect}" style="font-style: normal"></i></li>
+                                                <li class="list-inline-item m-0">복용밥법: <i class="fa fa-star text-start"
+                                                                                    th:text="${item.method}" style="font-style: normal"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div> <!-- End -->
+                            </li> <!-- End -->
 			            </ul> <!-- End -->
 			        </div>
 			    </div>

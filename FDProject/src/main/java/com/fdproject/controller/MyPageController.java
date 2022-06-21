@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
-import com.fdproject.domain.UserDiseaseDTO;
 import com.fdproject.service.DiseaseService;
+import com.fdproject.service.DrugService;
 import com.fdproject.util.GrammerUtils;
 import com.fdproject.util.UiUtils;
 
@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class MyPageController extends UiUtils {
 
 	private final DiseaseService diseaseService;
+	private final DrugService drugService;
 	
 	@GetMapping(value="/disease.do")
 	public String getDiseaseList(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model){
@@ -44,7 +45,19 @@ public class MyPageController extends UiUtils {
 	}
 	
 	@GetMapping(value="/drug.do")
-	public String getDrugList(){
+	public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, Model model){
+		
+		if (GrammerUtils.isStringEmpty(id) == true) {
+		 	id = "test";
+		 	List<DrugDTO> userdrugList = drugService.getUserDrugList(id, params);
+            model.addAttribute("userdrugList", userdrugList);
+            model.addAttribute("id", id);
+            //return "redirect:/";
+        } else {
+        	List<DrugDTO> userdrugList = drugService.getUserDrugList(id, params);
+            model.addAttribute("userdrugList", userdrugList);
+            model.addAttribute("id", id);
+        }
 		return "mypage/druglist";
 	}
 	

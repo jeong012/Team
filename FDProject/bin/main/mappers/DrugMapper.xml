@@ -137,4 +137,22 @@
         insert into DRUGS_CART (DRUG_CART_NO, DRUG_NO , USER_ID)
         values (#{userDrugNo}, #{drugNO}, #{userId})
     </insert>
+    
+    
+    <select id="getUserDrug" parameterType="UserDrugDTO" resultType="String">
+        select
+        drug_no as drugNo
+        from USER_DRUGS
+        where USER_ID = #{userId}
+    </select>
+    
+
+    <select id="userdrugList" parameterType="DrugDTO" resultMap="drug">
+        select
+        <include refid="drugColumns"/>
+      	FROM DRUGS d
+		WHERE d.drug_no = any(${cart})
+    </select>
+    
+    
 </mapper>
