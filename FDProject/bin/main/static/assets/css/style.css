@@ -1690,7 +1690,7 @@ section {
   background: #0d58ba;
 }
 #footer .footer-top {
-  padding: 60px 0 30px 0;
+  padding: 30px 0 30px 0;
   background: #fff;
 }
 #footer .footer-top .footer-contact {
@@ -2188,6 +2188,7 @@ select.list-dt:focus {
 /*약 리스트 페이지*/
 #list-page{
   width: 100%;
+  padding-bottom: 30px;
 }
 #list-page .container{
   width: 100%;
@@ -2346,10 +2347,12 @@ select.list-dt:focus {
 /*--------------------------------------------------------------
 # Drug Image
 --------------------------------------------------------------*/
-#drug-image{
-	float:left;
-	height: 170px;
-	width: 140px;
+#drug-image {
+  float: left;
+  height: 170px;
+  width: 140px;
+  position: relative;
+  left: -10px;
 }
 
 /*--------------------------------------------------------------
@@ -2383,6 +2386,7 @@ select.list-dt:focus {
 .placeinfo .tel {color:#0f7833;}
 .placeinfo .jibun {color:#999;font-size:11px;margin-top:0;}
 
+.pagetitle{font-weight:bold; font-size:30px}
 /*--------------------------------------------------------------
 # list-page
 --------------------------------------------------------------*/
@@ -2390,5 +2394,14 @@ select.list-dt:focus {
   display: block;
 }
 
-
-
+.ajax {
+  display: inline-block;
+  padding-top: 0px;
+  padding-right: 5px;
+  padding-bottom: 0px;
+  padding-left: 5px;
+  position: relative;
+  top: -3.5px;
+  border-color: #106eea;
+  background-color: #106eea;
+}

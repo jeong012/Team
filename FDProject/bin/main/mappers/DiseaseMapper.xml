@@ -2,19 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fdproject.mapper.DiseaseMapper">
 
-	<sql id="diseaseColumns">
-		disease_no,
-		disease_field,
-		disease_name,
-		description,
-		symptom
-	</sql> 
-	
 	<select id ="selectDiseaseListFive" resultType="DiseaseDTO">
 		SELECT 
 			<include refid="diseaseColumns" />							
-		FROM diseases 
-		where disease_no <![CDATA[<]]> 6 						
+		FROM DISEASES d 
+		where d.disease_no <![CDATA[<]]> 6 						
 	</select>	
 	
+    <resultMap id="disease" type="DiseaseDTO">
+        <result property="diseaseNo" column="disease_no"/>
+        <result property="diseaseField" column="disease_field"/>
+        <result property="diseaseName" column="disease_name"/>
+        <result property="description" column="description"/>
+        <result property="symptom" column="symptom"/>
+    </resultMap>
+    
+
+    <sql id="diseaseColumns">
+        <![CDATA[
+        d.DISEASE_NO,
+        d.DISEASE_FIELD,
+        d.DISEASE_NAME,
+        d.DESCRIPTION,
+        d.SYMPTOM
+        ]]>
+    </sql>
+    
+    <select id="getUserDisease" parameterType="UserDiseaseDTO" resultType="String">
+        select
+        disease_no as diseaseNo
+        from USER_DISEASES
+        where USER_ID = #{userId}
+    </select>
+    
+
+    <select id="diseaseList" parameterType="DiseaseDTO" resultMap="disease">
+        select
+        <include refid="diseaseColumns"/>
+      	FROM DISEASES d
+		WHERE d.disease_no = any(${cart})
+    </select>
+    
+
+    
 </mapper>

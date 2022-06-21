@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fdproject.mapper.DrugMapper">
     <resultMap id="drug" type="DrugDTO">
-        <result property="drugNo" column="drug_no"/>
+        <id property="drugNo" column="drug_no"/>
         <result property="drugName" column="drug_name"/>
         <result property="manufacturer" column="manufacturer"/>
         <result property="basis" column="basis"/>
@@ -18,34 +18,53 @@
     </resultMap>
 
     <sql id="drugColumns">
-        drug_no,
-        drug_name,
-        manufacturer,
-        basis,
-        effect,
-        method,
-        warning1,
-        warning2,
-        side_effect,
-        storage,
-        HOUSE_YN,
-        img_file,
-        keyword
+        d.DRUG_NO,
+        d.DRUG_NAME,
+        d.MANUFACTURER,
+        d.BASIS,
+        d.EFFECT,
+        d.METHOD,
+        d.WARNING1,
+        d.WARNING2,
+        d.SIDE_EFFECT,
+        d.STORAGE,
+        d.HOUSE_YN,
+        d.IMG_FILE,
+        d.KEYWORD
     </sql>
-    
+
     <sql id="riskDrug">
         <if test="params != null and params != ''">
-            and REGEXP_LIKE(warning1, #{params})
-            or REGEXP_LIKE(warning2, #{params})
+            <choose>
+                <when test="takeYn != null and takeYn != ''">
+                    <choose>
+                        <when test='takeYn.equals("Y")'>
+                            and NOT REGEXP_LIKE(temp.WARNING, #{params})
+                        </when>
+                        <when test='takeYn.equals("N")'>
+                            and REGEXP_LIKE(temp.WARNING, #{params})
+                        </when>
+                    </choose>
+                </when>
+            </choose>
         </if>
     </sql>
 
     <select id="drugList" parameterType="DrugDTO" resultMap="drug">
-        <include refid="CommonMapper.pagingHeader"></include>
+        <include refid="CommonMapper.pagingHeader"/>
         select
-        <include refid="drugColumns"/>
+        temp.DRUG_NO,
+        temp.DRUG_NAME,
+        temp.MANUFACTURER,
+        temp.BASIS,
+        temp.EFFECT,
+        temp.METHOD
         from
-        drugs
+        (select
+        <include refid="drugColumns"/>
+        ,d.WARNING1 || d.WARNING2 WARNING
+        from
+        drugs d) temp
         where
         1=1
         <include refid="riskDrug"/>
@@ -54,40 +73,58 @@
         <include refid="CommonMapper.pagingFooter"/>
     </select>
 
-    <select id="selectKeyword" resultType="String">
-        select
-        keyword
-        from
-        drugs
-        where
-        drug_no <![CDATA[<=]]> 5
-    </select>
-
     <select id="selectDrugTotalCount" parameterType="DrugDTO" resultType="int">
-        SELECT
-        COUNT(*)
-        FROM
-        drugs
+        select
+        COUNT(<![CDATA[*]]>)
+        from
+        (select
+        <include refid="drugColumns"/>
+        ,d.WARNING1 || d.WARNING2 WARNING
+        from
+        drugs d) temp
         where
         1=1
-        <include refid="CommonMapper.search_o"/>
+        <include refid="riskDrug"/>
+	    <include refid="CommonMapper.search_o"/>
     </select>
 
-    <select id="getUserDrug" parameterType="UserDrugDTO" resultType="UserDrugDTO">
+    <select id="selectKeywords" parameterType="UserDrugDTO" resultType="String">
         select
-        drug_name as drugName
-        from USER_DRUGS
-        where USER_ID = #{userId}
-    </select>
-
-    <select id="selectKeywords" resultType="String">
-        select
-        keyword
+        d.KEYWORD
         from
-        drugs
-        where drug_name in
-        <foreach collection="userDrugList" item="item" index="index" open="(" separator="," close=")">
-            #{item.drugName}
-        </foreach>
+        DRUGS d, USER_DRUGS u
+        where d.DRUG_NO = u.DRUG_NO
+        and u.USER_ID = #{userId}
     </select>
+
+    <select id="getDrugDetail" parameterType="DrugDTO" resultMap="drug">
+        select
+        <include refid="drugColumns"/>
+        from
+        drugs d
+        where
+        d.DRUG_NO = #{drugNo}
+    </select>
+
+    <select id="getMyDrugList" parameterType="DrugsCartDTO" resultMap="drug">
+        <include refid="CommonMapper.pagingHeader"/>
+        select
+        c.DRUG_CART_NO
+        <include refid="drugColumns"/>
+        from
+        DRUGS d, DRUGS_CART c
+        where d.DRUG_NO = c.DRUG_NO
+        and c.USER_ID = #{userId}
+        <include refid="CommonMapper.search_o"/>
+        order by drug_name asc
+        <include refid="CommonMapper.pagingFooter"/>
+    </select>
+
+    <insert id="addCart">
+        <selectKey keyProperty="userDrugNo" resultType="int" order="BEFORE">
+            select SEQ_DRUGS_CART_NO_NO.NEXTVAL from dual
+        </selectKey>
+        insert into DRUGS_CART (DRUG_CART_NO, DRUG_NO    , USER_ID)
+        values (#{userDrugNo}, #{drugNO}, #{userId})
+    </insert>
 </mapper>
