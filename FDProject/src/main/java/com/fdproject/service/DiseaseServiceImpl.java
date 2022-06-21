@@ -1,5 +1,13 @@
 package com.fdproject.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.fdproject.domain.DiseaseDTO;
+import com.fdproject.mapper.DiseaseMapper;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -18,6 +26,11 @@ import lombok.RequiredArgsConstructor;
 public class DiseaseServiceImpl implements DiseaseService {
 	
 	private final DiseaseMapper diseaseMapper;
+
+	@Override
+	public List<DiseaseDTO> getDiseaseListFive() {		
+		return diseaseMapper.selectDiseaseListFive();
+	}
 
 	@Override
 	public List<DiseaseDTO> getDiseaseList(String id, DiseaseDTO params) {
