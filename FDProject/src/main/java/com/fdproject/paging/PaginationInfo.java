@@ -1,10 +1,10 @@
 package com.fdproject.paging;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class PaginationInfo {
 	/** 페이징 계산에 필요한 파라미터들이 담긴 클래스 */
 	private Criteria criteria;

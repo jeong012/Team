@@ -6,11 +6,19 @@
 	
 	<body th:fragment="main-body">
 	
-		<header th:replace="/fragments/header :: header"></header>	
-	
-		<div layout:fragment="content"></div>
-		
+		<header th:replace="/fragments/header :: header"></header>
+
+		<div layout:fragment="content">
+
+			<th:block layout:fragment="search"></th:block>
+
+			<th:block layout:fragment="paging"></th:block>
+
+		</div>
+
 		<footer th:replace="/fragments/footer :: footer"></footer>
+
+	<th:block layout:fragment="script"></th:block>
 	
 	</body>
 	

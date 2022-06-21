@@ -20,4 +20,7 @@ public class DiseaseDTO {
 	/** 증상 */
 	private String symptom;
 	
+	/** 마이페이지 질병 */
+	private String cart;
+	
 }

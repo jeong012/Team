@@ -7,7 +7,7 @@
 	  <main id="main" data-aos="fade-up">
 	
 	    <section class="bg-light">
-	      <div class="container py-4">
+	      <div class="container">
 	
 	        <div class="">
 	          <!-- 회원가입 폼 -->
@@ -17,10 +17,10 @@
 	
 	            <div class="row select-detail-wrap">
 	
-	              <div class="mb-3 form-group">
-	                <label for="inputDisease" class="label-title"><span>●</span> 앓고 있는 지병이 있으신가요?</label>
-	                <div class="input-box">
-	                  <input type="text" class="form-addInput" id="inputDisease">
+	              <div class="mb-3 row">
+	                <label for="inputDisease" class="col-4 col-form-label"><span>●</span> 앓고 있는 지병이 있으신가요?</label>
+	                <div class="col-2 input-box">
+	                  <input type="text" class="form-control" id="inputDisease">
 	                  <button class="btn-add btn-primary">
 	                    <i class='bx bx-plus' ></i>
 	                  </button>
@@ -45,10 +45,10 @@
 	                </ul>
 	              </div>
 	
-	              <div class="mb-3 form-group">
-	                <label for="inputDrug" class="label-title"><span>●</span> 복용 중인 약이 있으신가요?</label>
+	              <div class="mb-3 row">
+	                <label for="inputDrug" class="col-4 col-form-label"><span>●</span> 복용 중인 약이 있으신가요?</label>
 	                <div class="col-2 input-box">
-	                  <input type="text" class="form-addInput" id="inputDrug">
+	                  <input type="text" class="form-control" id="inputDrug">
 	                  <button class="btn-add btn-primary">
 	                    <i class='bx bx-plus' ></i>
 	                  </button>
@@ -76,10 +76,16 @@
 	            <div class="agree-wrap">
 	              <h5>
 	                - 약관 동의 
-	                <span class="agree-btn">
+	                <span class="agree-toggle">
 	                  <a href="#">▼</a>
 	                </span>
 	              </h5>
+	              <div class="form-check">
+	                <input class="form-check-input" type="checkbox" value="" id="agreeCheck">
+	                <label class="form-check-label" for="agreeCheck">
+	                  서비스 약관에 동의합니다.
+	                </label>
+	              </div>
 	              <div class="agree-content">
 	                제 1 조 (목적)
 	
@@ -96,12 +102,6 @@
 	                ⑥"포인트"라 함은 서비스의 효율적 이용을 위해 회사가 임의로 책정 또는 지급, 조정할 수 있는 재산적 가치가 없는 "서비스" 상의 가상 데이터를 의미합니다.
 	                ⑦"게시물"이라 함은 "회원"이 "서비스"를 이용함에 있어 "서비스상"에 게시한 부호ㆍ문자ㆍ음성ㆍ음향ㆍ화상ㆍ동영상 등의 정보 형태의 글, 사진, 동영상 및 각종 파일과 링크 등을 의미합니다.
 	              </div>
-	              <div class="form-check">
-	                <input class="form-check-input" type="checkbox" value="" id="agreeCheck">
-	                <label class="form-check-label" for="agreeCheck">
-	                  서비스 약관에 동의합니다.
-	                </label>
-	              </div>
 	              <div class="form-group">
 	                <div class="d-grid gap-2">
 	                  <button type="submit" class="btn btn-primary btn-join">회원 가입</button>
@@ -112,6 +112,11 @@
 	        </div>
 	      </div>
 	    </section>
+	    <script>
+	        $(function(){
+	            
+	        })
+	    </script>
 
   	</main><!-- End #main -->
   </div>

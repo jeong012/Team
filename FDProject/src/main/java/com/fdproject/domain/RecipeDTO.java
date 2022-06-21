@@ -3,7 +3,7 @@ package com.fdproject.domain;
 import lombok.Data;
 
 @Data
-public class RecipeDTO {
+public class RecipeDTO extends CommonDTO {
 
 	/** 번호 (PK) */
 	private int recipeNo;

@@ -6,7 +6,7 @@ import lombok.Data;
 public class UserDrugDTO {
 
 	/** 번호 (PK) */
-	private int userDiseaseNo;
+	private int userDrugNo;
 	
 	/** 약 번호 */
 	private int drugNo;
