@@ -12,6 +12,10 @@ public interface DrugService {
 
     DrugDTO getDrug(int drugNo);
 
-    String addDrugCart(DrugsCartDTO cartDTO);
+    boolean addMyDrug(DrugsCartDTO cartDTO);
+
+    boolean deleteMyDrug(DrugsCartDTO cartDTO);
+
+    DrugsCartDTO getMyDrug(int drugNo);
 
 }
