@@ -45,6 +45,8 @@ public class DrugController extends UiUtils {
         }
         DrugDTO drug = drugService.getDrug(drugNo);
         model.addAttribute("drug", drug);
+        DrugsCartDTO drugsCartDTO = drugService.getMyDrug(drugNo);
+        model.addAttribute("myDrug", drugsCartDTO);
 
         return "drug/view";
     }
