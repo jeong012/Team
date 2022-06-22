@@ -51,15 +51,19 @@ public class DrugController extends UiUtils {
         return "drug/view";
     }
 
-    @GetMapping(value = "/find_pharmacy")
+    @GetMapping(value ="/pharmacy.do")
     public String getFindPharmacy() {
-
+    	
         return "drug/find_pharmacy";
     }
-
-    @GetMapping(value = "/find_store")
-    public String getFindStore() {
-        return "drug/find_store";
-    }
+    
+    @GetMapping(value="/store.do")
+	public String getFindStore(@ModelAttribute("params") DrugDTO params, Model model){
+    	
+    	List<DrugDTO> housedrugList = drugService.getHouseDrugList(params);
+        model.addAttribute("housedrugList", housedrugList);
+        
+		return "drug/find_store";
+	}
 
 }

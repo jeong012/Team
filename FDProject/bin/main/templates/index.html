@@ -39,7 +39,7 @@
 		
 		        <div class="row">
 		          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-					<a href="/drug/list.do">
+					<a th:href="@{/drug/list.do}">
 			          <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
 			              <div class="icon"><i class='bx bxs-capsule'></i></div>
 			              <h4 class="title" style="color: black;">약</h4>
@@ -48,7 +48,7 @@
 		          </div>
 		
 		          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-			      	<a href="/recipe/list">
+			      	<a th:href="@{/recipe/list}">
 			          <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
 			              <div class="icon"><i class='bx bxs-food-menu' ></i></div>
 			              <h4 class="title" style="color: black;">레시피</h4>
@@ -57,7 +57,7 @@
 		          </div>
 		
 		          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-					<a href="/drug/find_store">
+					<a th:href="@{/drug/store.do}">
 			          <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
 			              <div class="icon"><i class='bx bx-first-aid'></i></div>
 			              <h4 class="title" style="color: black;">상비약 리스트</h4>
@@ -66,7 +66,7 @@
 		          </div>
 		
 		          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-					<a href="/drug/find_pharmacy">
+					<a th:href="@{/drug/pharmacy.do}">
 			          <div class="icon-box" data-aos="fade-up" data-aos-delay="400">
 			              <div class="icon"><i class='bx bx-map' ></i></div>
 			              <h4 class="title" style="color: black;">내 주변 약국</h4>
