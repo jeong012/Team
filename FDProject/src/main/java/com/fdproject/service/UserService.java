@@ -1,16 +1,13 @@
 package com.fdproject.service;
 
-import com.fdproject.domain.UserDTO;
+import java.util.ArrayList;
+
+import com.fdproject.domain.UserDiseaseDTO;
+import com.fdproject.domain.UserDrugDTO;
 
 public interface UserService {
-	
-	public boolean existId(String userId);
-	
-	public boolean registerUser(UserDTO users);
-	
-	public UserDTO getUserDetail(Long userId);
-	
-	public boolean deleteUser(UserDTO users);
-	
+
+	/** 회원가입 - 사용자 지병 + 복용중인 약 데이터 추가*/
+	int joinUser(ArrayList<UserDiseaseDTO> userDiseaseList, ArrayList<UserDrugDTO> userDrugList);
 	
 }

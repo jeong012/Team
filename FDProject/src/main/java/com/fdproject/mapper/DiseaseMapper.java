@@ -15,5 +15,8 @@ public interface DiseaseMapper {
 	
     List<DiseaseDTO> selectDiseaseListFive();
 
+    /** 회원가입 - 질병 리스트 조회 사용*/
+    List<DiseaseDTO> joinDiseaseList();
+
 
 }

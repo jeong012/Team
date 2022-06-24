@@ -1,7 +1,6 @@
 package com.fdproject.service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.fdproject.domain.DrugsCartDTO;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ public class DrugServiceImpl implements DrugService {
 
     private final DrugMapper drugMapper;
 
-    @Transactional(readOnly = true)
     public List<DrugDTO> getDrugList(String id, DrugDTO params, String takeYn) {
         List<DrugDTO> drugList = Collections.emptyList();
 
@@ -78,15 +76,47 @@ public class DrugServiceImpl implements DrugService {
     	return housedrugList;
     }
 
-    @Transactional(readOnly = true)
     public DrugDTO getDrug(int drugNo) {
         DrugDTO drug = drugMapper.getDrugDetail(drugNo);
-        return  drug;
+        return drug;
     }
 
-    public String addDrugCart(DrugsCartDTO cartDTO) {
+    @Override
+    @Transactional
+    public boolean addMyDrug(DrugsCartDTO cartDTO) {
         cartDTO.setUserId("test");
-        int count = drugMapper.addCart(cartDTO);
-        return (count == 1) ? "true" : "false" ;
+        int count = 0;
+        List<DrugsCartDTO> list = drugMapper.myDrugList(cartDTO.getUserId());
+        if (!list.isEmpty()) {
+            for (DrugsCartDTO cart : list) {
+                if (cart.getDrugNo() != cartDTO.getDrugNo()) {
+                    count = drugMapper.addCart(cartDTO);
+                    return (count == 1) ? true : false;
+                }
+                count = 0;
+            }
+        }
+        count = drugMapper.addCart(cartDTO);
+        return (count == 1) ? true : false;
     }
+
+    @Override
+    public boolean deleteMyDrug(DrugsCartDTO cartDTO) {
+        int count = drugMapper.deleteCart(cartDTO);
+        return (count == 1) ? true : false;
+    }
+
+    @Override
+    public DrugsCartDTO getMyDrug(int drugNo) {
+        return drugMapper.getMyDrug(drugNo);
+    }
+    
+    /** 회원가입 - 약 리스트 조회 사용*/
+	public List<DrugDTO> getJoinDrugList() {
+		
+        List<DrugDTO> drugList = new ArrayList<>();
+        drugList = drugMapper.joinDrugList();
+        
+		return drugList;
+	}
 }

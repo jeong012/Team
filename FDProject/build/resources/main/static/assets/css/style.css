@@ -2400,9 +2400,14 @@ select.list-dt:focus {
   padding-bottom: 0px;
   padding-left: 5px;
   position: relative;
-  top: -3.5px;
+  top: -4.5px;
   border-color: #106eea;
   background-color: #106eea;
+}
+
+.cart {
+  position: relative;
+  top: -2px;
 }
 
 

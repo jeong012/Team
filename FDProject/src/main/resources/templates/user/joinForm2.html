@@ -2,84 +2,50 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/layout/basic">
-
+	
 	<div layout:fragment="content">
-	  <main id="main" data-aos="fade-up">
-	
 	    <section class="bg-light">
-	      <div class="container py-4">
-	
-	        <div class="">
+	      <div class="container">
 	          <!-- 회원가입 폼 -->
-	          <form class="join-form2" method="post" action="">
+			  <div class="join-form2">
 	            <h4>- 선택 항목 입력</h4>
-	            <input type="hidden" id="" name="" value="">
-	
 	            <div class="row select-detail-wrap">
-	
-	              <div class="mb-3 form-group">
-	                <label for="inputDisease" class="label-title"><span>●</span> 앓고 있는 지병이 있으신가요?</label>
-	                <div class="input-box">
-	                  <input type="text" class="form-addInput" id="inputDisease">
-	                  <button class="btn-add btn-primary">
-	                    <i class='bx bx-plus' ></i>
+	              <div class="mb-3 row">
+	                <label for="inputDisease" class="col-4 col-form-label"><span>●</span> 앓고 있는 지병이 있으신가요?</label>
+	                <div class="col-2 input-box">
+	                  <input type="text" class="form-control" id="inputDisease">
+	                  <button class="btn-add btn-primary" onclick="addDisease()">
+	                    <i class='bx bx-plus'></i>
 	                  </button>
 	                </div>
 	              </div>
 	
 	              <div id="selectedDisease" class="disease-kind">
 	                <span class="ex">(최대 3개)</span>
-	                <ul>
-	                  <li>
-	                    <span>
-	                      위염
-	                    </span>
-	                    <a class="del" href="">x</a>
-	                  </li>
-	                  <li>
-	                    <span>
-	                      당뇨
-	                    </span>
-	                    <a class="del" href="">x</a>
-	                  </li>
+	                <ul id="selectedDisease">
 	                </ul>
 	              </div>
 	
-	              <div class="mb-3 form-group">
-	                <label for="inputDrug" class="label-title"><span>●</span> 복용 중인 약이 있으신가요?</label>
+	              <div class="mb-3 row">
+	                <label for="inputDrug" class="col-4 col-form-label"><span>●</span> 복용 중인 약이 있으신가요?</label>
 	                <div class="col-2 input-box">
-	                  <input type="text" class="form-addInput" id="inputDrug">
-	                  <button class="btn-add btn-primary">
-	                    <i class='bx bx-plus' ></i>
+	                  <input type="text" class="form-control" id="inputDrug">
+	                  <button class="btn-add btn-primary" onclick="addDrug()">
+	                    <i class='bx bx-plus'></i>
 	                  </button>
 	                </div>
 	              </div>
 	
-	              <div id="selectedDisease" class="disease-kind">
+	              <div id="selectedDrug" class="disease-kind">
 	                <span class="ex">(최대 5개)</span>
-	                <ul>
-	                  <li>
-	                    <span>
-	                      스티렌
-	                    </span>
-	                    <a class="del" href="">x</a>
-	                  </li>
-	                  <li>
-	                    <span>
-	                      타이레놀
-	                    </span>
-	                    <a class="del" href="">x</a>
-	                  </li>
+	                <ul id="selectedDrug">
 	                </ul>
 	              </div>
 	            </div>
 	            <div class="agree-wrap">
-	              <h5>
-	                - 약관 동의 
-	                <span class="agree-btn">
-	                  <a href="#">▼</a>
-	                </span>
-	              </h5>
+	              <h4>
+	                - 약관 동의
+	              </h4>
 	              <div class="agree-content">
 	                제 1 조 (목적)
 	
@@ -96,24 +62,329 @@
 	                ⑥"포인트"라 함은 서비스의 효율적 이용을 위해 회사가 임의로 책정 또는 지급, 조정할 수 있는 재산적 가치가 없는 "서비스" 상의 가상 데이터를 의미합니다.
 	                ⑦"게시물"이라 함은 "회원"이 "서비스"를 이용함에 있어 "서비스상"에 게시한 부호ㆍ문자ㆍ음성ㆍ음향ㆍ화상ㆍ동영상 등의 정보 형태의 글, 사진, 동영상 및 각종 파일과 링크 등을 의미합니다.
 	              </div>
+	              
 	              <div class="form-check">
-	                <input class="form-check-input" type="checkbox" value="" id="agreeCheck">
-	                <label class="form-check-label" for="agreeCheck">
-	                  서비스 약관에 동의합니다.
-	                </label>
-	              </div>
-	              <div class="form-group">
-	                <div class="d-grid gap-2">
-	                  <button type="submit" class="btn btn-primary btn-join">회원 가입</button>
-	                </div>
+	                <input class="form-check-input" type="checkbox" id="agreeCheck">
+	                <label class="form-check-label" for="agreeCheck">서비스 약관에 동의합니다.</label>
 	              </div>
 	            </div>
-	          </form>
+	              
+	            <div class="form-group">
+	                <div class="d-grid gap-2">
+                  		<button type="submit" class="btn btn-primary btn-join" onclick="join()">회원 가입</button>
+                	</div>
+	            </div>
+	            
+	            <!--  Modal -->
+	           	<div id="myModal" class="modal fade" role="dialog">
+	           		<div class="modal-dialog">
+	           			<!--  Modal content -->
+	           			<div class="modal-content">
+	           				<div class="modal-header">
+	           					<h4 class="modal-title">아프면찾아조</h4>
+	           				</div>
+	           				
+	           				<div class="modal-body">
+	           					<label id="modalLabel"> 회원가입에 성공하였습니다. </label>
+	           				</div>
+	           				
+	           				<div class="modal-footer">
+	           					<button id='btnModal' class="btn btn-info" onclick="clickModal()"></button>
+	           				</div>
+	           			</div>
+	           		</div>
+	           	</div>
+	              
+			  </div>
 	        </div>
-	      </div>
 	    </section>
+	</div>
 
-  	</main><!-- End #main -->
-  </div>
+	<th:block layout:fragment="script">
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+ 		<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+				var diseaseNameList = new Array();
+				var diseaseNoList = new Array();
+				var diseaseNo;
+				var diseaseName;
+				var diseaseMap = new Map();
+				
+				var drugNameList = new Array();
+				var drugNoList = new Array();
+				var drugNo;
+				var drugName;
+				var drugMap = new Map();
+				
+				var isChecked = false;
+				
+				$(document).ready(function() {
+					$.ajax({
+						url : "/user/join/getDiseaseList.do",
+						type : "get",
+						dataType : "json",
+						success : function(json) {
+							var diseaseList = json.diseaseList;
+							diseaseList.forEach(function(arg){
+								diseaseNameList.push(arg.diseaseName);
+						    });
+							
+							diseaseList.forEach(function(arg){
+								diseaseNoList.push(arg.diseaseNo);
+						    });
+						},
+						error : function(error) {
+							console.error(error);
+					    }
+					});
 
+					$.ajax({
+						url : "/user/join/getDrugList.do",
+						type : "get",
+						dataType : "json",
+						success : function(json) {
+							var drugList = json.drugList;
+							drugList.forEach(function(arg){
+								drugNameList.push(arg.drugName);
+						    });
+							
+							drugList.forEach(function(arg){
+								drugNoList.push(arg.drugNo);
+						    });
+						},
+						error : function(error) {
+							console.error(error);
+					    }
+					});
+					
+					$("#agreeCheck").change(function(){
+				        if($("#agreeCheck").is(":checked")){
+				        	isChecked = true;
+				        }else{
+				        	isChecked = false;
+				        }
+				    });
+				});
+				
+				$('#inputDisease').click(function() {
+					if(diseaseMap.size === 3){
+						alert("최대 3개만 입력 가능합니다.");
+					}
+				});
+				
+				$("#inputDisease").autocomplete({
+					source : diseaseNameList,
+					select : function(event, ui) {
+						diseaseName = ui.item.value;
+			            diseaseNo = diseaseNoList[diseaseNameList.indexOf(diseaseName)];
+		            }
+				});
+				
+				function addDisease(){
+					if($("#inputDisease").val() === "" || diseaseNameList.indexOf(diseaseName) === -1){
+						alert("등록할 수 없습니다.");
+					}else{
+						for(var i = 0; i < diseaseNameList.length; i++) {
+							if(diseaseNameList[i] === diseaseName)  {
+								diseaseNameList.splice(i, 1);
+								diseaseNoList.splice(i, 1);
+								i--;
+							}
+						}
+
+						var data = "";
+						$("ul[id=selectedDisease]").empty();
+						diseaseMap.set(diseaseNo, diseaseName);
+						diseaseMap.forEach( (value, key, map) => {
+							diseaseName = `${value}`;
+							diseaseNo = `${key}`;
+							
+							data += "<li>"
+								 + "	<span>" + diseaseName + "</span>"
+				                 + "	<a href='javascript:delDisease("+ diseaseNo + ");'>x</a>"
+				                 + "</li>";
+						});
+						$("ul[id=selectedDisease]").append(data);
+						$("input[type=text][id=inputDisease]").val("");
+						diseaseName = "";
+					}
+				};
+				
+				function delDisease(diseaseNo){
+					diseaseName = diseaseMap.get(diseaseNo);
+					diseaseNameList.push(diseaseName);
+					diseaseNoList.push(diseaseNo);
+					
+					diseaseMap.delete(diseaseNo);
+
+					var data = "";;
+					$("ul[id=selectedDisease]").empty();
+					diseaseMap.forEach( (value, key, map) => {
+						diseaseName = `${value}`;
+						diseaseNo = `${key}`;
+						
+						data += "<li>"
+							 + "	<span>" + diseaseName + "</span>"
+			                 + "	<a href='javascript:delDisease("+ diseaseNo + ");'>x</a>"
+			                 + "</li>";
+					});
+					$("ul[id=selectedDisease]").append(data);
+					$("input[type=text][id=inputDisease]").val("");
+					diseaseName = "";
+				};				
+				
+				$('#inputDrug').click(function() {
+					if(drugMap.size === 5){
+						alert("최대 5개만 입력 가능합니다.");
+					}
+				});
+				
+				$("#inputDrug").autocomplete({
+					source : drugNameList,
+					select : function(event, ui) {
+						drugName = ui.item.value;
+			            drugNo = drugNoList[drugNameList.indexOf(drugName)];
+		            }
+				});
+
+				function addDrug(){
+					if($("#inputDrug").val() === "" || drugNameList.indexOf(drugName) === -1){
+						alert("등록할 수 없습니다.");
+					}else{
+						for(var i = 0; i < drugNameList.length; i++) {
+							if(drugNameList[i] === drugName)  {
+								drugNameList.splice(i, 1);
+								drugNoList.splice(i, 1);
+								i--;
+							}
+						}
+
+						var data = "";
+						$("ul[id=selectedDrug]").empty();
+						drugMap.set(drugNo, drugName);
+						drugMap.forEach( (value, key, map) => {
+							drugName = `${value}`;
+							drugNo = `${key}`;
+							
+							data += "<li>"
+								 + "	<span>" + drugName + "</span>"
+				                 + "	<a href='javascript:delDrug("+ drugNo + ");'>x</a>"
+				                 + "</li>";
+						});
+						$("ul[id=selectedDrug]").append(data);
+						$("input[type=text][id=inputDrug]").val("");
+						drugName = "";
+					}
+				};
+				
+				function delDrug(drugNo){
+					drugName = drugMap.get(drugNo);
+					drugNameList.push(drugName);
+					drugNoList.push(drugNo);
+					
+					drugMap.delete(drugNo);
+
+					var data = "";;
+					$("ul[id=selectedDrug]").empty();
+					drugMap.forEach( (value, key, map) => {
+						drugName = `${value}`;
+						drugNo = `${key}`;
+						
+						data += "<li>"
+							 + "	<span>" + drugName + "</span>"
+			                 + "	<a href='javascript:delDrug("+ drugNo + ");'>x</a>"
+			                 + "</li>";
+					});
+					$("ul[id=selectedDrug]").append(data);
+					$("input[type=text][id=inputDrug]").val("");
+					drugName = "";
+				};
+				
+				function join(){
+					if(isChecked){
+						var params = "";
+						
+						if(diseaseMap.size === 0){
+							params += '{"diseaseMap" : [],';
+						} else{
+							params += '{"diseaseMap" : [';
+										 
+							diseaseMap.forEach( (value, key, map) => {
+								diseaseName = `${value}`;
+								diseaseNo = `${key}`;
+								
+								params += '{"diseaseNo" : ' + diseaseNo + ', '
+									   +  '	"diseaseName" : "' + diseaseName + '"},';
+							});
+							
+							if(params.charAt(params.length-1) === ','){
+								params = params.slice(0,-1);
+							}
+
+							params += '],';
+						}
+							
+						if(drugMap.size === 0){
+							params += '"drugMap" : []}';
+						} else{
+							params += '"drugMap" : [';
+							
+							drugMap.forEach( (value, key, map) => {
+								drugName = `${value}`;
+								drugNo = `${key}`;
+								
+								params += '{"drugNo" : ' + drugNo + ','
+									   +  '	"drugName" : "' + drugName + '"},';
+							});
+							
+							if(params.charAt(params.length-1) === ','){
+								params = params.slice(0,-1);
+							}
+							
+							params += ']}';
+						}
+						
+						$.ajax({
+							url : "/user/join.do",
+							type : "post",
+							data : params,
+							dataType : "json",
+							contentType: "application/json; charset=utf-8",
+							success : function(json) {
+								if(json.result === 'success'){
+									$("#myModal").modal("show");
+								    $("#modalLabel").text("회원가입에 성공하였습니다.");
+								    $("#btnModal").text("로그인하기");
+								} else{
+									$("#myModal").modal("show");
+								    $("#modalLabel").text("회원가입에 실패하였습니다.");
+								    $("#btnModal").text("다시 가입하기");
+								}
+							},
+							error : function(error) {
+								console.error(error);
+						    }
+						});
+					} else{
+						$("#myModal").modal("show");
+					    $("#modalLabel").text("약관 동의가 필요합니다.");
+					    $("#btnModal").text("확인");
+					}
+				};
+				
+				function clickModal(){
+					var flag = $("#btnModal").text();
+					if(flag === '로그인하기'){
+						location.href = "/user/loginForm.do";
+					} else if(flag == '다시 가입하기'){
+						location.href = "/user/joinForm.do";
+					} else{
+						$("#myModal").modal("hide");
+					}
+				}
+			/*]]*/
+		</script>
+ 	</th:block>
+ 	
 </html>
