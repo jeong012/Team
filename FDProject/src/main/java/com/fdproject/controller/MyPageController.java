@@ -2,6 +2,7 @@ package com.fdproject.controller;
 
 import java.util.List;
 
+import com.fdproject.service.DrugService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class MyPageController extends UiUtils {
 
 	private final DiseaseService diseaseService;
+
+	private final DrugService drugService;
 	
 	@GetMapping(value="/disease.do")
 	public String getDiseaseList(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model){
@@ -44,8 +47,19 @@ public class MyPageController extends UiUtils {
 	}
 	
 	@GetMapping(value="/drug.do")
-	public String getDrugList(){
+	public String getDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model){
+
+		List<DrugDTO> drugList = drugService.getMyDrugList(params);
+		model.addAttribute("drugList", drugList);
+
 		return "mypage/druglist";
+	}
+
+	@GetMapping(value = "/myDrug.do")
+	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model) {
+		List<DrugDTO> drugList = drugService.getMyDrugList(params);
+		model.addAttribute("drugList", drugList);
+		return "mypage/myDrugList";
 	}
 	
 

@@ -1,8 +1,10 @@
 package com.fdproject.domain;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class DrugsCartDTO {
 
 	/** 번호 (PK) */

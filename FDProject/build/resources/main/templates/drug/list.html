@@ -86,7 +86,7 @@
     </section>
 
     <th:block layout:fragment="paging">
-        <nav th:replace="fragments/common :: pagination">
+        <nav th:replace="fragments/common :: drugPagination">
         </nav>
     </th:block>
 
@@ -104,8 +104,8 @@
 
             function searchDrug(form) {
                 /*[- 드롭다운이 아닌 메인 검색 키워드로 검색했을 때 -]*/
-                    var searchKeyword = document.getElementById("sub-searchForm");
-                    if (isEmpty(searchKeyword.value) == true) {
+                    var searchKeyword = document.getElementById("sub-drug-searchForm");
+                    if (searchKeyword.value == "") {
                         alert("키워드를 입력해 주세요.");
                         searchKeyword.focus();
                         return false;

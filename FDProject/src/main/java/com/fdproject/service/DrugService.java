@@ -19,4 +19,6 @@ public interface DrugService {
 
     DrugsCartDTO getMyDrug(int drugNo);
 
+    List<DrugDTO> getMyDrugList(DrugDTO drugDTO);
+
 }

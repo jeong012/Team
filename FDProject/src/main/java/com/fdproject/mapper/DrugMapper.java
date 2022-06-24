@@ -30,4 +30,6 @@ public interface DrugMapper {
 
     List<DrugsCartDTO> myDrugList(String id);
 
+    int selectMyDrugTotalCount(DrugDTO drugDTO);
+
 }
