@@ -11,23 +11,10 @@
 			    <div class="row">
 					<div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
 		     	 		<ul class="border-top"></ul>
-	    				<ul class="list-unstyled ps-0">
-	      					<li class="mb-1">
-		       					<form method="get" th:action="@{/mypage/disease.do}">
-			       					<button class="dropdown-none-toggle" type="submit">
-			         					질병 관리
-			       					</button>
-		       					</form>
-		     				</li>
-		     				<li class="mb-1">
-		       					<form method="get" th:action="@{/mypage/drug.do}">
-			       					<button class="dropdown-none-toggle" style="color:blue;" type="submit">
-			         					약 관리
-			       					</button>
-		       					</form>
-		     				</li>
-		     				
-	    				</ul>
+	    				<th:block layout:fragment="mypagebar">
+			                <div th:replace="fragments/common :: mypagebar">
+			                </div>
+			            </th:block>
 	  				</div>
 			    
 			        <div class="col-lg-10 mx-auto" style="margin-top: 15px;">
@@ -42,7 +29,7 @@
                                     <div class="media-body order-2 order-lg-1">
                                         <img src="https://i.imgur.com/KFojDGa.jpg" id="drug-image">
                                         <div>
-                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline" th:text="${item.drugName}"></h5>
+                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a th:href="@{/drug/myview.do(no=${item.drugNo},id=${not #strings.isEmpty(id) ? id : ''})}" th:text="${item.drugName}"></a></h5>
                                             <p class="font-italic text-muted mb-0 small" style="display: inline-block"
                                                th:text="${item.manufacturer}"></p>
                                         </div>

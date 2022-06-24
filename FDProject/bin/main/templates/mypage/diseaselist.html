@@ -6,32 +6,24 @@
 	<div layout:fragment="content">
 		<section id="list-page">
      	 <div class="container">
-	
 			<div class="container py-3">
 			    <div class="row">
-					<div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
+					<div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">	
 		     	 		<ul class="border-top"></ul>
-	    				<ul class="list-unstyled ps-0">
-	      					<li class="mb-1">
-		       					<form method="get" th:action="@{/mypage/disease.do}">
-			       					<button class="dropdown-none-toggle" style="color:blue;" type="submit">
-			         					질병 관리
-			       					</button>
-		       					</form>
-		     				</li>
-		     				<li class="mb-1">
-		       					<form method="get" th:action="@{/mypage/drug.do}">
-			       					<button class="dropdown-none-toggle" type="submit">
-			         					약 관리
-			       					</button>
-		       					</form>
-		     				</li>
-		     				
-	    				</ul>
+		     	 		<th:block layout:fragment="mypagebar">
+			                <div th:replace="fragments/common :: mypagebar">
+			                <script>
+			                function changecolor(){
+			                	 var x = document.getElementById("mydisease");
+			                     x.style="color:red;"
+			                }
+			                </script>
+			                </div>
+			            </th:block>
 	  				</div>
-			    
+						    
 			        <div class="col-lg-10 mx-auto" style="margin-top: 15px;">
-			        <div class="pagetitle m-2">질병 관리 페이지</div>
+					<div class="pagetitle m-2">질병 관리 페이지</div>
 			            <!-- List group-->
 			            <ul class="list-group shadow m-2" th:if="${not #lists.isEmpty(diseaseList)}"
 			                	th:each="item : ${diseaseList}">

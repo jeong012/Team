@@ -113,5 +113,44 @@
 	<form method="get" action="/recipe/writeForm">
 		<button type="submit" class="btn btn-primary btn-write">레시피 작성</button>
 	</form>
-</div>				
+</div>
+<div th:fragment="mypagebar">
+	<ul class="list-unstyled ps-0" >
+	<li class="mb-1" id="colorCont" >
+		<form method="get" th:action="@{/mypage/drug.do}">
+			<button class="dropdown-none-toggle" type="submit">
+					회원 정보 수정
+			</button>
+		</form>
+		</li>
+		<li class="mb-1">
+			<form method="get" th:action="@{/mypage/drug.do}">
+				<button class="dropdown-none-toggle" type="submit">
+ 					약 관리
+				</button>
+			</form>
+		</li>
+		<li class="mb-1">
+			<form method="get" th:action="@{/mypage/disease.do}">
+				<button class="dropdown-none-toggle" type="submit" id="mydisease" onclick="changecolor()">
+ 					질병 관리
+				</button>
+			</form>
+		</li>
+		<li class="mb-1">
+          <button class="dropdown-toggle" data-bs-toggle="collapse"
+                  data-bs-target="#userDrug-collapse" aria-expanded="false">
+              찜 관리
+          </button>
+          <div class="collapse" id="userDrug-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li ><a th:href="@{/drug/list.do}" class="link-dark d-inline-flex text-decoration-none rounded">
+                      약 찜 리스트</a></li>
+                  <li><a th:href="@{/drug/list.do}" class="link-dark d-inline-flex text-decoration-none rounded">
+                      레시피 찜 리스트</a></li>
+              </ul>
+          </div>
+       </li>
+	</ul>
+	</div>	
 </html>

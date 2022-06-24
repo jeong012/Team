@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fdproject.constant.Method;
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.service.DiseaseService;
@@ -30,11 +31,9 @@ public class MyPageController extends UiUtils {
 	public String getDiseaseList(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model){
 		
 		 if (GrammerUtils.isStringEmpty(id) == true) {
-			 	id = "test";
 			 	List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
 	            model.addAttribute("diseaseList", diseaseList);
-	            model.addAttribute("id", id);
-	            //return "redirect:/";
+	            return showMessageWithRedirect("접근 권한이 없습니다.", "/", Method.GET, null, model);
 	        } else {
 	            List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
 	            model.addAttribute("diseaseList", diseaseList);
@@ -47,12 +46,10 @@ public class MyPageController extends UiUtils {
 	@GetMapping(value="/drug.do")
 	public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, Model model){
 		
-		if (GrammerUtils.isStringEmpty(id) == true) {
-		 	id = "test";
+		if (GrammerUtils.isStringEmpty(id) == true) {		
 		 	List<DrugDTO> userdrugList = drugService.getUserDrugList(id, params);
             model.addAttribute("userdrugList", userdrugList);
-            model.addAttribute("id", id);
-            //return "redirect:/";
+            return showMessageWithRedirect("접근 권한이 없습니다.", "/", Method.GET, null, model);
         } else {
         	List<DrugDTO> userdrugList = drugService.getUserDrugList(id, params);
             model.addAttribute("userdrugList", userdrugList);
@@ -60,6 +57,5 @@ public class MyPageController extends UiUtils {
         }
 		return "mypage/druglist";
 	}
-	
 
 }
