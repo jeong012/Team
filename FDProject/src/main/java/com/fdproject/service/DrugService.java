@@ -22,7 +22,6 @@ public interface DrugService {
 
     boolean addMyDrug(DrugsCartDTO cartDTO);
 
-
     boolean deleteMyDrug(DrugsCartDTO cartDTO);
 
     DrugsCartDTO getMyDrug(int drugNo);

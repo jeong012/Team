@@ -306,7 +306,7 @@
                                         	<h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a th:href="@{/drug/myview.do(no=${item.drugNo},id=${not #strings.isEmpty(id) ? id : ''})}" th:onClick="window.open(this.href,'','width=900, height=800'); return false;" th:text="${item.drugName}"></a></h5>
                                         </div>
                                         <div th:unless="${not #strings.isEmpty(id)}">                                                              
-                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a th:href="@{/user/loginForm}" th:onClick="window.open(this.href,'','width=900, height=800'); return false;" th:text="${item.drugName}"></a></h5>  
+                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a th:href="@{/user/loginForm.do}" th:onClick="window.open(this.href,'','width=900, height=800'); return false;" th:text="${item.drugName}"></a></h5>  
                                         </div>
                                         
                                             <p class="font-italic text-muted mb-0 small" style="display: inline-block"

@@ -31,8 +31,7 @@ public class MyPageController extends UiUtils {
 	public String getDiseaseList(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model){
 		
 		 if (GrammerUtils.isStringEmpty(id) == true) {
-			 	List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
-	            model.addAttribute("diseaseList", diseaseList);
+			 	
 	            return showMessageWithRedirect("접근 권한이 없습니다.", "/", Method.GET, null, model);
 	        } else {
 	            List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
@@ -47,8 +46,6 @@ public class MyPageController extends UiUtils {
 	public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, Model model){
 		
 		if (GrammerUtils.isStringEmpty(id) == true) {		
-		 	List<DrugDTO> userdrugList = drugService.getUserDrugList(id, params);
-            model.addAttribute("userdrugList", userdrugList);
             return showMessageWithRedirect("접근 권한이 없습니다.", "/", Method.GET, null, model);
         } else {
         	List<DrugDTO> userdrugList = drugService.getUserDrugList(id, params);
