@@ -110,4 +110,13 @@ public class DrugServiceImpl implements DrugService {
     public DrugsCartDTO getMyDrug(int drugNo) {
         return drugMapper.getMyDrug(drugNo);
     }
+    
+    /** 회원가입 - 약 리스트 조회 사용*/
+	public List<DrugDTO> getJoinDrugList() {
+		
+        List<DrugDTO> drugList = new ArrayList<>();
+        drugList = drugMapper.joinDrugList();
+        
+		return drugList;
+	}
 }
