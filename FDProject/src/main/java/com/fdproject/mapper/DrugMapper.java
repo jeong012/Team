@@ -23,7 +23,16 @@ public interface DrugMapper {
 
     List<DrugDTO> getMyDrugList(DrugDTO drugDTO);
 
-    int addCart(DrugsCartDTO drugsCartDTO);
+    int addCart(DrugsCartDTO cartDTO);
+
+    int deleteCart(DrugsCartDTO cartDTO);
+
+    DrugsCartDTO getMyDrug(int drugNo);
+
+    List<DrugsCartDTO> myDrugList(String id);
+
+    /** 회원가입 - 약 리스트 조회 사용*/
+    List<DrugDTO> joinDrugList();
 
 	List<UserDrugDTO> getUserDrug(UserDrugDTO userDrug);
 

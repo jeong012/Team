@@ -13,13 +13,20 @@ public interface DrugService {
     List<DrugDTO> getDrugList(String id, DrugDTO params, String takeYn);
     
     DrugDTO getDrug(int drugNo);
-    
-    String addDrugCart(DrugsCartDTO cartDTO);
-    
-    /*상비약 리스트*/
-    List<DrugDTO> getHouseDrugList(DrugDTO params);
+
     
     /*마이페이지 약 리스트*/
 	List<DrugDTO> getUserDrugList(String id, DrugDTO params);
 
+    List<DrugDTO> getHouseDrugList(DrugDTO params);
+
+    boolean addMyDrug(DrugsCartDTO cartDTO);
+
+
+    boolean deleteMyDrug(DrugsCartDTO cartDTO);
+
+    DrugsCartDTO getMyDrug(int drugNo);
+    
+    /** 회원가입 - 약 리스트 조회 사용*/
+    List<DrugDTO> getJoinDrugList();
 }

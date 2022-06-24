@@ -17,8 +17,17 @@
         <result property="keyword" column="keyword"/>
     </resultMap>
 
+    <resultMap id="myDrug" type="DrugsCartDTO">
+        <id property="drugCartNo" column="DRUG_CART_NO"/>
+        <result property="drugNo" column="DRUG_NO"/>
+        <result property="userId" column="USER_ID"/>
+    </resultMap>
+
     <sql id="drugColumns">
-        d.DRUG_NO,
+        d
+        .
+        DRUG_NO
+        ,
         d.DRUG_NAME,
         d.MANUFACTURER,
         d.BASIS,
@@ -85,16 +94,15 @@
         where
         1=1
         <include refid="riskDrug"/>
-	    <include refid="CommonMapper.search_o"/>
+        <include refid="CommonMapper.search_o"/>
     </select>
 
     <select id="selectKeywords" parameterType="UserDrugDTO" resultType="String">
-        select
-        d.KEYWORD
-        from
-        DRUGS d, USER_DRUGS u
+        select d.KEYWORD
+        from DRUGS d,
+             USER_DRUGS u
         where d.DRUG_NO = u.DRUG_NO
-        and u.USER_ID = #{userId}
+          and u.USER_ID = #{userId}
     </select>
 
     <select id="housedrugList" parameterType="DrugDTO" resultMap="drug">
@@ -130,12 +138,37 @@
         <include refid="CommonMapper.pagingFooter"/>
     </select>
 
-    <insert id="addCart">
-        <selectKey keyProperty="userDrugNo" resultType="int" order="BEFORE">
-            select SEQ_DRUGS_CART_NO_NO.NEXTVAL from dual
+    <select id="getMyDrug" parameterType="int" resultMap="myDrug">
+        select
+            c.DRUG_CART_NO,
+            c.DRUG_NO,
+            c.USER_ID
+        from
+            DRUGS_CART c,
+            DRUGS d
+        where
+            c.DRUG_NO = d.DRUG_NO
+          and
+            c.DRUG_NO = #{drugNo}
+    </select>
+
+    <select id="myDrugList" parameterType="String" resultMap="myDrug">
+        select
+            DRUG_CART_NO,
+            DRUG_NO,
+            USER_ID
+        from
+            DRUGS_CART
+        where
+            USER_ID = #{userId}
+    </select>
+
+    <insert id="addCart" parameterType="DrugsCartDTO">
+        <selectKey keyProperty="drugCartNo" resultType="int" order="BEFORE">
+            select SEQ_DRUGS_CART_NO.NEXTVAL from dual
         </selectKey>
-        insert into DRUGS_CART (DRUG_CART_NO, DRUG_NO , USER_ID)
-        values (#{userDrugNo}, #{drugNO}, #{userId})
+        insert into DRUGS_CART (DRUG_CART_NO, DRUG_NO, USER_ID)
+        values (#{drugCartNo}, #{drugNo}, #{userId})
     </insert>
     
     
@@ -155,4 +188,19 @@
     </select>
     
     
+    <delete id="deleteCart">
+        delete
+        from DRUGS_CART
+        where DRUG_NO = #{drugNo}
+    </delete>
+    
+    <select id="joinDrugList" resultMap="drug">
+        <![CDATA[
+	       	SELECT DRUG_NO, DRUG_NAME
+	        FROM DRUGS
+	        WHERE 1=1
+	        ORDER BY DRUG_NO
+        ]]>
+    </select>
+
 </mapper>
