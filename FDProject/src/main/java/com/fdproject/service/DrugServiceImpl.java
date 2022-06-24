@@ -116,9 +116,8 @@ public class DrugServiceImpl implements DrugService {
     public List<DrugDTO> getMyDrugList(DrugDTO params) {
         List<DrugDTO> drugList = Collections.emptyList();
 
-        DrugsCartDTO cartDTO = DrugsCartDTO.builder()
-                .userId("test")
-                .build();
+        DrugsCartDTO cartDTO = new DrugsCartDTO();
+        cartDTO.setUserId("test");
         params.setCartDTO(cartDTO);
 
         int drugTotalCount = drugMapper.selectMyDrugTotalCount(params);
