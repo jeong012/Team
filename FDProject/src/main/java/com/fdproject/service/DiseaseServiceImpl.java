@@ -1,18 +1,10 @@
 package com.fdproject.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.fdproject.domain.DiseaseDTO;
-import com.fdproject.mapper.DiseaseMapper;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.StringUtils;
 
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.UserDiseaseDTO;
@@ -63,5 +55,14 @@ public class DiseaseServiceImpl implements DiseaseService {
         return diseaseList;
 	}
 
+    /** 회원가입 - 질병 리스트 조회 사용*/
+	@Override
+	public List<DiseaseDTO> getJoinDiseaseList() {
+		
+        List<DiseaseDTO> diseaseList = new ArrayList<>();
+        diseaseList = diseaseMapper.joinDiseaseList();
+        
+		return diseaseList;
+	}
 
 }

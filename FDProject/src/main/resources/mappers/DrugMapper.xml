@@ -176,5 +176,14 @@
         from DRUGS_CART
         where DRUG_NO = #{drugNo}
     </delete>
+    
+    <select id="joinDrugList" resultMap="drug">
+        <![CDATA[
+	       	SELECT DRUG_NO, DRUG_NAME
+	        FROM DRUGS
+	        WHERE 1=1
+	        ORDER BY DRUG_NO
+        ]]>
+    </select>
 
 </mapper>
