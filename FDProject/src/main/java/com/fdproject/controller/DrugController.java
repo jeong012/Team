@@ -52,9 +52,9 @@ public class DrugController extends UiUtils {
         return "drug/view";
     }
 
-    @GetMapping(value = "/search")
-    public @ResponseBody String search() {
-        List<String> keywords = drugService.getSearchKeyword();
+    @GetMapping(value = "/search", produces = "text/plain;charset=UTF-8")
+    public @ResponseBody String search(@RequestParam(value = "str", required = false) String str) {
+        List<String> keywords = drugService.getSearchKeyword(str);
 
         Gson gson = new Gson();
         return gson.toJson(keywords);

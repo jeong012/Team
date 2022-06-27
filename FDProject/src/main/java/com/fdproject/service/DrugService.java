@@ -21,7 +21,7 @@ public interface DrugService {
 
     List<DrugDTO> getMyDrugList(DrugDTO drugDTO);
 
-    List<String> getSearchKeyword();
+    List<String> getSearchKeyword(String str);
     
     /** 회원가입 - 약 리스트 조회 사용*/
     List<DrugDTO> getJoinDrugList();

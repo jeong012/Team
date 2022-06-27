@@ -132,8 +132,8 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    public List<String> getSearchKeyword() {
-        return drugMapper.getSearchKeyword();
+    public List<String> getSearchKeyword(String str) {
+        return drugMapper.getSearchKeyword(str);
     }
 
     /** 회원가입 - 약 리스트 조회 사용*/

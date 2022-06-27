@@ -173,9 +173,10 @@
         <include refid="CommonMapper.search_o"/>
     </select>
 
-    <select id="getSearchKeyword" resultType="String">
+    <select id="getSearchKeyword" parameterType="String"  resultType="String">
         select SEARCH_SYMPTOM keyword
         from SEARCH
+        where SEARCH_SYMPTOM like '%' || #{searchKeyword} || '%'
         order by SEARCH_SYMPTOM asc
     </select>
 
