@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fdproject.mapper.UserMapper">
+
+    <resultMap id="userDisease" type="UserDiseaseDTO">
+        <id property="userDiseaseNo" column="user_disease_no"/>
+        <result property="diseaseNo" column="disease_no"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <resultMap id="userDrug" type="UserDrugDTO">
+        <id property="userDrugNo" column="user_drug_no"/>
+        <result property="drugNo" column="drug_no"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+    
+    <sql id="userDiseaseColumns">
+        USER_DISEASE_NO,
+        DISEASE_NO,
+        USER_ID
+    </sql>
+    
+    <sql id="userDrugColumns">
+        USER_DRUG_NO,
+        DRUG_NO,
+        USER_ID
+    </sql>
+
+    <insert id="insertUserDisease">
+        <selectKey keyProperty="userDiseaseNo" resultType="int" order="BEFORE">
+            SELECT SEQ_USER_DISEASES_NO.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO USER_DISEASES (USER_DISEASE_NO, DISEASE_NO, USER_ID)
+		VALUES(#{userDiseaseNo}, #{diseaseNo}, #{userId})
+    </insert>
+
+    <insert id="insertUserDrug">
+        <selectKey keyProperty="userDrugNo" resultType="int" order="BEFORE">
+            SELECT SEQ_USER_DRUGS_NO.NEXTVAL FROM DUAL
+        </selectKey>
+		INSERT INTO USER_DRUGS (USER_DRUG_NO, DRUG_NO, USER_ID)
+		VALUES(#{userDrugNo}, #{drugNo}, #{userId})
+    </insert>
+    
+</mapper>

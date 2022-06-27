@@ -2,6 +2,7 @@ package com.fdproject.controller;
 
 import java.util.List;
 
+import com.fdproject.service.DrugService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,6 @@ import com.fdproject.constant.Method;
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.service.DiseaseService;
-import com.fdproject.service.DrugService;
 import com.fdproject.util.GrammerUtils;
 import com.fdproject.util.UiUtils;
 
@@ -37,9 +37,7 @@ public class MyPageController extends UiUtils {
 	//내 질병 관리
 	@GetMapping(value="/disease.do")
 	public String getDiseaseList(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model){
-		id="[Manager]";
 		 if (GrammerUtils.isStringEmpty(id) == true) {
-			 	
 	            return showMessageWithRedirect("접근 권한이 없습니다.", "/", Method.GET, null, model);
 	        } else {
 	            List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
@@ -53,7 +51,6 @@ public class MyPageController extends UiUtils {
 	//내 복용약 관리
 	@GetMapping(value="/drug.do")
 	public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, Model model){
-		id="[Manager]";
 		if (GrammerUtils.isStringEmpty(id) == true) {		
             return showMessageWithRedirect("접근 권한이 없습니다.", "/", Method.GET, null, model);
         } else {
@@ -63,5 +60,13 @@ public class MyPageController extends UiUtils {
         }
 		return "mypage/druglist";
 	}
+	
+	@GetMapping(value = "/myDrug.do")
+	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model) {
+		List<DrugDTO> drugList = drugService.getMyDrugList(params);
+		model.addAttribute("drugList", drugList);
+		return "mypage/myDrugList";
+	}
+	
 
 }

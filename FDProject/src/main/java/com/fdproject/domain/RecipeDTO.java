@@ -37,4 +37,7 @@ public class RecipeDTO extends CommonDTO {
 
 	/** 삭제여부 */
 	private String deleteYn;
+	
+	/** 레시피 카트 객체 */
+	private RecipesCartDTO cartDTO;
 }

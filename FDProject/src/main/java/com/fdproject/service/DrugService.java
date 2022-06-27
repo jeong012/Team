@@ -25,6 +25,10 @@ public interface DrugService {
     boolean deleteMyDrug(DrugsCartDTO cartDTO);
 
     DrugsCartDTO getMyDrug(int drugNo);
+
+    List<DrugDTO> getMyDrugList(DrugDTO drugDTO);
+
+    List<String> getSearchKeyword();
     
     /** 회원가입 - 약 리스트 조회 사용*/
     List<DrugDTO> getJoinDrugList();

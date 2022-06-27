@@ -1,5 +1,6 @@
 package com.fdproject.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -49,11 +50,11 @@ public class RecipeController {
 
 	@GetMapping(value="/view") 
 	public String getRecipe(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Model model){
-		
+				
 		//recipe_info
 		RecipeDTO Recipe_info = recipeService.getRecipeInfo(Recipe_No);
 		model.addAttribute("Recipe_info", Recipe_info);
-		
+		System.out.println("Recipe_info" + Recipe_info);
 		//foodIngredients split해서 배열에 차곡차곡 넣음 
 		String recipe_ingredients = Recipe_info.getFoodIngredients();		
 		String[] ri_split = recipe_ingredients.split("\n");		
@@ -94,6 +95,8 @@ public class RecipeController {
 		
 		//조회수 관련 - 구현 완료
 		recipeService.uphit(Recipe_No);
+		
+		
 		return "recipe/view";
 	}
 

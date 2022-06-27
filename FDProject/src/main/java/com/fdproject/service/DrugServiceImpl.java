@@ -18,11 +18,12 @@ import com.fdproject.util.GrammerUtils;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class DrugServiceImpl implements DrugService {
 
     private final DrugMapper drugMapper;
-
+    @Override
     public List<DrugDTO> getDrugList(String id, DrugDTO params, String takeYn) {
         List<DrugDTO> drugList = Collections.emptyList();
 
@@ -78,7 +79,7 @@ public class DrugServiceImpl implements DrugService {
     	}
     	
     	return housedrugList;
-    }
+}
 
     public DrugDTO getDrug(int drugNo) {
         DrugDTO drug = drugMapper.getDrugDetail(drugNo);
@@ -86,7 +87,6 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    @Transactional
     public boolean addMyDrug(DrugsCartDTO cartDTO) {
         cartDTO.setUserId("test");
         int count = 0;
@@ -145,16 +145,41 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     public DrugsCartDTO getMyDrug(int drugNo) {
+
         return drugMapper.getMyDrug(drugNo);
     }
-    
+
+    @Override
+    public List<DrugDTO> getMyDrugList(DrugDTO params) {
+        List<DrugDTO> drugList = Collections.emptyList();
+
+        DrugsCartDTO cartDTO = new DrugsCartDTO();
+        cartDTO.setUserId("test");
+        params.setCartDTO(cartDTO);
+
+        int drugTotalCount = drugMapper.selectMyDrugTotalCount(params);
+
+        PaginationInfo paginationInfo = new PaginationInfo(params);
+        paginationInfo.setTotalRecordCount(drugTotalCount);
+
+        params.setPaginationInfo(paginationInfo);
+
+        drugList = drugMapper.getMyDrugList(params);
+        return drugList;
+    }
+
+    @Override
+    public List<String> getSearchKeyword() {
+        return drugMapper.getSearchKeyword();
+    }
+
     /** 회원가입 - 약 리스트 조회 사용*/
-	public List<DrugDTO> getJoinDrugList() {
-		
+    @Override
+    public List<DrugDTO> getJoinDrugList() {
+
         List<DrugDTO> drugList = new ArrayList<>();
         drugList = drugMapper.joinDrugList();
-        
-		return drugList;
 
-	}
+        return drugList;
+    }
 }
