@@ -2,7 +2,6 @@ package com.fdproject.mapper;
 
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.DrugsCartDTO;
-import com.fdproject.domain.SearchDTO;
 import com.fdproject.domain.UserDrugDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -31,8 +30,7 @@ public interface DrugMapper {
 
     List<DrugsCartDTO> myDrugList(String id);
 
-    int selectMyDrugTotalCount(DrugDTO drugDTO);
-
-    List<String> getSearchKeyword();
+    /** 회원가입 - 약 리스트 조회 사용*/
+    List<DrugDTO> joinDrugList();
 
 }
