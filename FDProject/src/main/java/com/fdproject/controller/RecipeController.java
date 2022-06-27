@@ -34,13 +34,13 @@ public class RecipeController {
 	private DiseaseService diseaseService;
 	
 	@GetMapping(value="/list")
-	public String getRecipeList(@ModelAttribute("params") RecipeDTO params, @RequestParam(value = "recipe_type", required = false) String recipe_type,
+	public String getRecipeList(@ModelAttribute("params") RecipeDTO params,
 			Model model){					 				
 		// 레시피 리스트 뽑아오기	
 		List<RecipeDTO> Recipe_List = recipeService.getRecipeList(params);		
 		model.addAttribute("Recipe_List", Recipe_List);
 		System.out.println("Recipe_List:" + Recipe_List);
-		//disease_list 전부 가져오는 객체
+		//disease_list 상위 5개 가져오는 객체
 		List<DiseaseDTO> Disease_List_Five = diseaseService.getDiseaseListFive();
 		model.addAttribute("Disease_List_Five", Disease_List_Five);		
 		//System.out.println("Disease_List_Five:" + Disease_List_Five);

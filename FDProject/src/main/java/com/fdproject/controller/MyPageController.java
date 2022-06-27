@@ -57,6 +57,15 @@ public class MyPageController extends UiUtils {
 
 	@GetMapping(value = "/myDrug.do")
 	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model) {
+		System.out.println("params:" + params);
+		List<DrugDTO> drugList = drugService.getMyDrugList(params);
+		System.out.println("params:" + params);
+		model.addAttribute("drugList", drugList);
+		return "mypage/myDrugList";
+	}
+	
+	@GetMapping(value = "/myRecipe.do")
+	public String getMyRecipeList(@ModelAttribute(value = "params") DrugDTO params, Model model) {
 		List<DrugDTO> drugList = drugService.getMyDrugList(params);
 		model.addAttribute("drugList", drugList);
 		return "mypage/myDrugList";
