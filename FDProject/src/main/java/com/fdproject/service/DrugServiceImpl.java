@@ -15,11 +15,12 @@ import com.fdproject.util.GrammerUtils;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class DrugServiceImpl implements DrugService {
 
     private final DrugMapper drugMapper;
-
+    @Override
     public List<DrugDTO> getDrugList(String id, DrugDTO params, String takeYn) {
         List<DrugDTO> drugList = Collections.emptyList();
 
@@ -63,17 +64,17 @@ public class DrugServiceImpl implements DrugService {
 
         return drugList;
     }
-    
-    public List<DrugDTO> getHouseDrugList(DrugDTO params){
-    	List<DrugDTO> housedrugList = Collections.emptyList();
-    	
-    	int drugTotalCount = drugMapper.selectDrugTotalCount(params);
-    	
-    	if(drugTotalCount>0) {
-    		housedrugList = drugMapper.housedrugList(params);
-    	}
-    	
-    	return housedrugList;
+    @Override
+    public List<DrugDTO> getHouseDrugList(DrugDTO params) {
+        List<DrugDTO> housedrugList = Collections.emptyList();
+
+        int drugTotalCount = drugMapper.selectDrugTotalCount(params);
+
+        if (drugTotalCount > 0) {
+            housedrugList = drugMapper.housedrugList(params);
+        }
+
+        return housedrugList;
     }
 
     public DrugDTO getDrug(int drugNo) {
@@ -82,7 +83,6 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    @Transactional
     public boolean addMyDrug(DrugsCartDTO cartDTO) {
         cartDTO.setUserId("test");
         int count = 0;
@@ -108,15 +108,31 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     public DrugsCartDTO getMyDrug(int drugNo) {
+
         return drugMapper.getMyDrug(drugNo);
     }
-    
-    /** 회원가입 - 약 리스트 조회 사용*/
-	public List<DrugDTO> getJoinDrugList() {
-		
-        List<DrugDTO> drugList = new ArrayList<>();
-        drugList = drugMapper.joinDrugList();
-        
-		return drugList;
-	}
+
+    @Override
+    public List<DrugDTO> getMyDrugList(DrugDTO params) {
+        List<DrugDTO> drugList = Collections.emptyList();
+
+        DrugsCartDTO cartDTO = new DrugsCartDTO();
+        cartDTO.setUserId("test");
+        params.setCartDTO(cartDTO);
+
+        int drugTotalCount = drugMapper.selectMyDrugTotalCount(params);
+
+        PaginationInfo paginationInfo = new PaginationInfo(params);
+        paginationInfo.setTotalRecordCount(drugTotalCount);
+
+        params.setPaginationInfo(paginationInfo);
+
+        drugList = drugMapper.getMyDrugList(params);
+        return drugList;
+    }
+
+    @Override
+    public List<String> getSearchKeyword() {
+        return drugMapper.getSearchKeyword();
+    }
 }

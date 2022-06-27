@@ -105,6 +105,16 @@
           and u.USER_ID = #{userId}
     </select>
 
+    <select id="housedrugList" parameterType="DrugDTO" resultMap="drug">
+        select
+        <include refid="drugColumns"/>
+        from
+        drugs d
+        where
+        d.HOUSE_YN = 'Y'
+    </select>
+    
+
     <select id="getDrugDetail" parameterType="DrugDTO" resultMap="drug">
         select
         <include refid="drugColumns"/>
@@ -114,15 +124,15 @@
         d.DRUG_NO = #{drugNo}
     </select>
 
-    <select id="getMyDrugList" parameterType="DrugsCartDTO" resultMap="drug">
+    <select id="getMyDrugList" parameterType="DrugDTO" resultMap="drug">
         <include refid="CommonMapper.pagingHeader"/>
         select
-        c.DRUG_CART_NO
+        c.DRUG_CART_NO,
         <include refid="drugColumns"/>
         from
         DRUGS d, DRUGS_CART c
         where d.DRUG_NO = c.DRUG_NO
-        and c.USER_ID = #{userId}
+        and c.USER_ID = #{cartDTO.userId}
         <include refid="CommonMapper.search_o"/>
         order by drug_name asc
         <include refid="CommonMapper.pagingFooter"/>
@@ -151,6 +161,22 @@
             DRUGS_CART
         where
             USER_ID = #{userId}
+    </select>
+
+    <select id="selectMyDrugTotalCount" parameterType="DrugDTO" resultType="int">
+        select
+        COUNT(<![CDATA[*]]>)
+        from DRUGS_CART c, DRUGS d
+        where
+        d.DRUG_NO = c.DRUG_NO
+        and USER_ID = #{cartDTO.userId}
+        <include refid="CommonMapper.search_o"/>
+    </select>
+
+    <select id="getSearchKeyword" resultType="String">
+        select SEARCH_SYMPTOM keyword
+        from SEARCH
+        order by SEARCH_SYMPTOM asc
     </select>
 
     <insert id="addCart" parameterType="DrugsCartDTO">

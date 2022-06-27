@@ -1,6 +1,7 @@
 package com.fdproject.domain;
 
 import com.fdproject.paging.Criteria;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -85,5 +86,10 @@ public class DrugDTO extends CommonDTO {
      */
     private String takeYn;
         
+
+    /**
+     * 관심 약품
+     */
+    private DrugsCartDTO cartDTO;
 
 }

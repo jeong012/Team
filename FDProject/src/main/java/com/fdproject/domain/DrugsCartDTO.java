@@ -1,5 +1,6 @@
 package com.fdproject.domain;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
