@@ -13,6 +13,12 @@ public interface DrugService {
     DrugDTO getDrug(int drugNo);
     List<DrugDTO> getHouseDrugList(DrugDTO params);
 
-    String addDrugCart(DrugsCartDTO cartDTO);
+    boolean addMyDrug(DrugsCartDTO cartDTO);
 
+    boolean deleteMyDrug(DrugsCartDTO cartDTO);
+
+    DrugsCartDTO getMyDrug(int drugNo);
+    
+    /** 회원가입 - 약 리스트 조회 사용*/
+    List<DrugDTO> getJoinDrugList();
 }
