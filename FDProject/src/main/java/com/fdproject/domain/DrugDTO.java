@@ -92,4 +92,7 @@ public class DrugDTO extends CommonDTO {
      */
     private DrugsCartDTO cartDTO;
 
+    
+    private String Cart;
+
 }
