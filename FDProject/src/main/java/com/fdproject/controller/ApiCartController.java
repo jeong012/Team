@@ -1,29 +1,46 @@
 package com.fdproject.controller;
 
-import com.fdproject.domain.DrugsCartDTO;
-import com.fdproject.service.DrugService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fdproject.domain.DrugsCartDTO;
+import com.fdproject.domain.RecipesCartDTO;
+import com.fdproject.service.DrugService;
+import com.fdproject.service.RecipeService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/cart")
 @RequiredArgsConstructor
 public class ApiCartController {
     private final DrugService drugService;
+    private final RecipeService recipeService;
 
-    @PostMapping("/add")
-    public @ResponseBody boolean insert(@ModelAttribute DrugsCartDTO cartDTO) {
+    @PostMapping("/addDrug")
+    public @ResponseBody boolean insert1(@ModelAttribute DrugsCartDTO cartDTO) {
 
         return drugService.addMyDrug(cartDTO);
     }
 
-    @PostMapping("/delete")
-    public @ResponseBody boolean delete(@ModelAttribute DrugsCartDTO cartDTO) {
+    @PostMapping("/deleteDrug")
+    public @ResponseBody boolean delete1(@ModelAttribute DrugsCartDTO cartDTO) {
 
         return drugService.deleteMyDrug(cartDTO);
+    }
+    
+    @PostMapping("/addRecipe")
+    public @ResponseBody boolean insert2(@ModelAttribute RecipesCartDTO cartDTO) {
+
+        return recipeService.addMyRecipe(cartDTO);
+    }
+
+    @PostMapping("/deleteRecipe")
+    public @ResponseBody boolean delete2(@ModelAttribute RecipesCartDTO cartDTO) {
+
+        return recipeService.deleteMyRecipe(cartDTO);
     }
 }

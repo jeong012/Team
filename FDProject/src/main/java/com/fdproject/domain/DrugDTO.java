@@ -84,5 +84,6 @@ public class DrugDTO extends CommonDTO {
      * 복용 가능 여부
      */
     private String takeYn;
+        
 
 }

@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fdproject.domain.DrugsCartDTO;
 import com.fdproject.domain.RecipeDTO;
-
-
+import com.fdproject.domain.RecipesCartDTO;
 import com.fdproject.mapper.RecipeMapper;
 import com.fdproject.paging.PaginationInfo;
 
@@ -39,13 +39,39 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
 	@Override
-	public RecipeDTO getRecipeInfo(String Recipe_no) {		
-		return recipeMapper.selectRecipeInfo(Recipe_no);
+	public RecipeDTO getRecipeInfo(String Recipe_no) {
+		RecipeDTO recipeDTO = recipeMapper.selectRecipeInfo(Recipe_no);
+		recipeDTO.setCartDTO(recipeMapper.selectMyRecipe(Recipe_no));
+		return recipeDTO;
 	}
 
 	@Override
 	public Integer uphit(String Recipe_No) {		
 		return recipeMapper.UpdateUphit(Recipe_No);
+	}
+
+	@Override
+	public boolean addMyRecipe(RecipesCartDTO cartDTO) {
+		 cartDTO.setUserId("test");
+	        int count = 0;
+	        List<RecipesCartDTO> list = recipeMapper.myRecipeList(cartDTO.getUserId());
+	        if (!list.isEmpty()) {
+	            for (RecipesCartDTO cart : list) {
+	                if (cart.getRecipeNo() != cartDTO.getRecipeNo()) {
+	                    count = recipeMapper.addCart(cartDTO);
+	                    return (count == 1) ? true : false;
+	                }
+	                count = 0;
+	            }
+	        }
+	        count = recipeMapper.addCart(cartDTO);
+	        return (count == 1) ? true : false;
+	}
+
+	@Override
+	public boolean deleteMyRecipe(RecipesCartDTO cartDTO) {		
+        int count = recipeMapper.deleteCart(cartDTO);
+        return (count == 1) ? true : false;
 	};
 	
 	
