@@ -135,4 +135,14 @@ public class DrugServiceImpl implements DrugService {
     public List<String> getSearchKeyword() {
         return drugMapper.getSearchKeyword();
     }
+
+    /** 회원가입 - 약 리스트 조회 사용*/
+    @Override
+    public List<DrugDTO> getJoinDrugList() {
+
+        List<DrugDTO> drugList = new ArrayList<>();
+        drugList = drugMapper.joinDrugList();
+
+        return drugList;
+    }
 }
