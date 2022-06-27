@@ -21,4 +21,6 @@ public interface DrugService {
 
     List<DrugDTO> getMyDrugList(DrugDTO drugDTO);
 
+    List<String> getSearchKeyword();
+
 }

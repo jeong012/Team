@@ -173,6 +173,12 @@
         <include refid="CommonMapper.search_o"/>
     </select>
 
+    <select id="getSearchKeyword" resultType="String">
+        select SEARCH_SYMPTOM keyword
+        from SEARCH
+        order by SEARCH_SYMPTOM asc
+    </select>
+
     <insert id="addCart" parameterType="DrugsCartDTO">
         <selectKey keyProperty="drugCartNo" resultType="int" order="BEFORE">
             select SEQ_DRUGS_CART_NO.NEXTVAL from dual

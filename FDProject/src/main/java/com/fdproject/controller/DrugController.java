@@ -7,6 +7,7 @@ import com.fdproject.paging.Criteria;
 import com.fdproject.service.DrugService;
 import com.fdproject.util.GrammerUtils;
 import com.fdproject.util.UiUtils;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -49,6 +50,14 @@ public class DrugController extends UiUtils {
         model.addAttribute("myDrug", drugsCartDTO);
 
         return "drug/view";
+    }
+
+    @GetMapping(value = "/search")
+    public @ResponseBody String search() {
+        List<String> keywords = drugService.getSearchKeyword();
+
+        Gson gson = new Gson();
+        return gson.toJson(keywords);
     }
 
     @GetMapping(value ="/pharmacy.do")

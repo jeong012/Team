@@ -130,4 +130,9 @@ public class DrugServiceImpl implements DrugService {
         drugList = drugMapper.getMyDrugList(params);
         return drugList;
     }
+
+    @Override
+    public List<String> getSearchKeyword() {
+        return drugMapper.getSearchKeyword();
+    }
 }
