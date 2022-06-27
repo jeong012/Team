@@ -2404,6 +2404,20 @@ select.list-dt:focus {
   border-color: #106eea;
   background-color: #106eea;
 }
+.ajax2 {
+	  display: inline-block;
+  	  padding-top: 0px;
+  	  padding-right: 5px;
+  	  padding-bottom: 0px;
+  	  padding-left: 5px;
+  	  position: relative;
+  
+  	  border-color: #106eea;
+  	  background-color: #106eea;
+  	  
+      right: 243px;
+      top: -2px;
+}
 
 .cart {
   position: relative;
