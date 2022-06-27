@@ -24,6 +24,7 @@ public class DrugController extends UiUtils {
 
     private final DrugService drugService;
 
+    //약 리스트
     @GetMapping(value = "/list.do")
     public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "takeYn", required = false) String takeYn, Model model) {
   
@@ -39,9 +40,10 @@ public class DrugController extends UiUtils {
         return "drug/list";
     }
 
+    //약 상세정보
     @GetMapping(value = "/view.do")
     public String getDrug(@ModelAttribute(value = "params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "takeYn", required = false) String takeYn, @RequestParam(value = "no", required = false) int drugNo, Model model) {
-    	 
+    	
     	if (GrammerUtils.isStringEmpty(id) == true) {
             return showMessageWithRedirect("접근 권한이 없습니다.", "/drug/list.do", Method.GET, null, model);
         }
@@ -53,26 +55,30 @@ public class DrugController extends UiUtils {
         return "drug/view";
     }
     
+    //회원가입시 입력한 약 정보
     @GetMapping(value = "/myview.do")
     public String getMyDrug(@ModelAttribute(value = "params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "no", required = false) int drugNo, Model model) {
         
     	if (GrammerUtils.isStringEmpty(id) == true) {
-            return showMessageWithRedirect("접근 권한이 없습니다.", "/drug/list.do", Method.GET, null, model);
+            return showMessageWithRedirect("로그인이 필요한 서비스 입니다.", "/user/loginForm.do", Method.GET, null, model);
         }
         DrugDTO mydrug = drugService.getDrug(drugNo);
         model.addAttribute("mydrug", mydrug);
+        
         return "drug/myview";
     }
 
+    //내 주변 약국
     @GetMapping(value ="/pharmacy.do")
     public String getFindPharmacy() {
     	
         return "drug/find_pharmacy";
     }
     
+    //상비약 리스트
     @GetMapping(value="/store.do")
 	public String getFindStore(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, Model model){
-    	
+    	id="[Manager]";
     	List<DrugDTO> housedrugList = drugService.getHouseDrugList(params);
         model.addAttribute("housedrugList", housedrugList);
         model.addAttribute("id", id);

@@ -114,25 +114,26 @@
 		<button type="submit" class="btn btn-primary btn-write">레시피 작성</button>
 	</form>
 </div>
+
 <div th:fragment="mypagebar">
 	<ul class="list-unstyled ps-0" >
-	<li class="mb-1" id="colorCont" >
-		<form method="get" th:action="@{/mypage/drug.do}">
-			<button class="dropdown-none-toggle" type="submit">
+	<li class="mb-1 btn-group-vertical" >
+		<form method="get" th:action="@{/mypage/user.do}">
+			<button class="dropdown-none-toggle" type="submit" id="1">
 					회원 정보 수정
 			</button>
 		</form>
 		</li>
 		<li class="mb-1">
 			<form method="get" th:action="@{/mypage/drug.do}">
-				<button class="dropdown-none-toggle" type="submit">
+				<button class="dropdown-none-toggle active" type="submit" id="2">
  					약 관리
 				</button>
 			</form>
 		</li>
 		<li class="mb-1">
 			<form method="get" th:action="@{/mypage/disease.do}">
-				<button class="dropdown-none-toggle" type="submit" id="mydisease" onclick="changecolor()">
+				<button class="dropdown-none-toggle" type="submit" id="3">
  					질병 관리
 				</button>
 			</form>

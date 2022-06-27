@@ -2317,6 +2317,9 @@ select.list-dt:focus {
   margin-bottom: 10px;
 }
 
+.dropdown-none-toggle:hover {
+	color : blue;
+}
 
 .btn-toggle-nav a {
   padding: .1875rem .5rem;
@@ -2474,6 +2477,8 @@ select.list-dt:focus {
 }
 
 
-
-
+.container .pagetitle {
+	font-size: 30px;
+	font-weight : bold;
+}
 

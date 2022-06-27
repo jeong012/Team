@@ -5,23 +5,15 @@
 	
 	<div layout:fragment="content">
 		<section id="list-page">
-     	 <div class="container">
+     	 <div class="container" data-aos="fade-up">
 			<div class="container py-3">
 			    <div class="row">
 					<div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">	
 		     	 		<ul class="border-top"></ul>
 		     	 		<th:block layout:fragment="mypagebar">
-			                <div th:replace="fragments/common :: mypagebar">
-			                <script>
-			                function changecolor(){
-			                	 var x = document.getElementById("mydisease");
-			                     x.style="color:red;"
-			                }
-			                </script>
-			                </div>
+			                <div th:replace="fragments/common :: mypagebar"></div>
 			            </th:block>
-	  				</div>
-						    
+	  				</div>  
 			        <div class="col-lg-10 mx-auto" style="margin-top: 15px;">
 					<div class="pagetitle m-2">질병 관리 페이지</div>
 			            <!-- List group-->

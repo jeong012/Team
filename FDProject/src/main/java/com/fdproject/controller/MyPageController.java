@@ -27,9 +27,17 @@ public class MyPageController extends UiUtils {
 	private final DiseaseService diseaseService;
 	private final DrugService drugService;
 	
+	@GetMapping(value="/user.do")
+	public String UserModify(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
+		
+		return "mypage/usermodify";
+	}
+	
+	
+	//내 질병 관리
 	@GetMapping(value="/disease.do")
 	public String getDiseaseList(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model){
-		
+		id="[Manager]";
 		 if (GrammerUtils.isStringEmpty(id) == true) {
 			 	
 	            return showMessageWithRedirect("접근 권한이 없습니다.", "/", Method.GET, null, model);
@@ -42,9 +50,10 @@ public class MyPageController extends UiUtils {
 		return "mypage/diseaselist";
 	}
 	
+	//내 복용약 관리
 	@GetMapping(value="/drug.do")
 	public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, Model model){
-		
+		id="[Manager]";
 		if (GrammerUtils.isStringEmpty(id) == true) {		
             return showMessageWithRedirect("접근 권한이 없습니다.", "/", Method.GET, null, model);
         } else {
