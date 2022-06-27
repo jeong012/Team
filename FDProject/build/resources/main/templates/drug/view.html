@@ -139,125 +139,126 @@
 
     <th:block layout:fragment="script">
         <script th:inline="javascript">
-                /*<![CDATA[*/
+            /*<![CDATA[*/
 
-                // var i = 0;
-                // $('img').on('click', function () {
-                //     if (i == 0) {
-                //         $(this).attr('src', '/assets/img/star-fill.svg');
-                //
-                //         i++;
-                //     } else if (i == 1) {
-                //         $(this).attr('src', '/assets/img/star.svg');
-                //         i--;
-                //     }
-                //
-                // });
-                var i = 0;
-                function addCart(myDrug) {
-                    if (myDrug == null && i == 0) {
+            // var i = 0;
+            // $('img').on('click', function () {
+            //     if (i == 0) {
+            //         $(this).attr('src', '/assets/img/star-fill.svg');
+            //
+            //         i++;
+            //     } else if (i == 1) {
+            //         $(this).attr('src', '/assets/img/star.svg');
+            //         i--;
+            //     }
+            //
+            // });
+            var i = 0;
+            function addCart(myDrug) {
+                if (myDrug == null && i == 0) {
 
-                        // json 형식으로 데이터 set
+                    // json 형식으로 데이터 set
 
-                        var params = {
-                            drugNo: $("#drugNo").val(),
+                    var params = {
+                        drugNo: $("#drugNo").val(),
 
-                        }
-
-                        $.ajax({
-                            url: "/cart/add",
-                            type: "post",
-                            data: params,
-                            dataType: "json",
-                            cache: false,
-                            success: function (isExist) {
-                                if (isExist == true) {
-                                    $('.cart').attr('src', '/assets/img/star-fill.svg');
-                                    alert("추가 성공")
-                                    i++;
-                                } else {
-                                    alert("추가 실패");
-                                }
-                            },
-                            error: function (XHR, status, error) {
-                                console.error(status + " : " + error);
-                            }
-                        });
-                    } else if (myDrug == null && i == 1) {
-                        var params = {
-                            drugNo: $("#drugNo").val(),
-                        }
-
-                        $.ajax({
-                            url: "/cart/delete",
-                            type: "post",
-                            data: params,
-                            dataType: "json",
-                            success: function (isExist) {
-                                console.log(isExist);
-                                if (isExist == true) {
-                                    $('.cart').attr('src', '/assets/img/star.svg');
-                                    alert("삭제 성공")
-                                    i--;
-                                } else {
-                                    alert("삭제 실패");
-                                }
-                            },
-                            error: function (XHR, status, error) {
-                                console.error(status + " : " + error);
-                            }
-                        });
-                    } else if (myDrug != null && i == 0) {
-                        var params = {
-                            drugNo: $("#drugNo").val(),
-                        }
-
-                        $.ajax({
-                            url: "/cart/delete",
-                            type: "post",
-                            data: params,
-                            dataType: "json",
-                            success: function (isExist) {
-                                console.log(isExist);
-                                if (isExist == true) {
-                                    $('.cart').attr('src', '/assets/img/star.svg');
-                                    alert("삭제 성공")
-                                    i++;
-                                } else {
-                                    alert("삭제 실패");
-                                }
-                            },
-                            error: function (XHR, status, error) {
-                                console.error(status + " : " + error);
-                            }
-                        });
-                    } else {
-                        var params = {
-                            drugNo: $("#drugNo").val(),
-
-                        }
-
-                        $.ajax({
-                            url: "/cart/add",
-                            type: "post",
-                            data: params,
-                            dataType: "json",
-                            cache: false,
-                            success: function (isExist) {
-                                if (isExist == true) {
-                                    $('.cart').attr('src', '/assets/img/star-fill.svg');
-                                    alert("추가 성공")
-                                    i--;
-                                } else {
-                                    alert("추가 실패");
-                                }
-                            },
-                            error: function (XHR, status, error) {
-                                console.error(status + " : " + error);
-                            }
-                        });
                     }
+
+                    $.ajax({
+                        url: "/cart/addDrug",
+                        type: "post",
+                        data: params,
+                        dataType: "json",
+                        cache: false,
+                        success: function (isExist) {
+                            if (isExist == true) {
+                                $('.cart').attr('src', '/assets/img/star-fill.svg');
+                                alert("추가 성공")
+                                i++;
+                            }else {
+                                alert("추가 실패");
+                            }
+                        },
+                        error: function (XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }
+                    });
+                } else if (myDrug == null && i == 1) {
+                    var params = {
+                        drugNo: $("#drugNo").val(),
+                    }
+
+                    $.ajax({
+                        url: "/cart/deleteDrug",
+                        type: "post",
+                        data: params,
+                        dataType: "json",
+                        success: function (isExist) {
+                            console.log(isExist);
+                            if (isExist == true) {
+                                $('.cart').attr('src', '/assets/img/star.svg');
+                                alert("삭제 성공")
+                                i--;
+                            } else {
+                                alert("삭제 실패");
+                            }
+                        },
+                        error: function (XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }
+                    });
+                } else if (myDrug != null && i == 0) {
+                    var params = {
+                        drugNo: $("#drugNo").val(),
+                    }
+
+                    $.ajax({
+                        url: "/cart/deleteDrug",
+                        type: "post",
+                        data: params,
+                        dataType: "json",
+                        success: function (isExist) {
+                            console.log(isExist);
+                            if (isExist == true) {
+                                $('.cart').attr('src', '/assets/img/star.svg');
+                                alert("삭제 성공")
+                                i++;
+                            } else {
+                                alert("삭제 실패");
+                            }
+                        },
+                        error: function (XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }
+                    });
+                } else {
+                    var params = {
+                        drugNo: $("#drugNo").val(),
+
+                    }
+
+                    $.ajax({
+                        url: "/cart/addDrug",
+                        type: "post",
+                        data: params,
+                        dataType: "json",
+                        cache: false,
+                        success: function (isExist) {
+                            if (isExist == true) {
+                                $('.cart').attr('src', '/assets/img/star-fill.svg');
+                                alert("추가 성공")
+                                i--;
+                            }else {
+                                alert("추가 실패");
+                            }
+                        },
+                        error: function (XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }
+                    });
                 }
+            }
+
             /*]]>*/
         </script>
     </th:block>

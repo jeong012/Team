@@ -42,7 +42,14 @@
       	FROM DISEASES d
 		WHERE d.disease_no = any(${cart})
     </select>
-    
 
+    <select id="joinDiseaseList" resultMap="disease">
+   	 	<![CDATA[
+	        SELECT DISEASE_NO, DISEASE_NAME
+	        FROM DISEASES
+	        WHERE 1=1
+	        ORDER BY DISEASE_NO
+        ]]>
+    </select>
     
 </mapper>
