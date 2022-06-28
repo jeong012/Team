@@ -1,6 +1,5 @@
 package com.fdproject.mapper;
 
-import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.DrugsCartDTO;
 import com.fdproject.domain.UserDrugDTO;
