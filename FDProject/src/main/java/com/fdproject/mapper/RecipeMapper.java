@@ -18,4 +18,7 @@ public interface RecipeMapper {
 	int addCart(RecipesCartDTO cartDTO);
 	int deleteCart(RecipesCartDTO cartDTO);
 	 List<RecipesCartDTO> myRecipeList(String id);
+	 List<RecipeDTO> getMyRecipeList(RecipeDTO cartDTO);
+	 int selectMyRecipeTotalCount(RecipeDTO recipeDTO);
+	 
 }

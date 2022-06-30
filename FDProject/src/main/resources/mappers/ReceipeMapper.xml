@@ -17,6 +17,23 @@
 		delete_Yn
 		]]>
 	</sql>
+	
+	<sql id="recipeColumns2">
+		<![CDATA[
+		r.recipe_No,
+		r.disease_Field,
+		r.title,
+		r.writer,
+		r.food_Ingredients,
+		r.step,
+		r.img_File,
+		r.reg_Date,
+		r.hit,
+		r.recommended_Number,
+		r.delete_Yn
+		]]>
+	</sql>
+	
 
 	<!-- new -->
 	<select id="selectRecipeList" resultType="RecipeDTO">
@@ -31,7 +48,31 @@
 		order by title asc
 		<include refid="CommonMapper.pagingFooter" />
 	</select>
-
+		
+	<select id="getMyRecipeList" parameterType="RecipeDTO" resultType="RecipeDTO">
+        <include refid="CommonMapper.pagingHeader"/>
+        select
+        c.recipe_CART_NO,
+        <include refid="recipeColumns2"/>
+        from
+        Recipes r, Recipes_cart c
+        where r.recipe_NO = c.recipe_NO
+        and c.USER_ID = #{cartDTO.userId}
+        <include refid="CommonMapper.search_o"/>
+        order by title asc
+        <include refid="CommonMapper.pagingFooter"/>
+    </select>
+    
+    <select id="selectMyRecipeTotalCount" parameterType="RecipeDTO" resultType="int">
+        select
+        COUNT(<![CDATA[*]]>)
+        from Recipes_CART c, recipes r
+        where
+        c.recipe_NO = r.recipe_NO
+        and USER_ID = #{cartDTO.userId}
+        <include refid="CommonMapper.search_o"/>
+    </select>
+    
 	<select id="selectRecipeTotalCount" parameterType="RecipeDTO"
 		resultType="int">
         <![CDATA[

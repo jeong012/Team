@@ -170,6 +170,7 @@
         where
         d.DRUG_NO = c.DRUG_NO
         and USER_ID = #{cartDTO.userId}
+
         <include refid="CommonMapper.search_o"/>
     </select>
 
