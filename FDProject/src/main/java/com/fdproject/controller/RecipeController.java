@@ -36,7 +36,9 @@ public class RecipeController {
 	@GetMapping(value="/list")
 	public String getRecipeList(@ModelAttribute("params") RecipeDTO params,
 			Model model){					 				
-		// 레시피 리스트 뽑아오기	
+		// 레시피 리스트 뽑아오기
+		
+		
 		List<RecipeDTO> Recipe_List = recipeService.getRecipeList(params);		
 		model.addAttribute("Recipe_List", Recipe_List);
 		System.out.println("Recipe_List:" + Recipe_List);

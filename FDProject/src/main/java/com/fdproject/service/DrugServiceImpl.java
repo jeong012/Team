@@ -118,16 +118,19 @@ public class DrugServiceImpl implements DrugService {
 
         DrugsCartDTO cartDTO = new DrugsCartDTO();
         cartDTO.setUserId("test");
-        params.setCartDTO(cartDTO);
+        params.setCartDTO(cartDTO); //약객체.(재원이가 만든 관심약품DTO)(카트객체 - 유저ID 지정된.)
 
         int drugTotalCount = drugMapper.selectMyDrugTotalCount(params);
 
         PaginationInfo paginationInfo = new PaginationInfo(params);
-        paginationInfo.setTotalRecordCount(drugTotalCount);
+        paginationInfo.setTotalRecordCount(drugTotalCount); //전체 드러그 수를 pagination에 넘겨서 저장시키게끔
 
         params.setPaginationInfo(paginationInfo);
-
-        drugList = drugMapper.getMyDrugList(params);
+        
+        if(drugTotalCount >0) {
+        	drugList = drugMapper.getMyDrugList(params);
+        }
+        
         return drugList;
     }
 

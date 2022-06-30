@@ -20,9 +20,8 @@
 						<ul class="list-unstyled ps-0">
 							<li class="mb-1">
 								<!-- 관리자 작성 레시피 -->
-								<form method="get" action="@{/mypage/myRecipe.do}">
-									<button class="dropdown-toggle" data-bs-toggle="collapse"
-										data-bs-target="#manager-collapse" aria-expanded="false">
+								<form method="get" th:action="@{/mypage/myRecipe.do}">
+									<button class="dropdown-none-toggle" style="color:blue;" type="submit">
 										관심 레시피
 									</button>
 								</form>
