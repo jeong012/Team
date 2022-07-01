@@ -26,4 +26,7 @@ public class UserDTO {
 	/** 생년월일 */
 	private String birthDate;
 	
+	/** 가입플랫폼 */
+	private String registrationId;
+	
 }

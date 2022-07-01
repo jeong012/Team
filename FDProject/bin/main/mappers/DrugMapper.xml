@@ -169,8 +169,7 @@
         from DRUGS_CART c, DRUGS d
         where
         d.DRUG_NO = c.DRUG_NO
-        and USER_ID = #{cartDTO.userId}
-
+        and USER_ID = #{cartDTO.userId} <!-- 이게 뭘 말하는 거지?? -->
         <include refid="CommonMapper.search_o"/>
     </select>
 
