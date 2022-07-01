@@ -39,34 +39,34 @@ public class DrugMapperTest {
 
     }
 
-    @Test
-    public void getRiskDrugList() {
-
-        List<String> keyword = drugMapper.selectKeyword();
-        String keywords = StringUtils.join(keyword, ",");
-
-        String[] strArr = keywords.split(",");
-        System.out.println(strArr.toString());
-
-        Criteria criteria = new Criteria();
-        criteria.setCurrentPageNo(1);
-        criteria.setRecordsPerPage(10);
-        criteria.setPageSize(10);
-
-        PaginationInfo paginationInfo = new PaginationInfo(criteria);
-
-        DrugDTO drugDTO = new DrugDTO();
-        drugDTO.setPaginationInfo(paginationInfo);
-
-        int drugTotalCount = drugMapper.selectDrugTotalCount(drugDTO);
-
-        paginationInfo.setTotalRecordCount(drugTotalCount);
-        drugDTO.setPaginationInfo(paginationInfo);
-
-        String params = StringUtils.join(strArr, "|");
-
-        drugDTO.setParams(params);
-
-        List<DrugDTO> drugList = drugMapper.drugList(drugDTO);
-    }
+//    @Test
+//    public void getRiskDrugList() {
+//
+//        List<String> keyword = drugMapper.selectKeyword();
+//        String keywords = StringUtils.join(keyword, ",");
+//
+//        String[] strArr = keywords.split(",");
+//        System.out.println(strArr.toString());
+//
+//        Criteria criteria = new Criteria();
+//        criteria.setCurrentPageNo(1);
+//        criteria.setRecordsPerPage(10);
+//        criteria.setPageSize(10);
+//
+//        PaginationInfo paginationInfo = new PaginationInfo(criteria);
+//
+//        DrugDTO drugDTO = new DrugDTO();
+//        drugDTO.setPaginationInfo(paginationInfo);
+//
+//        int drugTotalCount = drugMapper.selectDrugTotalCount(drugDTO);
+//
+//        paginationInfo.setTotalRecordCount(drugTotalCount);
+//        drugDTO.setPaginationInfo(paginationInfo);
+//
+//        String params = StringUtils.join(strArr, "|");
+//
+//        drugDTO.setParams(params);
+//
+//        List<DrugDTO> drugList = drugMapper.drugList(drugDTO);
+//    }
 }

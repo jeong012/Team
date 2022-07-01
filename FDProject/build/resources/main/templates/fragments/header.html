@@ -31,25 +31,25 @@
 	            <nav id="navbar" class="navbar">
 	                <ul>
  	                    <!-- 로그아웃 상태-->
-	                    <li><a class="nav-link scrollto" href="/user/loginForm">로그인</a></li>
-	                 	<li><a class="nav-link scrollto" href="/user/joinForm">회원가입</a></li>
+	                    <li><a class="nav-link scrollto" href="/user/loginForm.do">로그인</a></li>
+	                 	<li><a class="nav-link scrollto" href="/user/joinForm.do">회원가입</a></li>
 	                    <!-- 로그인 상태-->
 	                    <li class="dropdown"><a href="#"><span>마이페이지</span> <i class="bi bi-chevron-down"></i></a>
 	                        <ul>
 	                            <li><a href="#">회원 정보 수정</a></li>
-	                            <li><a href="#">약 찜 리스트</a></li>
+	                            <li><a th:href="@{/mypage/myDrug.do}">약 찜 리스트</a></li>
 	                            <li><a href="#">레시피 찜 리스트</a></li>
-	                            <li><a href="#">질병 관리</a></li>
+	                            <li><a th:href="@{/mypage/disease.do}">질병 관리</a></li>
 	                        </ul>
 	                    </li>
 	                  
 	                 
 	                	<li class="dropdown"><a href="#"><span>메뉴</span> <i class="bi bi-chevron-down"></i></a>
 	                        <ul>
-	                           <li><a href="/drug/list">약</a></li>
-			                   <li><a href="/recipe/list">레시피</a></li>
-			                   <li><a href="#">상비약 리스트</a></li>
-			                   <li><a href="/drug/find_pharmacy">내 주변 약국</a></li>
+	                           <li><a th:href="@{/drug/list.do}">약</a></li>
+			                   <li><a th:href="@{/recipe/list}">레시피</a></li>
+			                   <li><a th:href="@{/drug/store.do}">상비약 리스트</a></li>
+			                   <li><a th:href="@{/drug/pharmacy.do}">내 주변 약국</a></li>
 	                        </ul>
 	                    </li>
 	                    

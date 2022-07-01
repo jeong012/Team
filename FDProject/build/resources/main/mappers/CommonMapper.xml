@@ -8,12 +8,14 @@
   </sql>
   
   <!-- Oracle Paging Header -->
-  <sql id="pagingHeader"> 
+  <sql id="pagingHeader">
     <if test="paginationInfo.firstRecordIndex != null and paginationInfo.lastRecordIndex != null">
+      <![CDATA[
       SELECT *
       FROM (
         SELECT rownum rnum, m.*
         FROM (
+      ]]>
     </if>
   </sql>
 
@@ -27,7 +29,7 @@
     </if>
   </sql>
   
-  <!-- Oracle search -->
+  <!-- Oracle search - drug-->
   <sql id="search_o">
     <!-- 검색 키워드가 있을 때 -->
     <if test="searchKeyword != null and searchKeyword != ''">
@@ -54,7 +56,45 @@
       </choose>
     </if>
   </sql>
-
+  
+    <!-- Oracle search - recipe-->
+  <sql id="search_R">
+    <!-- 검색 키워드가 있을 때 -->
+   <choose>    
+    <when test="searchKeyword != null and searchKeyword != ''">
+      <choose>
+        <!-- 검색 유형이 있을 때 -->
+        <when test="searchType != null and searchType != ''">
+          <choose>          	
+            <when test="'title'.equals(searchType)">
+              AND title LIKE '%' || #{searchKeyword} || '%'
+            </when>
+            <when test="'diseaseField'.equals(searchType)">
+              AND disease_Field LIKE '%' || #{searchKeyword} || '%'
+            </when>
+          </choose>
+        </when>
+        <!-- 검색 유형이 없을 때 -->
+        <otherwise>
+          AND
+          (
+          title LIKE '%' || #{searchKeyword} || '%'
+          OR disease_Field LIKE '%' || #{searchKeyword} || '%'
+          )
+        </otherwise>
+      </choose>
+    </when>
+    
+    <when test="diseaseField != null and diseaseField != ''">
+    	AND disease_Field =#{diseaseField}
+    </when>
+   </choose> 
+  </sql>
+  
+  
+  
+  
+ <!--   -->
   <!-- Mysql search -->
   <sql id="search_m">
     <!-- 검색 키워드가 있을 때 -->

@@ -48,26 +48,31 @@
 									</button>
 								</form>
 							</li>
-							<li class="mb-1">
-								<!-- 사용자 질병 관련 레시피 -->
-								<button class="dropdown-toggle" data-bs-toggle="collapse"
-									data-bs-target="#userDiseases-collapse" aria-expanded="false">
-									맞춤 레시피
-								</button>
-								<div class="collapse" id="userDiseases-collapse">
-									<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-										<li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">내
-												질병1</a></li>
-										<li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">내
-												질병2</a></li>
-										<li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">내
-												질병3</a></li>
-									</ul>
-								</div>
-							</li>
+							<!-- 로그인 세션이 있을 경우 표시-->
+							<th:block th:if="${authUser != null}">
+								<li class="mb-1">
+									<!-- 사용자 질병 관련 레시피 -->
+									<button class="dropdown-toggle" data-bs-toggle="collapse"
+										data-bs-target="#userDiseases-collapse" aria-expanded="false">
+										맞춤 레시피
+									</button>
+									<div class="collapse" id="userDiseases-collapse">
+										<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+											<li><a href="#"
+													class="link-dark d-inline-flex text-decoration-none rounded">내
+													질병1</a></li>
+											<li><a href="#"
+													class="link-dark d-inline-flex text-decoration-none rounded">내
+													질병2</a></li>
+											<li><a href="#"
+													class="link-dark d-inline-flex text-decoration-none rounded">내
+													질병3</a></li>
+										</ul>
+									</div>
+								</li>
+							</th:block>
 						</ul>
 					</div>
-
 					<div class="col-lg-10 mx-auto">
 						<section id="pricing" class="pricing" style="padding-bottom:0px;">
 							<div class="container" data-aos="fade-up">
@@ -83,7 +88,7 @@
 													<h3 th:text="${Recipe.title}"></h3>
 													<!-- 이미지 부분 -->
 													<div style="padding:0px;">
-														<img src="assets/img/${Recipe.imgFile}"
+														<img th:src="|@{/assets/img/recipeImages/}${Recipe.imgFile}|"
 															style="width:230px; height:240px; margin: 19px;">
 													</div>
 													<!-- 버튼 부분 -->
@@ -104,38 +109,21 @@
 			</div>
 		</div>
 	</section>
-
 	<th:block layout:fragment="paging">
-		<div th:replace="/fragments/common :: pagination"></div>
+		<nav th:replace="fragments/common :: recipePagination"></nav>
 	</th:block>
-	
 	<th:block layout:fragment="script">
-        <script th:inline="javascript">
-            /*<![CDATA[*/
+		<script th:inline="javascript">
+			/*<![CDATA[*/
 
-            function movePage(uri, queryString) {
-                location.href = uri + queryString;
-            }
+			function movePage(uri, queryString) {
+				location.href = uri + queryString;
+			}
+			
+			/*]]>*/
+		</script>
+	</th:block>
 
-            function searchRecipe(form) {
-                /*[- 드롭다운이 아닌 메인 검색 키워드로 검색했을 때 -]*/
-                    var searchKeyword = document.getElementById("sub-searchForm");
-                    if (isEmpty(searchKeyword.value) == true) {
-                        alert("키워드를 입력해 주세요.");
-                        searchKeyword.focus();
-                        return false;
-                    }
-
-                    form = document.getElementById("searchForm");
-                    form.searchKeyword.value = searchKeyword.value;
-                    form.submit();
-
-            }
-
-            /*]]>*/
-        </script>
-    </th:block>
-    
 </div>
 
 </html>
