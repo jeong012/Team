@@ -1,13 +1,23 @@
 package com.fdproject.controller;
 
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.fdproject.constant.Method;
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.DrugsCartDTO;
-import com.fdproject.paging.Criteria;
 import com.fdproject.service.DrugService;
 import com.fdproject.util.GrammerUtils;
 import com.fdproject.util.UiUtils;
 import com.google.gson.Gson;
+
 import com.google.gson.JsonArray;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +33,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping(value = "drug")
