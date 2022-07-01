@@ -173,11 +173,22 @@
         <include refid="CommonMapper.search_o"/>
     </select>
 
-    <select id="getSearchKeyword" parameterType="String"  resultType="String">
+    <select id="getSearchKeyword" parameterType="String" resultType="String">
+        <![CDATA[
         select SEARCH_SYMPTOM keyword
         from SEARCH
         where SEARCH_SYMPTOM like '%' || #{searchKeyword} || '%'
         order by SEARCH_SYMPTOM asc
+        ]]>
+    </select>
+
+    <select id="getNameKeyword" parameterType="String" resultType="String">
+        <![CDATA[
+        select drug_name
+        from DRUGS
+        where drug_name like '%' || #{searchKeyword} || '%'
+        order by drug_name asc
+        ]]>
     </select>
 
     <insert id="addCart" parameterType="DrugsCartDTO">
@@ -187,7 +198,24 @@
         insert into DRUGS_CART (DRUG_CART_NO, DRUG_NO, USER_ID)
         values (#{drugCartNo}, #{drugNo}, #{userId})
     </insert>
+    
+    
+    <select id="getUserDrug" parameterType="UserDrugDTO" resultType="String">
+        select
+        drug_no as drugNo
+        from USER_DRUGS
+        where USER_ID = #{userId}
+    </select>
+    
 
+    <select id="userdrugList" parameterType="DrugDTO" resultMap="drug">
+        select
+        <include refid="drugColumns"/>
+      	FROM DRUGS d
+		WHERE d.drug_no = any(${cart})
+    </select>
+    
+    
     <delete id="deleteCart">
         delete
         from DRUGS_CART

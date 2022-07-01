@@ -173,11 +173,22 @@
         <include refid="CommonMapper.search_o"/>
     </select>
 
-    <select id="getSearchKeyword" parameterType="String"  resultType="String">
+    <select id="getSearchKeyword" parameterType="String" resultType="String">
+        <![CDATA[
         select SEARCH_SYMPTOM keyword
         from SEARCH
         where SEARCH_SYMPTOM like '%' || #{searchKeyword} || '%'
         order by SEARCH_SYMPTOM asc
+        ]]>
+    </select>
+
+    <select id="getNameKeyword" parameterType="String" resultType="String">
+        <![CDATA[
+        select drug_name
+        from DRUGS
+        where drug_name like '%' || #{searchKeyword} || '%'
+        order by drug_name asc
+        ]]>
     </select>
 
     <insert id="addCart" parameterType="DrugsCartDTO">

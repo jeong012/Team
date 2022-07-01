@@ -3,8 +3,10 @@ package com.fdproject.service;
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.DrugsCartDTO;
+import com.google.gson.JsonArray;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface DrugService {
@@ -28,8 +30,8 @@ public interface DrugService {
 
     List<DrugDTO> getMyDrugList(DrugDTO drugDTO);
 
-    List<String> getSearchKeyword(String str);
-    
+    JsonArray getSearchKeyword(String searchValue) throws IOException;
+
     /** 회원가입 - 약 리스트 조회 사용*/
     List<DrugDTO> getJoinDrugList();
 }
