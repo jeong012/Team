@@ -1,88 +1,135 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layout/basic">
-	
-	<div layout:fragment="content">
-	    <section class="breadcrumbs">
-	      <div class="container">
-	        <div class="d-flex justify-content-between align-items-center">
-	          <label for="InputForm1">음식 제목을 입력하세요</label>
-   				<input type="text" class="form-control" id="FormControlInput1" placeholder="해물 파전" style ="width:800px;">	<!-- ------------------------------ -->
-	          <ol> <!-- 이전단계 링크로 넣어줘야함 -->
-	            <li><a th:href="@{/}">Home</a></li> <!--  홈 링크 -->
-	            <li><a th:href="@{/recipe/list}">Recipe</a></li> <!--  레시피 리스트링크 -->
-	            <li>Recipe_detail</li>
-	          </ol>
-	        </div>
-	      </div>
-	    </section><!-- Breadcrumbs Section -->
-		
-	    <!-- ======= Portfolio Details Section ======= -->
-	    <section id="portfolio-details" class="portfolio-details">
-	      <div class="container">
-	        <div class="row gy-4">
-	          <div class="col-lg-8">
-	            <div class="portfolio-details-slider swiper">            
-	              <div class="swiper-wrapper align-items-center">
-	              	<input type="file" name="file_upload" style="display: none;">			              			              		              
-	                  <img src="/assets/img/portfolio/portfolio-details-1.jpg" onclick="document.all.file_upload.click();" alt="" style="width:1200px; height:400px;">		                  			                  			                  			                  			                  		                                           
-	              </div>
-	              <!--  section id 주목하자. -->   
-	  			  <section id="about" class="about section-bg" style = "padding: 10px">
-				      <div class="container" data-aos="fade-up">       
-				        <div class="row">          
-				          <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="100">					                  
-				            <ul>
-				            <!-- 여기가 추가란 -->					           					             
-				              <li>
-				                <i class="bx bx-store"></i>
-				                <div>
-				                  <h5>음식 보관법 </h5>
-				                  <p><input type ="text" name="food_store_content" value="" placeholder="내용을 입력하세요" class="form-control" style ="border:1px solid #BDD0E7; border-radius:10px;"></p>					                 
-				                </div>
-				              </li>
-				              <li>
-				                <i class="bx bx-food-menu"></i>
-				                <div>
-				                  <h5>조리법 1</h5>
-				                  <p><input type ="text" name="order_content" value="" class="form-control" style ="border:1px solid #BDD0E7; border-radius:10px;"></p>
-				                  <button id="btn_First" type="button" class="btn btn-primary" style= "font-size : 15px;">추가</button> 
-				                </div>
-				              </li>					             
-				              <!-- 여기가 추가란 -->
-				              <li>
-				              	<i class="bx bx-bulb"></i>
-				              	<div>
-				                	<h5>꿀팁</h5>					            
-				            		<p><textarea class="form-control" style ="border:1px solid #BDD0E7; border-radius:10px; width: 700px; height: 250px;"></textarea></p>
-				            		<button id="btn_submit" type="button" class="btn btn-primary" style= "font-size : 15px;">등록</button>					            		
-				            	</div>					            	
-				             </li>
-				             						              
-				            </ul>					           					            
-				          </div>
-				        </div>
-		     		 </div>
-	  			  </section><!-- End About Section -->
-	            </div>
-	          </div>
-	          <div class="col-lg-4">
-	            <div class="portfolio-info">		            
-	              <h3>&nbsp;구성 재료 &amp; 조리 영상 </h3>		              	              		              
-	                  <div class="form-group">
-   							 <textarea class="form-control" id="FormControlInput2" rows="10" placeholder ="필요한 내용을 입력" style ="border:1px solid #BDD0E7; border-radius:10px; width: 355px;"></textarea>        <!-- ------------------------------ -->
- 						  </div>              		              
-	            </div> 		            
-	            <!-- 들어가야할곳 -->
-	          	<!--  -->       
-	          </div>
-	        </div>
-	      </div>
-	    </section><!-- End Portfolio Details Section -->
-	</div>		
-	
-	<script type="text/javascript">
-		
-	</script>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   layout:decorate="/layout/basic">
+
+<div layout:fragment="content">
+   <section class="breadcrumbs">
+      <div class="container">
+         <div class="d-flex justify-content-between align-items-center">
+            <label for="InputForm1">음식 제목을 입력하세요</label>
+            <input type="text" class="form-control" id="Title" placeholder="해물 파전" style="width:800px;">            
+            <ol id= "list">
+               <!-- 이전단계 링크로 넣어줘야함 -->
+               <li><a th:href="@{/}">Home</a></li> <!--  홈 링크 -->
+               <li><a th:href="@{/recipe/list}">Recipe</a></li> <!--  레시피 리스트링크 -->
+               <li>Recipe_detail</li>
+            </ol>
+         </div>
+      </div>
+   </section><!-- Breadcrumbs Section -->
+
+   <!-- ======= Portfolio Details Section ======= -->
+   <section id="portfolio-details" class="portfolio-details">
+      <div class="container">
+         <div class="row gy-4">
+            <div class="col-lg-8">
+               <div class="portfolio-details-slider swiper">
+                  <div class="swiper-wrapper align-items-center">
+                     <input type="file" name="file_upload" style="display: none;">
+                     <img src="/assets/img/portfolio/portfolio-details-1.jpg"
+                        onclick="document.all.file_upload.click();" alt="" style="width:1200px; height:400px;">
+                  </div>
+                  <!--  section id 주목하자. -->
+                  <section id="about" class="about section-bg" style="padding: 10px">
+                     <div class="container" data-aos="fade-up">
+                        <div class="row">
+                           <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center"
+                              data-aos="fade-up" data-aos-delay="100">
+                              <ul>
+                                 <!-- 여기가 추가란 -->
+                                 <li>
+                                    <i class="bx bx-store"></i>
+                                    <div>
+                                       <h5>음식 보관법 </h5>
+                                       <p><input type="text" id="food_store_content" value=""
+                                             placeholder="내용을 입력하세요" class="form-control"
+                                             style="border:1px solid #BDD0E7; border-radius:10px;"></p>
+                                    </div>
+                                 </li>
+                                 <!-- 여기가 핵심임-->
+                                 <div id="recipeStep">
+                                    <li id="add1" class="steps">
+                                       <i class="bx bx-food-menu"></i>
+                                       <div>
+                                          <h5>조리법 1</h5>
+                                          <p><input type="text" id="order_content1" value="" name="1"
+                                                class="form-control"
+                                                style="border:1px solid #BDD0E7; border-radius:10px;"></p>
+                                       </div>
+                                    </li>
+                                 </div>
+                                   <button id="btn_First" onclick="btn1_click();" type="button"
+                                         class="btn btn-primary" style="font-size : 15px; position: relative; top: -20px; left: 80px;">추가</button>
+                                 <!-- 여기가 핵심임-->
+                                 <!-- 여기가 추가란 -->
+                                 <li>
+                                    <i class="bx bx-bulb"></i>
+                                    <div>
+                                       <h5>꿀팁</h5>
+                                       <p><textarea id="tip" class="form-control"
+                                             style="border:1px solid #BDD0E7; border-radius:10px; width: 700px; height: 250px;"></textarea>
+                                       </p>
+                                       <button id="btn_submit" type="button" class="btn btn-primary"
+                                          style="font-size : 15px;">등록</button>
+                                    </div>
+                                 </li>
+
+                              </ul>
+                           </div>
+                        </div>
+                     </div>
+                  </section><!-- End About Section -->
+               </div>
+            </div>
+            <div class="col-lg-4">
+               <div class="portfolio-info">
+                  <h3>&nbsp;구성 재료 &amp; 조리 영상 </h3>
+                  <div class="form-group">
+                     <textarea class="form-control" id="FormControlInput2" rows="10" placeholder="필요한 내용을 입력"
+                        style="border:1px solid #BDD0E7; border-radius:10px; width: 355px;"></textarea>                     
+                  </div>
+               </div>
+               <!-- 들어가야할곳 -->
+               <!--  -->
+            </div>
+         </div>
+      </div>
+   </section><!-- End Portfolio Details Section -->
+</div>
+<th:block layout:fragment="script">
+   <script th:inline="javascript">      
+      var cnt = 2;   
+      function btn1_click() {
+            var stepsCnt = $('.steps').length;
+            
+            var data = '<li id="add'+ cnt + '" class="steps">' 
+                   +      '<i class="bx bx-food-menu"></i>'
+                   +      '<div>'
+                      +         '<h5>조리법 ' + cnt + '</h5>'
+                      +         '<p><input type="text" id="order_content'+ cnt +'" value="" name="'+ cnt + '"'
+                     +            'class="form-control"'
+                     +            'style="border:1px solid #BDD0E7; border-radius:10px;"></p>'
+                +      '</div>'
+                   +   '</li>';
+         
+            $("#recipeStep").append(data);
+            
+            for (var i=1; i<stepsCnt; i++){
+                console.log($("input[type=text][name=" + i +"]").val());   
+            }
+            
+            cnt += 1;
+      };
+      
+      // 등록 버튼을 클릭했을 때
+//      var stepsCnt = $('.steps').length;
+//      var steps = "";
+//      for (var i=1; i<stepsCnt; i++){
+//         steps += "[" + i + "]" + $("input[type=text][name=" + i +"]").val();
+//      }
+
+      /*]]>*/
+   </script>
+</th:block>
+
 </html>

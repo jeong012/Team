@@ -2,8 +2,6 @@ package com.fdproject.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fdproject.domain.DiseaseDTO;
-import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.RecipeDTO;
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.RecipeService;
@@ -33,13 +30,15 @@ public class RecipeController {
 	private DiseaseService diseaseService;
 	
 	@GetMapping(value="/list")
-	public String getRecipeList(@ModelAttribute("params") RecipeDTO params, @RequestParam(value = "recipe_type", required = false) String recipe_type,
+	public String getRecipeList(@ModelAttribute("params") RecipeDTO params,
 			Model model){					 				
-		// 레시피 리스트 뽑아오기	
+		// 레시피 리스트 뽑아오기
+		
+		
 		List<RecipeDTO> Recipe_List = recipeService.getRecipeList(params);		
 		model.addAttribute("Recipe_List", Recipe_List);
 		System.out.println("Recipe_List:" + Recipe_List);
-		//disease_list 전부 가져오는 객체
+		//disease_list 상위 5개 가져오는 객체
 		List<DiseaseDTO> Disease_List_Five = diseaseService.getDiseaseListFive();
 		model.addAttribute("Disease_List_Five", Disease_List_Five);		
 		//System.out.println("Disease_List_Five:" + Disease_List_Five);
@@ -49,11 +48,11 @@ public class RecipeController {
 
 	@GetMapping(value="/view") 
 	public String getRecipe(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Model model){
-		
+				
 		//recipe_info
 		RecipeDTO Recipe_info = recipeService.getRecipeInfo(Recipe_No);
 		model.addAttribute("Recipe_info", Recipe_info);
-		
+		System.out.println("Recipe_info" + Recipe_info);
 		//foodIngredients split해서 배열에 차곡차곡 넣음 
 		String recipe_ingredients = Recipe_info.getFoodIngredients();		
 		String[] ri_split = recipe_ingredients.split("\n");		
@@ -94,6 +93,8 @@ public class RecipeController {
 		
 		//조회수 관련 - 구현 완료
 		recipeService.uphit(Recipe_No);
+		
+		
 		return "recipe/view";
 	}
 

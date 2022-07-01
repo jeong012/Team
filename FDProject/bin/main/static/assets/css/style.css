@@ -2317,6 +2317,9 @@ select.list-dt:focus {
   margin-bottom: 10px;
 }
 
+.dropdown-none-toggle:hover {
+	color : blue;
+}
 
 .btn-toggle-nav a {
   padding: .1875rem .5rem;
@@ -2404,6 +2407,20 @@ select.list-dt:focus {
   border-color: #106eea;
   background-color: #106eea;
 }
+.ajax2 {
+	  display: inline-block;
+  	  padding-top: 0px;
+  	  padding-right: 5px;
+  	  padding-bottom: 0px;
+  	  padding-left: 5px;
+  	  position: relative;
+  
+  	  border-color: #106eea;
+  	  background-color: #106eea;
+  	  
+      right: 243px;
+      top: -2px;
+}
 
 .cart {
   position: relative;
@@ -2474,6 +2491,47 @@ select.list-dt:focus {
 }
 
 
+.container .pagetitle {
+	font-size: 30px;
+	font-weight : bold;
+}
 
+/*--------------------------------------------------------------
+# 회원가입 모달 창
+--------------------------------------------------------------*/
+#joinModal{
+	width: 500px;
+	height: 450px;
+	left: 50%;
+	top:50%;
+	transform: translate(-50%, -50%);
+}
 
+/*--------------------------------------------------------------
+# 가입 방식 버튼 
+--------------------------------------------------------------*/
+#joinMethod {
+  text-align: center;
+  position: relative;
+  margin-top: 20px;
+}
+#joinMethod .social-singup-wrap .socialBtn{
+  border: none;
+  background: none;
+  width: 70px;
+  height: 70px;
+  background: rgb(255, 255, 255);
+  border-radius: 100%;
+  overflow: hidden;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+#joinMethod .social-singup-wrap .socialBtn :last-child{
+  margin-right: 0;
+}
+#joinMethod .social-singup-wrap .socialBtn img{
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+}
 

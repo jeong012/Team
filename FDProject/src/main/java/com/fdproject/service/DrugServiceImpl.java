@@ -3,9 +3,12 @@ package com.fdproject.service;
 import java.util.*;
 
 import com.fdproject.domain.DrugsCartDTO;
+import com.fdproject.domain.UserDiseaseDTO;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.UserDrugDTO;
 import com.fdproject.mapper.DrugMapper;
@@ -15,11 +18,12 @@ import com.fdproject.util.GrammerUtils;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class DrugServiceImpl implements DrugService {
 
     private final DrugMapper drugMapper;
-
+    @Override
     public List<DrugDTO> getDrugList(String id, DrugDTO params, String takeYn) {
         List<DrugDTO> drugList = Collections.emptyList();
 
@@ -64,6 +68,7 @@ public class DrugServiceImpl implements DrugService {
         return drugList;
     }
     
+    //상비약
     public List<DrugDTO> getHouseDrugList(DrugDTO params){
     	List<DrugDTO> housedrugList = Collections.emptyList();
     	
@@ -74,7 +79,7 @@ public class DrugServiceImpl implements DrugService {
     	}
     	
     	return housedrugList;
-    }
+}
 
     public DrugDTO getDrug(int drugNo) {
         DrugDTO drug = drugMapper.getDrugDetail(drugNo);
@@ -82,7 +87,6 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    @Transactional
     public boolean addMyDrug(DrugsCartDTO cartDTO) {
         cartDTO.setUserId("test");
         int count = 0;
@@ -99,6 +103,39 @@ public class DrugServiceImpl implements DrugService {
         count = drugMapper.addCart(cartDTO);
         return (count == 1) ? true : false;
     }
+    
+    
+    //마이페이지 등록한 약 리스트
+	public List<DrugDTO> getUserDrugList(String id, DrugDTO params) {
+        List<DrugDTO> userdrugList = Collections.emptyList();
+        
+        if (GrammerUtils.isStringEmpty(id) == false && !id.equals("null")) {
+            UserDrugDTO userDrug = new UserDrugDTO();
+            
+            userDrug.setUserId(id);
+            List<UserDrugDTO> userdrugcart = drugMapper.getUserDrug(userDrug);
+            
+            if(userdrugcart.size()<1) { //저장한 질병이 없을 떄
+     
+                return userdrugList;
+            } else {
+            	String str = "";
+	            for(int i = 0; i < userdrugcart.size();i++ ) {
+	            	str += userdrugcart.get(i);
+	            	str += ",";
+	            }
+	            str = str.substring(0,str.length() - 1);
+	            str = str.replaceAll("\"", "");
+	            params.setCart(str);
+	            
+	            userdrugList = drugMapper.userdrugList(params);
+	            return userdrugList;
+            }
+           
+        }
+
+        return userdrugList;
+	}
 
     @Override
     public boolean deleteMyDrug(DrugsCartDTO cartDTO) {
@@ -108,15 +145,44 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     public DrugsCartDTO getMyDrug(int drugNo) {
+
         return drugMapper.getMyDrug(drugNo);
     }
-    
+
+    @Override
+    public List<DrugDTO> getMyDrugList(DrugDTO params) {
+        List<DrugDTO> drugList = Collections.emptyList();
+
+        DrugsCartDTO cartDTO = new DrugsCartDTO();
+        cartDTO.setUserId("test");
+        params.setCartDTO(cartDTO); //약객체.(재원이가 만든 관심약품DTO)(카트객체 - 유저ID 지정된.)
+
+        int drugTotalCount = drugMapper.selectMyDrugTotalCount(params);
+
+        PaginationInfo paginationInfo = new PaginationInfo(params);
+        paginationInfo.setTotalRecordCount(drugTotalCount); //전체 드러그 수를 pagination에 넘겨서 저장시키게끔
+
+        params.setPaginationInfo(paginationInfo);
+        
+        if(drugTotalCount >0) {
+        	drugList = drugMapper.getMyDrugList(params);
+        }
+        
+        return drugList;
+    }
+
+    @Override
+    public List<String> getSearchKeyword() {
+        return drugMapper.getSearchKeyword();
+    }
+
     /** 회원가입 - 약 리스트 조회 사용*/
-	public List<DrugDTO> getJoinDrugList() {
-		
+    @Override
+    public List<DrugDTO> getJoinDrugList() {
+
         List<DrugDTO> drugList = new ArrayList<>();
         drugList = drugMapper.joinDrugList();
-        
-		return drugList;
-	}
+
+        return drugList;
+    }
 }

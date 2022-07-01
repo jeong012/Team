@@ -17,22 +17,64 @@
 		delete_Yn
 		]]>
 	</sql>
-	 
+	
+	<sql id="recipeColumns2">
+		<![CDATA[
+		r.recipe_No,
+		r.disease_Field,
+		r.title,
+		r.writer,
+		r.food_Ingredients,
+		r.step,
+		r.img_File,
+		r.reg_Date,
+		r.hit,
+		r.recommended_Number,
+		r.delete_Yn
+		]]>
+	</sql>
+	
+
 	<!-- new -->
-	<select id ="selectRecipeList" resultType="RecipeDTO">
-		<include refid="CommonMapper.pagingHeader"/>
-		SELECT 
-			<include refid="recipeColumns" />							
-		FROM 
+	<select id="selectRecipeList" resultType="RecipeDTO">
+		<include refid="CommonMapper.pagingHeader" />
+		SELECT
+		<include refid="recipeColumns" />
+		FROM
 		recipes
 		where
 		1=1
-		<include refid="CommonMapper.search_R"/>
+		<include refid="CommonMapper.search_R" />
 		order by title asc
-		<include refid="CommonMapper.pagingFooter"/>						
+		<include refid="CommonMapper.pagingFooter" />
 	</select>
-	
-	 <select id="selectRecipeTotalCount" parameterType="RecipeDTO" resultType="int">
+		
+	<select id="getMyRecipeList" parameterType="RecipeDTO" resultType="RecipeDTO">
+        <include refid="CommonMapper.pagingHeader"/>
+        select
+        c.recipe_CART_NO,
+        <include refid="recipeColumns2"/>
+        from
+        Recipes r, Recipes_cart c
+        where r.recipe_NO = c.recipe_NO
+        and c.USER_ID = #{cartDTO.userId}
+        <include refid="CommonMapper.search_o"/>
+        order by title asc
+        <include refid="CommonMapper.pagingFooter"/>
+    </select>
+    
+    <select id="selectMyRecipeTotalCount" parameterType="RecipeDTO" resultType="int">
+        select
+        COUNT(<![CDATA[*]]>)
+        from Recipes_CART c, recipes r
+        where
+        c.recipe_NO = r.recipe_NO
+        and USER_ID = #{cartDTO.userId}
+        <include refid="CommonMapper.search_o"/>
+    </select>
+    
+	<select id="selectRecipeTotalCount" parameterType="RecipeDTO"
+		resultType="int">
         <![CDATA[
         	SELECT
 	        COUNT(*)
@@ -41,26 +83,60 @@
 	        where
 	        1=1
 	    ]]>
-	    <include refid="CommonMapper.search_R"/>
-    </select>       
-	
-	 <select id = "selectRecipeInfo" parameterType = "String" resultType = "RecipeDTO">
-	 	SELECT
-	 		<include refid="recipeColumns" />
-	 	FROM recipes
-	 	
-	 	WHERE Recipe_no = #{Recipe_no}	 	
+		<include refid="CommonMapper.search_R" />
+	</select>
+
+	<select id="selectRecipeInfo" parameterType="String"
+		resultType="RecipeDTO">
+		SELECT
+		<include refid="recipeColumns" />
+		FROM recipes
+		WHERE Recipe_no = #{Recipe_no}
+	</select>
+
+	<select id="selectMyRecipe" parameterType="String"
+		resultType="RecipesCartDTO">
+		select
+		*
+		from
+		recipes_cart
+		where recipe_no = #{Recipe_no}
+	</select>
+
+	<select id="UpdateUphit" parameterType="String"
+		resultType="Integer">
+		UPDATE recipes
+
+		SET hit = hit + 1
+
+		WHERE Recipe_no =
+		#{Recipe_no}
 	</select>
 	
-	<select id = "UpdateUphit" parameterType = "String" resultType = "Integer">
-		UPDATE recipes	 		
-		
-	 	SET hit = hit + 1    
-	 	
-	 	WHERE Recipe_no = #{Recipe_no}			
-	</select>
-	
-	
-	
-	
+	 <select id="myRecipeList" parameterType="String" resultType="RecipesCartDTO">
+        select
+            Recipe_CART_NO,
+            Recipe_NO,
+            USER_ID
+        from
+            Recipes_CART
+        where
+            USER_ID = #{userId}
+    </select>
+    
+	<insert id="addCart" parameterType="RecipesCartDTO">
+        <selectKey keyProperty="recipeCartNo" resultType="int" order="BEFORE">
+            select SEQ_RECIPES_CART_NO.NEXTVAL from dual
+        </selectKey>
+        insert into RECIPES_CART (RECIPE_CART_NO, RECIPE_NO, USER_ID)
+        values (#{recipeCartNo}, #{recipeNo}, #{userId})
+    </insert>
+
+    <delete id="deleteCart">
+        delete
+        from RECIPES_CART
+        where RECIPE_NO = #{recipeNo}
+    </delete>    
+
+
 </mapper>

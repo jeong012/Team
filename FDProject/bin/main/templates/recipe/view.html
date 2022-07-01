@@ -6,7 +6,12 @@
 	<section class="breadcrumbs">
 		<div class="container">
 			<div class="d-flex justify-content-between align-items-center">
-				<h2 th:text="${Recipe_info.title}"></h2>
+				<h2 style="display: inline" th:text="${Recipe_info.title}"></h2>
+				<input type="hidden" id="recipeNo" th:value="${Recipe_info.recipeNo}" />
+				<button class="btn btn-primary ajax2" th:onclick="addCart([[${ Recipe_info.cartDTO }]])">
+					<img th:if="${Recipe_info.cartDTO == null}" src="/assets/img/star.svg" class="cart" />
+					<img th:unless="${Recipe_info.cartDTO == null}" src="/assets/img/star-fill.svg" class="cart" />
+				</button>
 				<ol>
 					<!-- 이전단계 링크로 넣어줘야함 -->
 					<li><a th:href="@{/}">Home</a></li> <!--  홈 링크 -->
@@ -25,7 +30,7 @@
 					<div class="portfolio-details-slider swiper">
 						<div class="swiper-wrapper align-items-center">
 							<img th:src="|@{/assets/img/recipeImages/}${Recipe_info.imgFile}|" alt=""
-								style="width:1200px; height:400px;">
+								style="width:900px; height:600px;">
 						</div>
 						<section id="about" class="about section-bg" style="padding: 10px">
 							<div class="container" data-aos="fade-up">
@@ -51,10 +56,11 @@
 				</div>
 				<div class="col-lg-4">
 					<div class="portfolio-info">
-					<div>
-						<img src="/assets/img/empty_star.jpg" alt="" style="width:27px; height:27px;">
-						<h3 style="display:inline-block;">&nbsp;구성 재료 &amp; 조리 영상 </h3>
-					</div>	
+						<div>
+							<!--<img src="/assets/img/empty_star.jpg" alt="" style="width:27px; height:27px;"> -->
+
+							<h3 style="display:inline-block;">&nbsp;구성 재료 &amp; 조리 영상 </h3>
+						</div>
 						<ul>
 							<th:block th:each="split : ${AL_ri_split}">
 								<li th:text="${split}"></li>
@@ -68,6 +74,131 @@
 			</div>
 		</div>
 	</section><!-- End Portfolio Details Section -->
+	<th:block layout:fragment="script">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            // var i = 0;
+            // $('img').on('click', function () {
+            //     if (i == 0) {
+            //         $(this).attr('src', '/assets/img/star-fill.svg');
+            //
+            //         i++;
+            //     } else if (i == 1) {
+            //         $(this).attr('src', '/assets/img/star.svg');
+            //         i--;
+            //     }
+            //
+            // });
+            var i = 0;
+            function addCart(myRecipe) {
+                if (myRecipe == null && i == 0) {
+
+                    // json 형식으로 데이터 set
+
+                    var params = {
+                        recipeNo: $("#recipeNo").val(),
+
+                    }
+
+                    $.ajax({
+                        url: "/cart/addRecipe",
+                        type: "post",
+                        data: params,
+                        dataType: "json",
+                        cache: false,
+                        success: function (isExist) {
+                            if (isExist == true) {
+                                $('.cart').attr('src', '/assets/img/star-fill.svg');
+                                alert("추가 성공")
+                                i++;
+                            }else {
+                                alert("추가 실패");
+                            }
+                        },
+                        error: function (XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }
+                    });
+                } else if (myRecipe == null && i == 1) {
+                    var params = {
+                        recipeNo: $("#recipeNo").val(),
+                    }
+
+                    $.ajax({
+                        url: "/cart/deleteRecipe",
+                        type: "post",
+                        data: params,
+                        dataType: "json",
+                        success: function (isExist) {
+                            console.log(isExist);
+                            if (isExist == true) {
+                                $('.cart').attr('src', '/assets/img/star.svg');
+                                alert("삭제 성공")
+                                i--;
+                            } else {
+                                alert("삭제 실패");
+                            }
+                        },
+                        error: function (XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }
+                    });
+                } else if (myRecipe != null && i == 0) {
+                    var params = {
+                        recipeNo: $("#recipeNo").val(),
+                    }
+
+                    $.ajax({
+                        url: "/cart/deleteRecipe",
+                        type: "post",
+                        data: params,
+                        dataType: "json",
+                        success: function (isExist) {
+                            console.log(isExist);
+                            if (isExist == true) {
+                                $('.cart').attr('src', '/assets/img/star.svg');
+                                alert("삭제 성공")
+                                i++;
+                            } else {
+                                alert("삭제 실패");
+                            }
+                        },
+                        error: function (XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }
+                    });
+                } else {
+                    var params = {
+                        recipeNo: $("#recipeNo").val(),
+
+                    }
+
+                    $.ajax({
+                        url: "/cart/addRecipe",
+                        type: "post",
+                        data: params,
+                        dataType: "json",
+                        cache: false,
+                        success: function (isExist) {
+                            if (isExist == true) {
+                                $('.cart').attr('src', '/assets/img/star-fill.svg');
+                                alert("추가 성공")
+                                i--;
+                            }else {
+                                alert("추가 실패");
+                            }
+                        },
+                        error: function (XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }
+                    });
+                }
+            }
+
+            /*]]>*/
+        </script>
+    </th:block>
 </div>
 
 </html>
