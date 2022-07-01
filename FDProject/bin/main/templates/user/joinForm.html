@@ -138,26 +138,24 @@
 		              <label for="inputId" class="form-label mt-4">아이디</label>
 		              <input type="text" class="form-control" id="userId" name="userId" autofocus required>
 		              <input type="button" id="idCheck" class="btn btn-primary btn-verify" value="중복확인">
-		              <div id="id_check"></div>
-		              <span th:text="${valid_userId}"></span>
+		              <div class="id_check textMsg"></div>
 		            </fieldset>
 	            
 		            <fieldset class="form-group has-success">
 		              <label for="inputPwd" class="form-label mt-4">비밀번호</label>
 		              <input type="password" class="form-control pw" name="pw" id="pw1">
-		              <div class="valid-pw"></div>
-		              <span th:text="${valid_pw}"></span>
+		              <div class="pw_check textMsg"></div>
 		            </fieldset>
 		            <fieldset class="form-group has-danger">
 		              <label for="inputPwd2" class="form-label mt-4">비밀번호 재확인</label>
 		              <input type="password" class="form-control pw" name="pw" id="pw2">
-		              <div class="invalid-pw"></div>
-		              <span th:text="${valid_pw}"></span>
+		              <div class="pw_valid textMsg"></div>
 		            </fieldset>
 		
 		            <fieldset class="form-group">
 		              <label for="inputName" class="form-label mt-4">이름</label>
 		              <input type="text" class="form-control" id="name" aria-describedby="emailHelp">
+		              <div class="name_check textMsg"></div>
 		            </fieldset>
 		
 		            <fieldset class="form-group bir_wrap">
@@ -180,33 +178,35 @@
 		                  <input type="text" class="form-control" id="dd" placeholder="일" maxlength="2">
 		                </span>
 		              </div>
-		              <span class="error_next_box" id="birthdayMsg" style aria-live="assertive">태어난 년도 4자리를 정확하게 입력하세요.</span>
+		              <div class="bd_check textMsg"></div>
 		            </fieldset>
 		
 		            <fieldset class="form-group verify-box">
 		              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
 		              <input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요" maxlength="11">
 		              <button class="btn btn-primary btn-verify">인증</button>
+		              <div class="ph_check textMsg"></div>
 		            </fieldset>
 		            
 		            <fieldset class="form-group">
 		              <label for="exampleSelect1" class="form-label mt-4">성별</label>
 		              <div class="check-box">
 		                <div class="form-check form-check-inline">
-		                  <input class="form-check-input" type="radio" name="sex" id="inlineRadio1" value="남자">
+		                  <input class="form-check-input" type="radio" name="sex" id="male" value="남자">
 		                  <label class="form-check-label" for="inlineRadio1">남자</label>
 		                </div>
 		                <div class="form-check form-check-inline">
-		                  <input class="form-check-input" type="radio" name="sex" id="inlineRadio2" value="여자">
+		                  <input class="form-check-input" type="radio" name="sex" id="female" value="여자">
 		                  <label class="form-check-label" for="inlineRadio2">여자</label>
 		                </div>
 		              </div>
+		              <div class="sex_check textMsg"></div>
 		            </fieldset>
 	            </th:block>
 	             
 	          	<fieldset class="form-group">
 	          		<div class="d-grid gap-2">
-		                <input type="button" class="btn btn-primary next-btn" value="다음" onclick="saveUserInfo()"></input>
+		                <input type="button" class="btn btn-primary next-btn" value="다음" onclick="saveUserInfo(); cheked();"></input>
 					</div>
 	          	</fieldset>
 	        </div>
@@ -257,6 +257,56 @@
 					}
 					var registrationId = $("#registrationId").val();
 					
+					//$('.textMsg').css({"color":"red"});
+					if(userId == "" || null){
+						alert("아이디를 입력하세요.");
+						//$('.id_check').text("아이디를 입력해주세요.");
+						//$('.id_check').css("color","red");
+						return false;
+					}
+					var pw1 = $("#pw1").val();
+					if(pw1 == "" || null){
+						//$('.pw_check').text("비밀번호를 입력해주세요.");
+						//$('.pw_check').css("color","red");
+						return false;
+					}
+					if(pw == "" || null){
+						//$('.pw_valid').text("비밀번호를 입력해주세요.");
+						//$('.pw_valid').css("color","red");
+						return false;
+					}
+					if(name == "" || null){
+						//$('.name_check').text("이름을 입력해주세요.");
+						//$('.name_check').css("color","red");
+						return false;
+					}
+					var yy = $("#yy").val();
+					var mm = $("#mm").val();
+					var dd = $("#dd").val();
+					if(yy == "" || null){
+						//$('.bd_check').text("생년월일을 입력해주세요.");
+						//$('.bd_check').css("color","red");
+						return false;
+					}
+					if(dd == "" || null){
+						//$('.bd_check').text("생년월일을 입력해주세요.");
+						//$('.bd_check').css("color","red");
+						return false;
+					}
+					if(phoneNum == "" || null){
+						//$('.ph_check').text("휴대폰번호를 입력해주세요.");
+						//$('.ph_check').css("color","red");
+						return false;
+					}
+					var male = $("#male").val();
+					var female = $("#female").val();
+					if(male.checked || female.checked){
+						//$('.sex_check').text("성별을 선택해주세요.");
+						//$('.sex_check').css("color","red");
+						return false;
+					}
+					
+					
 					var data = {
 						"userId": userId,
 						"pw": pw,
@@ -295,7 +345,7 @@
 					});   
 				}
 				
-				//idcheck/ 버튼을 클릭했을 때 
+				//idcheck
 			    $("#idCheck").click(function() {
 			        var userId =  $("#userId").val();
 			        
@@ -305,14 +355,14 @@
 			            url : "/user/idCheck.do",
 			            dataType : "text",
 			            success : function(data) {
-			            	if (data == 1) { //
-			                	$('#id_check').text("사용중인 아이디입니다.");
-			                	$('#id_check').css("color","red");
-			                	$("#id_check").focus();
-			                } else { // 
-			                	$('#id_check').text("사용 가능한 아이디입니다.");
-			                	$('#id_check').css("color","blue");
-			                    $("#id_check").focus();
+			            	if (data == 1) {
+			                	$('.id_check').text("사용중인 아이디입니다.");
+			                	$('.id_check').css("color","red");
+			                	$(".id_check").focus();
+			                } else {
+			                	$('.id_check').text("사용 가능한 아이디입니다.");
+			                	$('.id_check').css("color","blue");
+			                    $(".id_check").focus();
 			                }
 			            },
 						error : function(error) {
@@ -320,6 +370,54 @@
 					    }
 			        });
 			    });
+				
+				// 비밀번호 유효형 검사
+			    $('#pw1').focusout(function(){
+			    	let pw = $(".pw").val();
+			        let number = pw.search(/[0-9]/g);
+			        let english = pw.search(/[a-z]/ig);
+			        let spece = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+			        let reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+				        
+			        if (pw.length < 8 || pw.length > 20) {
+			            //alert("8자리 ~ 20자리 이내로 입력해주세요.");
+			            $('.pw_check').text("8자리 ~ 20자리 이내로 입력해주세요.");
+			            $('.pw_check').css('color', 'red');
+			            return false;
+			
+			        } else if (pw.search(/\s/) != -1) {
+			            $('.pw_check').text("비밀번호는 공백 없이 입력해주세요.");
+			            $('.pw_check').css('color', 'red');
+			            return false;
+			
+			        } else if (number < 0 || english < 0 || spece < 0) {
+			            $('.pw_check').text("영문,숫자,특수문자를 혼합하여 입력해주세요.");
+			            $('.pw_check').css('color', 'red');
+			            return false;
+			
+			        } else if ((number < 0 && english < 0) || (english < 0 && spece < 0) || (spece < 0 && number < 0)) {
+			            $('.pw_check').text("영문,숫자, 특수문자 중 2가지 이상을 혼합하여 입력해주세요.");
+			            $('.pw_check').css('color', 'red');
+			            return false;
+			
+			        } else {
+			            $('.pw_check').text("비밀번호가 정상적으로 입력되었습니다.");
+			            $('.pw_check').css('color', 'blue');
+			            return true;
+			        }
+				
+			    });
+				// 비밀번호 일치여부
+				$('#pw2').keyup(function(){
+					if( $('#pw1').val() != $('#pw2').val() ){
+						$('.pw_valid').text('비밀번호가 일치하지 않습니다.');
+						$('.pw_valid').css('color', 'red');
+					} else{
+						$('.pw_valid').text('비밀번호가 일치합니다.');
+						$('.pw_valid').css('color', 'blue');
+					}
+				});
+				
 			/*]]*/
 		</script>
  	</th:block>
