@@ -20,7 +20,6 @@ import java.util.List;
 public class DrugController extends UiUtils {
 
     private final DrugService drugService;
-
     @GetMapping(value = "/list.do")
     public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
         if (GrammerUtils.isStringEmpty(id) == true) {
