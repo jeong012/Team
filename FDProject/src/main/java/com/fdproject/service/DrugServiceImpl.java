@@ -3,9 +3,12 @@ package com.fdproject.service;
 import java.util.*;
 
 import com.fdproject.domain.DrugsCartDTO;
+import com.fdproject.domain.UserDiseaseDTO;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.UserDrugDTO;
 import com.fdproject.mapper.DrugMapper;
@@ -64,18 +67,19 @@ public class DrugServiceImpl implements DrugService {
 
         return drugList;
     }
-    @Override
-    public List<DrugDTO> getHouseDrugList(DrugDTO params) {
-        List<DrugDTO> housedrugList = Collections.emptyList();
-
-        int drugTotalCount = drugMapper.selectDrugTotalCount(params);
-
-        if (drugTotalCount > 0) {
-            housedrugList = drugMapper.housedrugList(params);
-        }
-
-        return housedrugList;
-    }
+    
+    //상비약
+    public List<DrugDTO> getHouseDrugList(DrugDTO params){
+    	List<DrugDTO> housedrugList = Collections.emptyList();
+    	
+    	int drugTotalCount = drugMapper.selectDrugTotalCount(params);
+    	
+    	if(drugTotalCount>0) {
+    		housedrugList = drugMapper.housedrugList(params);
+    	}
+    	
+    	return housedrugList;
+}
 
     public DrugDTO getDrug(int drugNo) {
         DrugDTO drug = drugMapper.getDrugDetail(drugNo);
@@ -99,6 +103,39 @@ public class DrugServiceImpl implements DrugService {
         count = drugMapper.addCart(cartDTO);
         return (count == 1) ? true : false;
     }
+    
+    
+    //마이페이지 등록한 약 리스트
+	public List<DrugDTO> getUserDrugList(String id, DrugDTO params) {
+        List<DrugDTO> userdrugList = Collections.emptyList();
+        
+        if (GrammerUtils.isStringEmpty(id) == false && !id.equals("null")) {
+            UserDrugDTO userDrug = new UserDrugDTO();
+            
+            userDrug.setUserId(id);
+            List<UserDrugDTO> userdrugcart = drugMapper.getUserDrug(userDrug);
+            
+            if(userdrugcart.size()<1) { //저장한 질병이 없을 떄
+     
+                return userdrugList;
+            } else {
+            	String str = "";
+	            for(int i = 0; i < userdrugcart.size();i++ ) {
+	            	str += userdrugcart.get(i);
+	            	str += ",";
+	            }
+	            str = str.substring(0,str.length() - 1);
+	            str = str.replaceAll("\"", "");
+	            params.setCart(str);
+	            
+	            userdrugList = drugMapper.userdrugList(params);
+	            return userdrugList;
+            }
+           
+        }
+
+        return userdrugList;
+	}
 
     @Override
     public boolean deleteMyDrug(DrugsCartDTO cartDTO) {
