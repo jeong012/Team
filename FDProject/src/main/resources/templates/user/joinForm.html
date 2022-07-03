@@ -257,7 +257,7 @@
 					}
 					var registrationId = $("#registrationId").val();
 					
-					/* 유효성 검사 */
+					/** 유효성 검사 */
 					if(userId == ""){
 						alert("아이디를 입력해주세요.");
 						return false;
@@ -281,7 +281,7 @@
 						return false;
 					}
 					var reg = /^[0-9]+/g;
-					var phoneReg = /^[0-9]+/g;
+					var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 					var yy = $("#yy").val();
 					var dd = $("#dd").val();
 					if(yy == ""){
@@ -300,8 +300,8 @@
 						alert("휴대폰번호를 입력해주세요.");
 						return false;
 					}
-					if(!phoneReg.test(phoneNum)){
-						alert("휴대폰번호는 숫자만 입력할 수 있습니다.");
+					if(!regPhone.test(phoneNum)){
+						alert("휴대폰번호 형식이 아닙니다.");
 						return false;
 					}
 					var male = $("#male").val();
@@ -350,7 +350,7 @@
 					});   
 				}
 				
-				//idcheck
+				//idcheck 아이디 중복체크
 			    $("#idCheck").click(function() {
 			        var userId =  $("#userId").val();
 			        
@@ -376,26 +376,13 @@
 			        });
 			    });
 				
-				// 비밀번호 유효형 검사
+				// 비밀번호 유효형 검사 keyup
 			    $('#pw1').keyup(function(){
 			    	let pw = $(".pw").val();
-			        let number = pw.search(/[0-9]/g);
-			        let english = pw.search(/[a-z]/ig);
-			        let spece = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+			        var reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
 				        
-			        if (pw.length < 8 || pw.length > 20) {
-			            //alert("8자리 ~ 20자리 이내로 입력해주세요.");
-			            $('.pw_check').text("8자리 ~ 20자리 이내로 입력해주세요.");
-			            $('.pw_check').css('color', 'red');
-			            return false;
-			
-			        } else if (pw.search(/\s/) != -1) {
-			            $('.pw_check').text("비밀번호는 공백 없이 입력해주세요.");
-			            $('.pw_check').css('color', 'red');
-			            return false;
-			
-			        } else if (number < 0 || english < 0 || spece < 0) {
-			            $('.pw_check').text("영문,숫자,특수문자를 혼합하여 입력해주세요.");
+			        if (!regPhone.test(phoneNum)) {
+			            $('.pw_check').text("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
 			            $('.pw_check').css('color', 'red');
 			            return false;
 			
