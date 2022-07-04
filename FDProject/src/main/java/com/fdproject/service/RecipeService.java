@@ -19,5 +19,6 @@ public interface RecipeService {
 	
 	public boolean deleteMyRecipe(RecipesCartDTO cartDTO);
 	
-	
+	public boolean uploadRecipe(RecipeDTO params);
+		
 }

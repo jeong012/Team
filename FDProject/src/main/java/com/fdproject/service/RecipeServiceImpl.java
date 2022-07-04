@@ -94,4 +94,22 @@ public class RecipeServiceImpl implements RecipeService {
 		return (count == 1) ? true : false;
 	}
 
+	@Override
+	public boolean uploadRecipe(RecipeDTO params) {
+		//writer 지정
+		params.setWriter("test");
+		//recipe_no 지정
+		int recipe_no = recipeMapper.getRecipeNo();
+		recipe_no += 1;
+		params.setRecipeNo(recipe_no);
+		//upload 동작 수행.
+		int count = recipeMapper.uploadRecipe(params);
+		//upload 하고나서 params_recipeno 가지고
+		//recommended Number 조회		
+		int recommended_Number = recipeMapper.getRecommendedNumber(params);
+		params.setRecommendedNumber(recommended_Number);
+		System.out.println("params:" + params);
+		return (count == 1) ? true : false;
+	}
+
 }

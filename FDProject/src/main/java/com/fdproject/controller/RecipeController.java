@@ -1,21 +1,20 @@
 package com.fdproject.controller;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fdproject.domain.DiseaseDTO;
-import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.RecipeDTO;
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.RecipeService;
@@ -105,5 +104,13 @@ public class RecipeController {
 	@GetMapping(value="/writeForm")
 	public String getRecipeForm(){
 		return "recipe/writeForm";
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/add")
+	public String addRecipe(@ModelAttribute RecipeDTO params){
+		System.out.println("recipedto:" + params);
+		recipeService.uploadRecipe(params);
+		return "recipe/list"; 
 	}
 }

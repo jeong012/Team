@@ -33,8 +33,7 @@
 		r.delete_Yn
 		]]>
 	</sql>
-	
-
+		
 	<!-- new -->
 	<select id="selectRecipeList" resultType="RecipeDTO">
 		<include refid="CommonMapper.pagingHeader" />
@@ -103,15 +102,14 @@
 		where recipe_no = #{Recipe_no}
 	</select>
 
-	<select id="UpdateUphit" parameterType="String"
-		resultType="Integer">
+	<update id="UpdateUphit" parameterType="String">
 		UPDATE recipes
 
 		SET hit = hit + 1
 
 		WHERE Recipe_no =
 		#{Recipe_no}
-	</select>
+	</update>
 	
 	 <select id="myRecipeList" parameterType="String" resultType="RecipesCartDTO">
         select
@@ -137,6 +135,21 @@
         from RECIPES_CART
         where RECIPE_NO = #{recipeNo}
     </delete>    
-
+    
+    <select id ="getRecommendedNumber" parameterType="RecipeDTO" resultType="int">     	
+     	select count(<![CDATA[*]]>)
+     	from recipes_cart
+     	where recipe_no = #{recipeNo}     	     	
+     </select>
+      
+	 <insert id ="uploadRecipe" parameterType="RecipeDTO">
+	 	insert into recipes(recipe_no, title, writer,food_ingredients,step,reg_Date,recommended_number) 
+	 	values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{recommendedNumber})
+	 </insert>
+	
+	<select id = "getRecipeNo" resultType = "int">
+		select max(r.recipe_no)
+		from recipes r
+	</select>
 
 </mapper>
