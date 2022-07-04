@@ -2,6 +2,10 @@ package com.fdproject.service;
 
 import java.util.ArrayList;
 
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserMapper userMapper;
     
@@ -25,7 +29,10 @@ public class UserServiceImpl implements UserService {
     	int isInserted = 0;
     	
     	/** 회원가입 - 사용자 정보 추가*/
+    	userDto.setRole("USER");
+    	System.out.println("userDto: " + userDto);
     	isInserted = userMapper.saveUser(userDto);
+    	System.out.println("isInserted: " + isInserted);
     	
     	/** 회원가입 - 사용자 지병 데이터 추가*/
     	for (UserDiseaseDTO userDiseaseDTO : userDiseaseList) {
@@ -49,8 +56,31 @@ public class UserServiceImpl implements UserService {
 
 	/** ID 중복체크*/
 	@Override
-	public int idCheck(String userId) {
-		int cnt = userMapper.idCheck(userId);
+	public int findById(String userId) {
+		int cnt = userMapper.findById(userId);
 		return cnt;
 	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+//	@Override
+//	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+//		UserDTO userDto = userMapper.findById(userId);
+//		
+//		if(userDto == null) {
+//			throw new UsernameNotFoundException("userId" + userId + "not found");
+//		}
+//		System.out.println("**************Found user***************");
+//		System.out.println("id : " + userDto.getUserId());
+//		
+//		return User.builder()
+//				.username(userDto.getUserId())
+//				.password(userDto.getPw())
+//				.roles(userDto.getRole().toString())
+//				.build();
+//	}
 }

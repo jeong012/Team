@@ -28,5 +28,8 @@ public class UserDTO {
 	
 	/** 가입플랫폼 */
 	private String registrationId;
+
+	/** 권한 */
+	private String role;
 	
 }
