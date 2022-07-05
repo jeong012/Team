@@ -25,9 +25,10 @@
 				<div class="col-lg-8">
 					<div class="portfolio-details-slider swiper">
 						<div class="swiper-wrapper align-items-center">
-							<input type="file" name="file_upload" style="display: none;">
-							<img src="/assets/img/portfolio/portfolio-details-1.jpg"
-								onclick="document.all.file_upload.click();" alt="" style="width:1200px; height:400px;">
+							<div class="uploadDiv">
+								<input type="file" name="uploadFile">
+							</div>
+							<button id ='uploadBtn'>이미지 업로드</button>
 						</div>
 						<!--  section id 주목하자. -->
 						<section id="about" class="about section-bg" style="padding: 10px">
@@ -99,6 +100,7 @@
 	</section><!-- End Portfolio Details Section -->
 </div>
 <th:block layout:fragment="script">
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<script th:inline="javascript">
 		var cnt = 2;
 		function btn1_click() {
@@ -146,7 +148,26 @@
 					 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);}
 				});
 		}; //function
-
+		$("#uploadBtn").on("click", function(e){
+			
+			var formData = new FormData();
+			var inputFile = $("input[name='uploadFile']");
+			var files = inputFile[0].files;
+			console.log(files);
+			
+			formData.append("uploadFile",files[0]);
+			
+			$.ajax({
+				url: '/upload',
+				processData: false,
+				contentType:false,
+				data: formData,
+				type:'POST',
+				success:function(result){
+					alert("올라갔어유");
+				}
+			}); //ajax
+		});// 함수
 
 
 
