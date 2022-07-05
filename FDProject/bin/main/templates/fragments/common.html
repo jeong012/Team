@@ -72,7 +72,7 @@
         <input type="hidden" name="takeYn" th:value="${params.takeYn}"/>
         <input type="hidden" name="id" th:value="${not #strings.isEmpty(id) ? id : ''}"/>
         <div>
-            <select name="searchType" class="btn btn-primary btn-search">
+            <select name="searchType" class="btn btn-primary btn-search" id="searchType">
                 <option value="" th:selected="${#strings.isEmpty( params.searchType )}">전체</option>
                 <option value="drugName" th:selected="${#strings.equals( params.searchType, 'drugName' )}">약</option>
                 <option value="effect" th:selected="${#strings.equals( params.searchType, 'effect' )}">증상</option>
@@ -117,21 +117,21 @@
 	<ul class="list-unstyled ps-0" >
 	<li class="mb-1 btn-group-vertical" >
 		<form method="get" th:action="@{/mypage/user.do}">
-			<button class="dropdown-none-toggle" type="submit" id="1">
-					회원 정보 수정
+			<button class="dropdown-none-toggle" type="submit">
+				회원 정보 수정
 			</button>
 		</form>
 		</li>
 		<li class="mb-1">
 			<form method="get" th:action="@{/mypage/drug.do}">
-				<button class="dropdown-none-toggle active" type="submit" id="2">
+				<button class="dropdown-none-toggle" type="submit">
  					약 관리
 				</button>
 			</form>
 		</li>
 		<li class="mb-1">
 			<form method="get" th:action="@{/mypage/disease.do}">
-				<button class="dropdown-none-toggle" type="submit" id="3">
+				<button class="dropdown-none-toggle" type="submit">
  					질병 관리
 				</button>
 			</form>
@@ -143,7 +143,7 @@
           </button>
           <div class="collapse" id="userDrug-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                  <li ><a th:href="@{/drug/list.do}" class="link-dark d-inline-flex text-decoration-none rounded">
+                  <li ><a th:href="@{/mypage/myDrug.do}" class="link-dark d-inline-flex text-decoration-none rounded">
                       약 찜 리스트</a></li>
                   <li><a th:href="@{/drug/list.do}" class="link-dark d-inline-flex text-decoration-none rounded">
                       레시피 찜 리스트</a></li>
