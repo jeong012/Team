@@ -3,6 +3,7 @@ package com.fdproject.controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,9 +13,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.RecipeDTO;
@@ -110,10 +111,32 @@ public class RecipeController {
 	
 	@ResponseBody
 	@PostMapping(value="/add")
-	public String addRecipe(@ModelAttribute RecipeDTO params){
+	public String addRecipe(@RequestPart(value="File", required = false) MultipartFile file,
+							@RequestPart(value="Data") Map<String, Object> data){		
+		
+		String uploadFolder = "C:\\upload";
+    	for(MultipartFile multipartFile : params.getUploadFile()) {
+    		System.out.println("Upload File Name:" + multipartFile.getOriginalFilename());
+    		System.out.println("Upload File Size:" + multipartFile.getSize());
+    		
+    		String uploadFileName = multipartFile.getOriginalFilename();
+    		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
+    		
+    		System.out.println("only file name:" + uploadFileName);
+    		
+    		File saveFile = new File(uploadFolder, uploadFileName);
+    		try {
+    			multipartFile.transferTo(saveFile);
+    		}catch(Exception e) {
+    			System.out.println(e.getMessage());
+    			System.out.println("에러 발생");
+    		}
+    		
+    		}   
+		//
 		System.out.println("recipedto:" + params);
 		recipeService.uploadRecipe(params);
-		return "recipe/list"; 
+		return "ok"; 
 	}
 	
 	@ResponseBody
@@ -138,6 +161,6 @@ public class RecipeController {
     		}
     		
     		}    	
-    	return "recipe/list"; 
+    	return "ok"; 
     }
 }

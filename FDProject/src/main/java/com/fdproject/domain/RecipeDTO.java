@@ -1,5 +1,7 @@
 package com.fdproject.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 @Data
@@ -44,4 +46,6 @@ public class RecipeDTO extends CommonDTO {
 	private String storage;
 	
 	private String tip;
+	
+	private MultipartFile[] uploadFile;
 }

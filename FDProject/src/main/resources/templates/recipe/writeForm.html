@@ -3,6 +3,7 @@
 	layout:decorate="/layout/basic">
 
 <div layout:fragment="content">
+	<form id ="uploadform">
 	<section class="breadcrumbs">
 		<div class="container">
 			<div class="d-flex justify-content-between align-items-center">
@@ -28,7 +29,6 @@
 							<div class="uploadDiv">
 								<input type="file" name="uploadFile">
 							</div>
-							<button id ='uploadBtn'>이미지 업로드</button>
 						</div>
 						<!--  section id 주목하자. -->
 						<section id="about" class="about section-bg" style="padding: 10px">
@@ -42,8 +42,8 @@
 												<i class="bx bx-store"></i>
 												<div>
 													<h5>음식 보관법 </h5>
-													<p><input type="text" id="storage" value=""
-															placeholder="내용을 입력하세요" class="form-control"
+													<p><input type="text" id="storage" value="" placeholder="내용을 입력하세요"
+															class="form-control"
 															style="border:1px solid #BDD0E7; border-radius:10px;"></p>
 												</div>
 											</li>
@@ -72,8 +72,8 @@
 													<p><textarea id="tip" class="form-control"
 															style="border:1px solid #BDD0E7; border-radius:10px; width: 700px; height: 250px;"></textarea>
 													</p>
-													<button id="btn_submit" onclick ="btn2_click();" type="button" class="btn btn-primary"
-														style="font-size : 15px;">등록</button>
+													<button id="btn_submit" onclick="btn2_click();" type="button"
+														class="btn btn-primary" style="font-size : 15px;">등록</button>
 												</div>
 											</li>
 
@@ -98,9 +98,10 @@
 			</div>
 		</div>
 	</section><!-- End Portfolio Details Section -->
+	</form>
 </div>
 <th:block layout:fragment="script">
-<!--  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
+	<!--  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
 	<script th:inline="javascript">
 		var cnt = 2;
 		function btn1_click() {
@@ -116,61 +117,58 @@
 				+ '</li>';
 
 			$("#recipeStep").append(data);
-			
+
 			cnt += 1;
 		};
-		function btn2_click() {			
+		function btn2_click() {
 			var stepsCnt = $('.steps').length; //class에 대한 개수를 불러오기			
-			var steps = ""			
+			var steps = ""
 			for (var i = 1; i <= stepsCnt; i++) {
 				steps += "[" + i + "]  " + $("input[type=text][name=" + i + "]").val() + "\n";
-			} 			
+			}
+			var formData = new FormData(uploadform[0]);
+			
+			var inputFile = $("input[name='uploadFile']");
+			var files = inputFile[0].files;
+			//console.log(files);
+
+			formData.append('File', files[0]);
+			
+			for (let key of formData.keys()) {
+				console.log(key);
+			}
+
+			/* value 확인하기 */
+			for (let value of formData.values()) {
+				console.log(value);
+			}
 			var data = {
-				"tip":$("[id=tip]").val(),
-				"storage":$("[id=storage]").val(),
+				"tip": $("[id=tip]").val(),
+				"storage": $("[id=storage]").val(),
 				"title": $("[id=Title]").val(), //음식제목
 				"step": steps,
 				//"storage": $("[id=food_store_content]").val(),//음식보관법
 				"foodIngredients": $("[id=ingredients]").val() //구성재료
 			}; //json data
-			console.log(data);
+			
+			formData.append('Data',new Blob([JSON.stringify(data)], {type : "application/json"}));
 			
 			$.ajax({
-				url:"/recipe/add",
-				type : "post",
-				data: data,
-				dataType: "text", // controller에서 return하는 데이터의 타입.
-				success : function(json){
-					alert("레시피가 등록되었습니다");
-					location.href="/recipe/list";
-				},
-				 error:function(request,status,error){        
-					 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);}
-				});
-		}; //function
-		$("#uploadBtn").on("click", function(e){
-			
-			var formData = new FormData();
-			var inputFile = $("input[name='uploadFile']");
-			var files = inputFile[0].files;
-			console.log(files);
-			
-			formData.append("uploadFile",files[0]);
-			
-			$.ajax({
-				url: '/recipe/upload',
-				processData: false,
-				contentType:false,
+				url: "/recipe/add",
+				type: "post",
 				data: formData,
-				type:'POST',
-				success:function(result){
-					alert("올라갔어유");
+				processData: false,
+				contentType: false,
+				dataType: "text", // controller에서 return하는 데이터의 타입.
+				success: function (json) {
+					alert("레시피가 등록되었습니다");
+					location.href = "/recipe/list";
+				},
+				error: function (request, status, error) {
+					alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 				}
 			}); //ajax
-		});// 함수
-
-
-
+		}; //function
 
 		/*]]>*/
 	</script>
