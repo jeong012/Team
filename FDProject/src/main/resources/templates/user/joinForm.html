@@ -17,6 +17,11 @@
 	       					<button onclick="closeModal()" style="border:0; background-color:#FFF">X</button>
 	       				</div>
 	       				
+	       				<div class="modal-body" id="failUser">
+           					<label id="modalLabel" style="display: block; text-align: center; "></label>
+           					<button class="btn btn-info" th:onclick="closeModal()" style="float: right;">확인</button>
+	       				</div>
+	       				
 	       				<div class="modal-body" id="existUser">
            					<label id="modalLabel" style="display: block; text-align: center; "> 이미 가입된 회원입니다. </label>
            					<button class="btn btn-info" th:onclick="location.href='/user/loginForm.do';" style="float: right;">확인</button>
@@ -137,9 +142,9 @@
 		            <fieldset class="form-group id-check-box">
 		              <label for="inputId" class="form-label mt-4">아이디</label>
 		              <input type="text" class="form-control" id="userId" name="userId" autofocus>
-		              <input type="button" id="idCheck" class="btn btn-primary btn-verify" value="중복확인">
-		              <div class="id_check textMsg"></div>
+		              <input type="button" id="idCheck" class="btn btn-primary btn-verify" value="중복확인" style="margin-top:10px;">
 		            </fieldset>
+		            <div class="id_check textMsg"></div>
 	            
 		            <fieldset class="form-group has-success">
 		              <label for="inputPwd" class="form-label mt-4">비밀번호</label>
@@ -184,9 +189,9 @@
 		            <fieldset class="form-group verify-box">
 		              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
 		              <input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요" maxlength="11">
-		              <button class="btn btn-primary btn-verify">인증</button>
-		              <div class="ph_check textMsg"></div>
+		              <button class="btn btn-primary btn-verify" style="margin-top:10px;">인증</button>
 		            </fieldset>
+		              <div class="ph_check textMsg"></div>
 		            
 		            <fieldset class="form-group">
 		              <label for="exampleSelect1" class="form-label mt-4">성별</label>
@@ -218,6 +223,8 @@
 		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 		<script th:inline="javascript">
 			/*<![CDATA[*/
+				var isChecked = false;
+			
 				$(document).ready(function() {
 					$('#joinModal').modal({backdrop: 'static', keyboard: false});
 					
@@ -225,11 +232,13 @@
 						$("#joinModal").modal("show");
 						$("#existUser").show();
 						$("#newUser").hide();
+						$("#failUser").hide();
 					} else if(/*[[${oAuth2User}]]*/ != null){	/** 새로운 유저 **/
 						$("#joinModal").modal("hide");
 					} else{										/** 조인폼 첫 접근 **/
 						$("#joinModal").modal("show");
 						$("#existUser").hide();
+						$("#failUser").hide();
 					}
 				});
 			
@@ -244,6 +253,12 @@
 				function closeModal(){
 					$("#joinModal").modal("hide");
 				}
+				
+				function showModal(){
+					$("#joinModal").modal("show");
+					$("#newUser").hide();
+					$("#failUser").show();
+				}
 			
 				function saveUserInfo(){
 					var userId = $("#userId").val();
@@ -256,15 +271,23 @@
 						sex = $("#sex").val();
 					}
 					var registrationId = $("#registrationId").val();
-					
 					/** 유효성 검사 */
 					if(userId == ""){
-						alert("아이디를 입력해주세요.");
+						showModal();
+						$("#modalLabel").text("아이디를 입력해주세요.");
 						return false;
 					}
+					
+					if(!isChecked){
+						showModal();
+						$("#modalLabel").text("아이디 중복확인을 해주세요.");
+						return false;
+					}
+					
 					var pw1 = $("#pw1").val();
 					if(pw1 == ""){
-						alert("비밀번호를 입력해주세요.");
+						showModal();
+						$("#modalLabel").text("비밀번호를 입력해주세요.");
 						return false;
 					}
 			        var pwCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
@@ -272,12 +295,14 @@
 						alert("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
 						return false;
 					}*/
-					if($('#pw1').val() != $('#pw2').val()){
-						alert("비밀번호가 일치하지 않습니다.");
+					if($('#pw1').val() != $('#pw2').val() && !registrationId){
+						showModal();
+						$("#modalLabel").text("비밀번호가 일치하지 않습니다.");
 						return false;
 					}
 					if(name == ""){
-						alert("이름을 입력해주세요.");
+						showModal();
+						$("#modalLabel").text("이름을 입력해주세요.");
 						return false;
 					}
 					var reg = /^[0-9]+/g;
@@ -285,32 +310,37 @@
 					var yy = $("#yy").val();
 					var dd = $("#dd").val();
 					if(yy == ""){
-						alert("연도를 입력해주세요.");
+						showModal();
+						$("#modalLabel").text("연도를 입력해주세요.");
 						return false;
 					}
 					if(!reg.test(yy && dd)){
-						alert("날짜는 숫자만 입력할 수 있습니다.");
+						showModal();
+						$("#modalLabel").text("날짜는 숫자만 입력할 수 있습니다.");
 						return false;
 					}
 					if(dd == ""){
-						alert("일자를 입력해주세요.");
+						showModal();
+						$("#modalLabel").text("일자를 입력해주세요.");
 						return false;
 					}
 					if(phoneNum == ""){
-						alert("휴대폰번호를 입력해주세요.");
+						showModal();
+						$("#modalLabel").text("휴대폰번호를 입력해주세요.");
 						return false;
 					}
 					if(!regPhone.test(phoneNum)){
-						alert("휴대폰번호 형식이 아닙니다.");
+						showModal();
+						$("#modalLabel").text("휴대폰번호 형식이 아닙니다.");
 						return false;
 					}
 					var male = $("#male").val();
 					var female = $("#female").val();
 					if(sex == null){
-						alert("성별을 선택해주세요.");
+						showModal();
+						$("#modalLabel").text("성별을 선택해주세요.");
 						return false;
 					}
-					
 					
 					var data = {
 						"userId": userId,
@@ -353,6 +383,11 @@
 				//idcheck 아이디 중복체크
 			    $("#idCheck").click(function() {
 			        var userId =  $("#userId").val();
+			        if(userId == ""){
+						showModal();
+						$("#modalLabel").text("아이디를 입력하세요.");
+						return false;
+			        }
 			        
 			        $.ajax({
 			            type : 'GET',
@@ -361,6 +396,7 @@
 			            dataType : "text",
 			            success : function(data) {
 			            	if (data == 1) {
+			            		isChecked = true;
 			                	$('.id_check').text("사용중인 아이디입니다.");
 			                	$('.id_check').css("color","red");
 			                	$(".id_check").focus();
@@ -381,7 +417,7 @@
 			    	let pw = $(".pw").val();
 			        var reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
 				        
-			        if (!regPhone.test(phoneNum)) {
+			        if (!reg.test(pw)) {
 			            $('.pw_check').text("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
 			            $('.pw_check').css('color', 'red');
 			            return false;
