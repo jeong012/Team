@@ -32,7 +32,9 @@ public interface DrugMapper {
 
     int selectMyDrugTotalCount(DrugDTO drugDTO);
 
-    List<String> getSearchKeyword();
+    List<String> getSearchKeyword(String keyword);
+
+    List<String> getNameKeyword(String keyword);
 
     /** 회원가입 - 약 리스트 조회 사용*/
     List<DrugDTO> joinDrugList();

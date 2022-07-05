@@ -18,6 +18,23 @@ import com.fdproject.util.GrammerUtils;
 import com.fdproject.util.UiUtils;
 import com.google.gson.Gson;
 
+import com.google.gson.JsonArray;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -72,12 +89,18 @@ public class DrugController extends UiUtils {
         return "drug/myview";
     }
 
-    @GetMapping(value = "/search")
-    public @ResponseBody String search() {
-        List<String> keywords = drugService.getSearchKeyword();
-
-        Gson gson = new Gson();
-        return gson.toJson(keywords);
+    @RequestMapping(value = "autoSearch",
+                    method = {RequestMethod.GET},
+                    produces = "application/json; charset=utf8")
+    @ResponseBody
+    public void search(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+        String searchValue = request.getParameter("searchValue");
+        JsonArray arrayObj = drugService.getSearchKeyword(searchValue);
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter pw = response.getWriter();
+        pw.print(arrayObj);
+        pw.flush();
+        pw.close();
     }
 
     //내 주변 약국
