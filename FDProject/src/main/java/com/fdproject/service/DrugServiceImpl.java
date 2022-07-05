@@ -1,10 +1,13 @@
 package com.fdproject.service;
 
+import java.io.IOException;
 import java.util.*;
 
 import com.fdproject.domain.DrugsCartDTO;
 import com.fdproject.domain.UserDiseaseDTO;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -172,8 +175,20 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    public List<String> getSearchKeyword() {
-        return drugMapper.getSearchKeyword();
+    public JsonArray getSearchKeyword(String searchValue) throws IOException {
+        JsonArray arrayObj = new JsonArray();
+        JsonObject jsonObj = null;
+        List<String> list1 = drugMapper.getSearchKeyword(searchValue);
+        List<String> list2 = drugMapper.getNameKeyword(searchValue);
+        List<String> resultList = new ArrayList<>();
+        resultList.addAll(list1);
+        resultList.addAll(list2);
+        for (String str : resultList) {
+            jsonObj = new JsonObject();
+            jsonObj.addProperty("data", str);
+            arrayObj.add(jsonObj);
+        }
+        return arrayObj;
     }
 
     /** 회원가입 - 약 리스트 조회 사용*/
