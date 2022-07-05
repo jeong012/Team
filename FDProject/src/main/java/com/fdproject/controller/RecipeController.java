@@ -116,8 +116,9 @@ public class RecipeController {
 		return "recipe/list"; 
 	}
 	
+	@ResponseBody
     @PostMapping(value="/upload")
-    public void uploadAjaxPost(MultipartFile[] uploadFile) {
+    public String uploadAjaxPost(MultipartFile[] uploadFile) {
     	String uploadFolder = "C:\\upload";
     	for(MultipartFile multipartFile : uploadFile) {
     		System.out.println("Upload File Name:" + multipartFile.getOriginalFilename());
@@ -133,9 +134,10 @@ public class RecipeController {
     			multipartFile.transferTo(saveFile);
     		}catch(Exception e) {
     			System.out.println(e.getMessage());
+    			System.out.println("에러 발생");
     		}
     		
     		}    	
-    	 
+    	return "recipe/list"; 
     }
 }

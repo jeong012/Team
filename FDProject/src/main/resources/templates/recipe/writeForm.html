@@ -100,7 +100,7 @@
 	</section><!-- End Portfolio Details Section -->
 </div>
 <th:block layout:fragment="script">
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<!--  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
 	<script th:inline="javascript">
 		var cnt = 2;
 		function btn1_click() {
@@ -158,7 +158,7 @@
 			formData.append("uploadFile",files[0]);
 			
 			$.ajax({
-				url: '/upload',
+				url: '/recipe/upload',
 				processData: false,
 				contentType:false,
 				data: formData,
