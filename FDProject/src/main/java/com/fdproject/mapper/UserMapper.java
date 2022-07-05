@@ -20,8 +20,9 @@ public interface UserMapper {
 	UserDTO findByUser(OAuth2UserDTO oAuth2UserDTO);
 
 	/** ID 중복체크*/
-	int idCheck(String userId); 
+	int findById(String userId);
 
 	/** 회원정보 저장*/
 	int saveUser(UserDTO userDto);
+
 }

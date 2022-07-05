@@ -86,7 +86,7 @@
 		VALUES (#{userNo}, #{userId}, #{pw}, #{name}, #{phoneNumber}, #{sex}, #{birthDate}, #{registrationId})
 	</insert>
 	
-	<select id="idCheck" parameterType="String" resultType="int">
+	<select id="findById" parameterType="String" resultType="int">
  		SELECT count(user_id)
  		FROM USERS
  		WHERE USER_ID = #{userId}
