@@ -41,7 +41,7 @@
 												<i class="bx bx-store"></i>
 												<div>
 													<h5>음식 보관법 </h5>
-													<p><input type="text" id="food_store_content" value=""
+													<p><input type="text" id="storage" value=""
 															placeholder="내용을 입력하세요" class="form-control"
 															style="border:1px solid #BDD0E7; border-radius:10px;"></p>
 												</div>
@@ -124,6 +124,8 @@
 				steps += "[" + i + "]  " + $("input[type=text][name=" + i + "]").val() + "\n";
 			} 			
 			var data = {
+				"tip":$("[id=tip]").val(),
+				"storage":$("[id=storage]").val(),
 				"title": $("[id=Title]").val(), //음식제목
 				"step": steps,
 				//"storage": $("[id=food_store_content]").val(),//음식보관법
@@ -137,7 +139,8 @@
 				data: data,
 				dataType: "text", // controller에서 return하는 데이터의 타입.
 				success : function(json){
-					alert("json.title"+json.title);
+					alert("레시피가 등록되었습니다");
+					location.href="/recipe/list";
 				},
 				 error:function(request,status,error){        
 					 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);}

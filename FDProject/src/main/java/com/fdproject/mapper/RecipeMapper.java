@@ -20,7 +20,8 @@ public interface RecipeMapper {
 	 List<RecipesCartDTO> myRecipeList(String id);
 	 List<RecipeDTO> getMyRecipeList(RecipeDTO params);
 	 int selectMyRecipeTotalCount(RecipeDTO params);
-	 int getRecommendedNumber(RecipeDTO params);
+	 int updateRecommendedNumber(RecipesCartDTO params);
+	 int minusRecommendedNumber(RecipesCartDTO params);
 	 int uploadRecipe(RecipeDTO params);
 	 int getRecipeNo();
 	 

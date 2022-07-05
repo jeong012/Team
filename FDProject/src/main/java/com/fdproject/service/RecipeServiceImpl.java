@@ -74,7 +74,9 @@ public class RecipeServiceImpl implements RecipeService {
 	public boolean addMyRecipe(RecipesCartDTO cartDTO) {
 		cartDTO.setUserId("test");
 		int count = 0;
-		List<RecipesCartDTO> list = recipeMapper.myRecipeList(cartDTO.getUserId());
+		//recommended Number plus		
+		recipeMapper.updateRecommendedNumber(cartDTO);
+		List<RecipesCartDTO> list = recipeMapper.myRecipeList(cartDTO.getUserId());		
 		if (!list.isEmpty()) {
 			for (RecipesCartDTO cart : list) {
 				if (cart.getRecipeNo() != cartDTO.getRecipeNo()) {
@@ -84,12 +86,14 @@ public class RecipeServiceImpl implements RecipeService {
 				count = 0;
 			}
 		}
-		count = recipeMapper.addCart(cartDTO);
+		count = recipeMapper.addCart(cartDTO);				
 		return (count == 1) ? true : false;
 	}
 
 	@Override
 	public boolean deleteMyRecipe(RecipesCartDTO cartDTO) {
+		//recommended Number minus		
+		recipeMapper.minusRecommendedNumber(cartDTO);
 		int count = recipeMapper.deleteCart(cartDTO);
 		return (count == 1) ? true : false;
 	}
@@ -104,10 +108,7 @@ public class RecipeServiceImpl implements RecipeService {
 		params.setRecipeNo(recipe_no);
 		//upload 동작 수행.
 		int count = recipeMapper.uploadRecipe(params);
-		//upload 하고나서 params_recipeno 가지고
-		//recommended Number 조회		
-		int recommended_Number = recipeMapper.getRecommendedNumber(params);
-		params.setRecommendedNumber(recommended_Number);
+		 		
 		System.out.println("params:" + params);
 		return (count == 1) ? true : false;
 	}

@@ -14,7 +14,9 @@
 		reg_Date,
 		hit,
 		recommended_Number,
-		delete_Yn
+		delete_Yn,
+		storage,
+		tip
 		]]>
 	</sql>
 	
@@ -30,7 +32,9 @@
 		r.reg_Date,
 		r.hit,
 		r.recommended_Number,
-		r.delete_Yn
+		r.delete_Yn,
+		r.storage,
+		r.tip
 		]]>
 	</sql>
 		
@@ -111,6 +115,7 @@
 		#{Recipe_no}
 	</update>
 	
+	
 	 <select id="myRecipeList" parameterType="String" resultType="RecipesCartDTO">
         select
             Recipe_CART_NO,
@@ -136,15 +141,21 @@
         where RECIPE_NO = #{recipeNo}
     </delete>    
     
-    <select id ="getRecommendedNumber" parameterType="RecipeDTO" resultType="int">     	
-     	select count(<![CDATA[*]]>)
-     	from recipes_cart
+    <update id ="updateRecommendedNumber" parameterType="RecipesCartDTO">     	
+     	update recipes
+     	set RECOMMENDED_NUMBER = RECOMMENDED_NUMBER + 1
      	where recipe_no = #{recipeNo}     	     	
-     </select>
+     </update>
+     
+     <update id ="minusRecommendedNumber" parameterType="RecipesCartDTO">     	
+     	update recipes
+     	set RECOMMENDED_NUMBER = RECOMMENDED_NUMBER - 1
+     	where recipe_no = #{recipeNo}     	     	
+     </update>
       
 	 <insert id ="uploadRecipe" parameterType="RecipeDTO">
-	 	insert into recipes(recipe_no, title, writer,food_ingredients,step,reg_Date,recommended_number) 
-	 	values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{recommendedNumber})
+	 	insert into recipes(recipe_no, title, writer,food_ingredients,step,reg_Date,recommended_number,storage,tip) 
+	 	values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{recommendedNumber},#{storage},#{tip})
 	 </insert>
 	
 	<select id = "getRecipeNo" resultType = "int">

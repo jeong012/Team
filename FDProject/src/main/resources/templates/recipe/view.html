@@ -13,6 +13,12 @@
 					<img th:unless="${Recipe_info.cartDTO == null}" src="/assets/img/star-fill.svg" class="cart" />
 				</button>
 				<ol>
+					<li style="display: inline; " th:text="조회수"></li>
+					<li style="display: inline; " th:text="${Recipe_info.hit}"></li>
+					<li style="display: inline" th:text="찜수"></li>
+					<li style="display: inline" th:text="${Recipe_info.recommendedNumber}"></li>
+				</ol>
+				<ol>
 					<!-- 이전단계 링크로 넣어줘야함 -->
 					<li><a th:href="@{/}">Home</a></li> <!--  홈 링크 -->
 					<li><a th:href="@{/recipe/list}">Recipe</a></li> <!--  레시피 리스트링크 -->
@@ -38,12 +44,30 @@
 									<div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center"
 										data-aos="fade-up" data-aos-delay="100">
 										<ul>
+											<th:block th:if="${Recipe_info.storage != null}">
+												<li>
+													<i class="bx bx-store"></i>
+													<div>
+														<h5>음식 보관법 </h5>
+														<p th:text="${Recipe_info.storage}"></p>
+													</div>
+												</li>
+											</th:block>	
 											<th:block th:each="recipe_step, status : ${AL_rs_split}">
 												<li>
 													<i class="bx bx-food-menu"></i>
 													<div>
 														<h5 th:text="${status.index + 1}"></h5>
 														<p th:text="${recipe_step}"></p>
+													</div>
+												</li>
+											</th:block>
+											<th:block th:if="${Recipe_info.tip != null}">
+												<li>
+													<i class="bx bx-bulb"></i>
+													<div>
+														<h5>꿀팁</h5>
+														<p th:text="${Recipe_info.tip}"></p>																										
 													</div>
 												</li>
 											</th:block>

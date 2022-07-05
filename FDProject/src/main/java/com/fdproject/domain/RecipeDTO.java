@@ -40,4 +40,8 @@ public class RecipeDTO extends CommonDTO {
 	
 	/** 레시피 카트 객체 */
 	private RecipesCartDTO cartDTO;
+	
+	private String storage;
+	
+	private String tip;
 }
