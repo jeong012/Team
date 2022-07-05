@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/basic">
+
+<body>
+	<div layout:fragment="content">
+	  <main id="main" data-aos="fade-up">
+	
+	    <section class="bg-light">
+	      <div class="container">
+			<div id="content">
+				<div id="user">
+					<p class="jr-success">
+						회원가입을 축하합니다.
+						<br><br>
+						<a href="${pageContext.servletContext.contextPath }/user/login">로그인하기</a>
+					</p>				
+				</div>
+			</div>
+		  </div>
+		</section>
+	  </main>
+	</div>
+</body>
+</html>

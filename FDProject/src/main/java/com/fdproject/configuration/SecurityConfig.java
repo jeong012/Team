@@ -2,8 +2,10 @@ package com.fdproject.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig{
 
     private final CustomOAuth2UserService customOAuth2UserService;
+	private final UserDetailsService userService;
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,11 +40,11 @@ public class SecurityConfig{
 	            .formLogin()
 		        .loginPage("/user/loginForm")
 		        .defaultSuccessUrl("/") //로그인 성공 시 제공할 페이지
-		        .usernameParameter("userId")
+		        .usernameParameter("userId") //로그인시 사용할 파라미터 이름
 		        .failureUrl("/user/login/error") //로그인 실패 시 제공할 페이지
             .and()
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout.do"))
+                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
             .and()
@@ -66,4 +69,11 @@ public class SecurityConfig{
 		return new BCryptPasswordEncoder();
 
 	}
+	
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception { // Spring Security 인증을 위한 AuthenticationManeger 생성
+		auth.userDetailsService(userService)
+			.passwordEncoder(passwordEncoder());
+	
+	}
+	
 }
