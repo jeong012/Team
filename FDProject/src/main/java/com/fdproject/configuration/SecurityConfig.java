@@ -38,8 +38,9 @@ public class SecurityConfig{
 		        .anyRequest().authenticated()
             .and()
 	            .formLogin()
-		        .loginPage("/user/loginForm")
-		        .defaultSuccessUrl("/") //로그인 성공 시 제공할 페이지
+		        .loginPage("/user/loginForm.do")
+		        .loginProcessingUrl("/login_proc") //사용자 이름과 암호를 제출할 URL
+		        .defaultSuccessUrl("/user/login_access") //로그인 성공 시 제공할 페이지
 		        .usernameParameter("userId") //로그인시 사용할 파라미터 이름
 		        .failureUrl("/user/login/error") //로그인 실패 시 제공할 페이지
             .and()

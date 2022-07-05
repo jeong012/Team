@@ -223,9 +223,9 @@
 		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 		<script th:inline="javascript">
 			/*<![CDATA[*/
-				var isChecked = false;
 			
 				$(document).ready(function() {
+					//var isChecked = false;
 					$('#joinModal').modal({backdrop: 'static', keyboard: false});
 					
 					if(/*[[${existUser}]]*/ != null){			/** 기존 유저 **/
@@ -272,30 +272,30 @@
 					}
 					var registrationId = $("#registrationId").val();
 					/** 유효성 검사 */
-					if(userId == ""){
+/*					if(userId == ""){
 						showModal();
 						$("#modalLabel").text("아이디를 입력해주세요.");
 						return false;
-					}
+					}*/
 					
-					if(!isChecked){
+					/*if(!isChecked){
 						showModal();
 						$("#modalLabel").text("아이디 중복확인을 해주세요.");
 						return false;
-					}
+					}*/
 					
-					var pw1 = $("#pw1").val();
+/*					var pw1 = $("#pw1").val();
 					if(pw1 == ""){
 						showModal();
 						$("#modalLabel").text("비밀번호를 입력해주세요.");
 						return false;
 					}
 			        var pwCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
-			        /*if(!pwCheck.test(pw1)){
+*/			        /*if(!pwCheck.test(pw1)){
 						alert("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
 						return false;
 					}*/
-					if($('#pw1').val() != $('#pw2').val() && !registrationId){
+					/*if($('#pw1').val() != $('#pw2').val() && !registrationId){
 						showModal();
 						$("#modalLabel").text("비밀번호가 일치하지 않습니다.");
 						return false;
@@ -341,7 +341,7 @@
 						$("#modalLabel").text("성별을 선택해주세요.");
 						return false;
 					}
-					
+*/					
 					var data = {
 						"userId": userId,
 						"pw": pw,
@@ -397,6 +397,7 @@
 			            success : function(data) {
 			            	if (data == 1) {
 			            		isChecked = true;
+			            		
 			                	$('.id_check').text("사용중인 아이디입니다.");
 			                	$('.id_check').css("color","red");
 			                	$(".id_check").focus();

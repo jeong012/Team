@@ -1,9 +1,14 @@
 package com.fdproject.domain;
 
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+
 import lombok.Data;
 
 @Data
-public class UserDTO {
+public class AuthUserDTO extends User {
 
 	/** 번호 (PK) */
 	private int userNo;
@@ -31,5 +36,12 @@ public class UserDTO {
 
 	/** 권한 */
 	private String role;
-
+	
+	
+	public AuthUserDTO(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+		super(username, password, authorities);
+		this.userId = username;
+        this.pw = password;
+	}
+	
 }

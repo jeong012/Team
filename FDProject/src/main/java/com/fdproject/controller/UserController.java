@@ -10,7 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +44,6 @@ public class UserController {
     private final DiseaseService diseaseService;
     private final DrugService drugService;
     private final UserService userService;
-	private final PasswordEncoder passwordEncoder;
 
 	@GetMapping(value="/joinForm.do")
 	public String getJoinForm(){
@@ -54,7 +53,6 @@ public class UserController {
 	@ResponseBody
 	@PostMapping(value="/joinForm2.do")	
 	public ModelAndView getJoinForm2(@RequestParam("userDTO") String userDTOString, ModelAndView mav) {
-		System.out.println(">>>>>>>>>" + userDTOString);
 		Gson gson = new Gson();
         UserDTO userDTO = gson.fromJson(userDTOString, UserDTO.class);
         mav.addObject("userDTO", userDTO);
@@ -73,6 +71,15 @@ public class UserController {
 		model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
 		return "user/loginForm";
 	}
+	
+	@GetMapping(value="/login_access")
+    public String userAccess(Model model, Authentication authentication) {
+        //Authentication 객체를 통해 유저 정보를 가져올 수 있다.
+        UserDTO userDTO = (UserDTO) authentication.getPrincipal();  //userDetail 객체를 가져옴
+		System.out.println(">>>>>>>>>>>>>>>"+userDTO);
+        model.addAttribute("info", userDTO.getUserId() +"의 "+ userDTO.getName()+ "님");      //유저 아이디
+        return "redirect:/";
+    }
 
     /** 회원가입 - 질병 리스트 조회 사용*/
     @ResponseBody
@@ -111,8 +118,8 @@ public class UserController {
 	
 	/** OAuth2 기존 회원 여부 조회*/
 	@GetMapping(value="/findByUser.do")
-	public String findByUser(@SessionAttribute(value="oAuth2User", required = false) OAuth2UserDTO oAuth2UserDTO, Model model, HttpSession httpSession){
-		UserDTO user = userService.findByUser(oAuth2UserDTO);
+	public String findByOAuth2User(@SessionAttribute(value="oAuth2User", required = false) OAuth2UserDTO oAuth2UserDTO, Model model, HttpSession httpSession){
+		UserDTO user = userService.findByOAuth2User(oAuth2UserDTO);
 		if(user != null) {
 			httpSession.removeAttribute("oAuth2User");
 			httpSession.invalidate();
@@ -176,8 +183,8 @@ public class UserController {
 	    	if(userDTO.getRegistrationId() == null) {
 	    		userDTO.setRegistrationId("main");
 				
-	    		String encodePw = passwordEncoder.encode(userDTO.getPw());
-				userDTO.setPw(encodePw);
+	    		//String encodePw = passwordEncoder.encode(userDTO.getPw());
+				//userDTO.setPw(encodePw);
 	    	}
 
 	        JSONArray diseaseArr = (JSONArray) jsonObj.get("diseaseMap");

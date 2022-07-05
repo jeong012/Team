@@ -17,12 +17,15 @@ public interface UserMapper {
     int insertUserDrug(UserDrugDTO userDrugDTO);
 
 	/** OAuth2 기존 회원 여부 조회*/
-	UserDTO findByUser(OAuth2UserDTO oAuth2UserDTO);
+	UserDTO findByOAuth2User(OAuth2UserDTO oAuth2UserDTO);
 
 	/** ID 중복체크*/
 	int findById(String userId);
 
 	/** 회원정보 저장*/
 	int saveUser(UserDTO userDto);
+	
+	/** 로그인*/
+	UserDTO findByUser(String userId);
 
 }

@@ -2,13 +2,14 @@ package com.fdproject.service;
 
 import java.util.ArrayList;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fdproject.domain.AuthUserDTO;
 import com.fdproject.domain.OAuth2UserDTO;
 import com.fdproject.domain.UserDTO;
 import com.fdproject.domain.UserDiseaseDTO;
@@ -22,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    
     
 	@Override
     @Transactional
@@ -29,10 +32,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     	int isInserted = 0;
     	
     	/** 회원가입 - 사용자 정보 추가*/
-    	userDto.setRole("USER");
-    	System.out.println("userDto: " + userDto);
+    	if(userDto.getRegistrationId().equals("main")) {
+    		String encodePw = passwordEncoder.encode(userDto.getPassword());
+    		userDto.setPw(encodePw);
+    	}
     	isInserted = userMapper.saveUser(userDto);
-    	System.out.println("isInserted: " + isInserted);
     	
     	/** 회원가입 - 사용자 지병 데이터 추가*/
     	for (UserDiseaseDTO userDiseaseDTO : userDiseaseList) {
@@ -49,8 +53,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	/** OAuth2 기존 회원 여부 조회*/
 	@Override
-	public UserDTO findByUser(OAuth2UserDTO oAuth2UserDTO) {
-		UserDTO user = userMapper.findByUser(oAuth2UserDTO);
+	public UserDTO findByOAuth2User(OAuth2UserDTO oAuth2UserDTO) {
+		UserDTO user = userMapper.findByOAuth2User(oAuth2UserDTO);
 		return user;
 	}
 
@@ -69,7 +73,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 //	@Override
 //	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-//		UserDTO userDto = userMapper.findById(userId);
+//		UserDTO userDto = userMapper.findByUser(userId);
 //		
 //		if(userDto == null) {
 //			throw new UsernameNotFoundException("userId" + userId + "not found");
@@ -77,10 +81,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 //		System.out.println("**************Found user***************");
 //		System.out.println("id : " + userDto.getUserId());
 //		
-//		return User.builder()
-//				.username(userDto.getUserId())
-//				.password(userDto.getPw())
-//				.roles(userDto.getRole().toString())
-//				.build();
+//		AuthUserDTO authUserDTO = new AuthUserDTO(
+//				UserDTO
+//				);
+//		
+//		
+//		return userDto;
 //	}
 }
