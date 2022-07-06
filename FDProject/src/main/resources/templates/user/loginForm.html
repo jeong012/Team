@@ -51,10 +51,10 @@
 	                                      <div class="form-card">
 	                                      	<div>
 	                                          <input type="text" name="userId" placeholder="아이디"/>
-	                                          <input type="password" name="pw" placeholder="비밀번호"/>
+	                                          <input type="password" name="pw" id="password" placeholder="비밀번호"/>
 	                                        </div>
 	                                        <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
-	                                        <button type="submit" class="btn btn-primary" id="submitButton">로그인</button>
+	                                        <button class="btn btn-primary">로그인</button>
 	                                        <button type="button" class="btn" onclick="location.href='/user/joinForm.do'">회원가입</button>
 	                                      </div>
 	                                  </fieldset>

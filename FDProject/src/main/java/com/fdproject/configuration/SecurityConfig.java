@@ -32,22 +32,23 @@ public class SecurityConfig{
             .and()
                 .authorizeRequests()
                 .antMatchers("/**/**", "/assets/**").permitAll()
-		        .mvcMatchers("/**/view/*").hasRole("USER")
+		        .mvcMatchers("/recipe/**").hasRole("USER")
 		        .mvcMatchers("/admin/**").hasRole("ADMIN")
 		        .antMatchers().rememberMe()
 		        .anyRequest().authenticated()
             .and()
 	            .formLogin()
 		        .loginPage("/user/loginForm.do")
+		        .usernameParameter("userId") //로그인시 사용할 파라미터 이름
+		        .passwordParameter("pw") //로그인시 사용할 파라미터 이름
 		        .loginProcessingUrl("/login_proc") //사용자 이름과 암호를 제출할 URL
 		        .defaultSuccessUrl("/user/login_access") //로그인 성공 시 제공할 페이지
-		        .usernameParameter("userId") //로그인시 사용할 파라미터 이름
 		        .failureUrl("/user/login/error") //로그인 실패 시 제공할 페이지
             .and()
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout.do"))
                 .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
+                .invalidateHttpSession(true).deleteCookies("JSESSIONID")
             .and()
                 .oauth2Login()
                 	.userInfoEndpoint()

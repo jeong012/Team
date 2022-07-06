@@ -1,7 +1,11 @@
 package com.fdproject.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fdproject.domain.AuthUserDTO;
 import com.fdproject.domain.OAuth2UserDTO;
 import com.fdproject.domain.UserDTO;
 import com.fdproject.domain.UserDiseaseDTO;
@@ -33,7 +36,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     	
     	/** 회원가입 - 사용자 정보 추가*/
     	if(userDto.getRegistrationId().equals("main")) {
-    		String encodePw = passwordEncoder.encode(userDto.getPassword());
+    		String encodePw = passwordEncoder.encode(userDto.getPw());
     		userDto.setPw(encodePw);
     	}
     	isInserted = userMapper.saveUser(userDto);
@@ -65,27 +68,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return cnt;
 	}
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 //	@Override
-//	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-//		UserDTO userDto = userMapper.findByUser(userId);
-//		
-//		if(userDto == null) {
-//			throw new UsernameNotFoundException("userId" + userId + "not found");
-//		}
-//		System.out.println("**************Found user***************");
-//		System.out.println("id : " + userDto.getUserId());
-//		
-//		AuthUserDTO authUserDTO = new AuthUserDTO(
-//				UserDTO
-//				);
-//		
-//		
-//		return userDto;
+//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//		// TODO Auto-generated method stub
+//		return null;
 //	}
+
+	@Override
+	public UserDTO loadUserByUsername(String userId) throws UsernameNotFoundException {
+		UserDTO authUser = userMapper.findByUser(userId);
+		
+		if(authUser == null) {
+			throw new UsernameNotFoundException("userId" + userId + "not found");
+		}
+		System.out.println("**************Found user***************");
+		System.out.println("userDto : " + authUser);
+		System.out.println("id : " + authUser.getUserId());
+		System.out.println("pw : " + authUser.getPw());
+		
+		return authUser;
+	}
 }

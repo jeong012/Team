@@ -42,19 +42,19 @@ public class UserControllerTest {
 		return userService.joinUser(userDto, null, null);
 	}
 	
-//	@Test
-//    @DisplayName("로그인 성공 테스트")
-//    public void loginSuccessTest() throws Exception{
-//		UserDTO UserDTO = new UserDTO();
-//		UserDTO.setUserId("userTest1");
-//		UserDTO.setPw("userTest1");
-//		UserDTO.setRegistrationId(null);
-//		
-//        mockMvc.perform(formLogin().userParameter("userId")
-//                .loginProcessingUrl("/user/loginForm.do")
-//                .user(userId).password(pw))
-//                .andExpect(SecurityMockMvcResultMatchers.authenticated());
-//    }
+	@Test
+    @DisplayName("로그인 성공 테스트")
+    public void loginSuccessTest() throws Exception{
+		UserDTO UserDTO = new UserDTO();
+		UserDTO.setUserId("userTest1");
+		UserDTO.setPw("userTest1");
+		UserDTO.setRegistrationId("main");
+		
+        mockMvc.perform(formLogin().userParameter("userId")
+                .loginProcessingUrl("/user/loginForm.do")
+                .user(UserDTO.getUserId()).password(UserDTO.getPassword()))
+                .andExpect(SecurityMockMvcResultMatchers.authenticated());
+    }
 //	
 //	@Test
 //    @DisplayName("로그인 실패 테스트")
