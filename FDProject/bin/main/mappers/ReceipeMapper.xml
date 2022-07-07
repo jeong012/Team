@@ -37,7 +37,7 @@
 		r.tip
 		]]>
 	</sql>
-		
+
 	<!-- new -->
 	<select id="selectRecipeList" resultType="RecipeDTO">
 		<include refid="CommonMapper.pagingHeader" />
@@ -48,6 +48,20 @@
 		where
 		1=1
 		<include refid="CommonMapper.search_R" />
+		order by title asc
+		<include refid="CommonMapper.pagingFooter" />
+	</select>
+		
+	<select id="selectWriterRecipeList" resultType="RecipeDTO">
+		<include refid="CommonMapper.pagingHeader" />
+		SELECT
+		<include refid="recipeColumns" />
+		FROM
+		recipes
+		where
+		1=1
+		and writer != '[Manager]'		
+		<include refid="CommonMapper.search_R" />		
 		order by title asc
 		<include refid="CommonMapper.pagingFooter" />
 	</select>
@@ -154,8 +168,8 @@
      </update>
       
 	 <insert id ="uploadRecipe" parameterType="RecipeDTO">
-	 	insert into recipes(recipe_no, title, writer,food_ingredients,step,reg_Date,recommended_number,storage,tip) 
-	 	values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{recommendedNumber},#{storage},#{tip})
+	 	insert into recipes(recipe_no, title, writer,food_ingredients,step,reg_Date,recommended_number,storage,tip,img_file) 
+	 	values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{recommendedNumber},#{storage},#{tip},#{imgFile})
 	 </insert>
 	
 	<select id = "getRecipeNo" resultType = "int">

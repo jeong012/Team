@@ -43,7 +43,7 @@
 							<li class="mb-1">
 								<!-- 사용자 작성 레시피 -->
 								<form method="get" action="/recipe/list">
-									<button class="dropdown-none-toggle" type="submit">
+									<button class="dropdown-none-toggle" type="submit" name="writer" value="writer">
 										공유 레시피
 									</button>
 								</form>
@@ -116,10 +116,24 @@
 		<script th:inline="javascript">
 			/*<![CDATA[*/
 
-			function movePage(uri, queryString) {
-				location.href = uri + queryString;
+			function movePage(uri, queryString, diseaseField, writer) {
+				if (writer == null && diseaseField == null) {					
+					location.href = uri + queryString;				
+				}
+				if (writer == null && diseaseField != null) {					
+					location.href = uri + queryString +"&diseaseField=" + diseaseField;					
+				}
+				if (writer != null && diseaseField == null) {
+					location.href = uri + queryString +"&writer=" + writer;
+				}
+				if (writer != null && diseaseField != null) {
+					location.href = uri + queryString +"&diseaseField=" + diseaseField + "&writer=" + writer;					
+				}
+				
+				
+
 			}
-			
+
 			/*]]>*/
 		</script>
 	</th:block>

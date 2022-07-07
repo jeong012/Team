@@ -511,6 +511,12 @@ body {
   left: -90px;
 }
 
+.btn-search2 {
+  position: absolute;
+  top: 0;
+  left: -130px;
+}
+
 /* 메인 검색 폼 */
 .form-control {
   display: block;

@@ -1,6 +1,9 @@
 package com.fdproject.service;
 
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fdproject.domain.RecipeDTO;
 import com.fdproject.domain.RecipesCartDTO;
@@ -19,6 +22,7 @@ public interface RecipeService {
 	
 	public boolean deleteMyRecipe(RecipesCartDTO cartDTO);
 	
-	public boolean uploadRecipe(RecipeDTO params);
+	public boolean uploadRecipe(MultipartFile file, Map<String, Object> data);
+		
 		
 }

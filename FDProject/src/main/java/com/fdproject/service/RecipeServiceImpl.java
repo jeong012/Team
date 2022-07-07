@@ -1,10 +1,13 @@
 package com.fdproject.service;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fdproject.domain.DrugsCartDTO;
 import com.fdproject.domain.RecipeDTO;
@@ -19,7 +22,7 @@ public class RecipeServiceImpl implements RecipeService {
 	private RecipeMapper recipeMapper;
 
 	@Override
-	public List<RecipeDTO> getRecipeList(RecipeDTO params) { //list
+	public List<RecipeDTO> getRecipeList(RecipeDTO params) { // list
 		List<RecipeDTO> recipeList = Collections.emptyList();
 
 		int recipeTotalCount = recipeMapper.selectRecipeTotalCount(params);
@@ -29,15 +32,19 @@ public class RecipeServiceImpl implements RecipeService {
 
 		params.setPaginationInfo(paginationInfo);
 
-		if (recipeTotalCount > 0) {
+		if (recipeTotalCount > 0 && params.getWriter() == null) {
 			recipeList = recipeMapper.selectRecipeList(params);
+			System.out.println("나여기 1");
 		}
-
+		else if(recipeTotalCount > 0 && params.getWriter() != null) {
+			recipeList = recipeMapper.selectWriterRecipeList(params);
+			System.out.println("나여기 2");
+		}
 		return recipeList;
 	}
 
 	@Override
-	public List<RecipeDTO> getMyRecipeList(RecipeDTO params) { //mylist
+	public List<RecipeDTO> getMyRecipeList(RecipeDTO params) { // mylist
 		List<RecipeDTO> recipeList = Collections.emptyList();
 
 		RecipesCartDTO cartDTO = new RecipesCartDTO();
@@ -74,9 +81,9 @@ public class RecipeServiceImpl implements RecipeService {
 	public boolean addMyRecipe(RecipesCartDTO cartDTO) {
 		cartDTO.setUserId("test");
 		int count = 0;
-		//recommended Number plus		
+		// recommended Number plus
 		recipeMapper.updateRecommendedNumber(cartDTO);
-		List<RecipesCartDTO> list = recipeMapper.myRecipeList(cartDTO.getUserId());		
+		List<RecipesCartDTO> list = recipeMapper.myRecipeList(cartDTO.getUserId());
 		if (!list.isEmpty()) {
 			for (RecipesCartDTO cart : list) {
 				if (cart.getRecipeNo() != cartDTO.getRecipeNo()) {
@@ -86,31 +93,59 @@ public class RecipeServiceImpl implements RecipeService {
 				count = 0;
 			}
 		}
-		count = recipeMapper.addCart(cartDTO);				
+		count = recipeMapper.addCart(cartDTO);
 		return (count == 1) ? true : false;
 	}
 
 	@Override
 	public boolean deleteMyRecipe(RecipesCartDTO cartDTO) {
-		//recommended Number minus		
+		// recommended Number minus
 		recipeMapper.minusRecommendedNumber(cartDTO);
 		int count = recipeMapper.deleteCart(cartDTO);
 		return (count == 1) ? true : false;
 	}
 
 	@Override
-	public boolean uploadRecipe(RecipeDTO params) {
-		//writer 지정
+	public boolean uploadRecipe(MultipartFile file, Map<String, Object> data) {
+		// 파일 처리
+		String uploadFolder = "C:\\Users\\i\\Documents\\workspace-spring-tool-suite-4-4.14.1.RELEASE\\Team\\Team\\FDProject\\src\\main\\resources\\static\\assets\\img\\recipeImages";
+
+		System.out.println("Upload File Name:" + file.getOriginalFilename());
+		System.out.println("Upload File Size:" + file.getSize());
+
+		String uploadFileName = file.getOriginalFilename();
+		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
+
+		System.out.println("only file name:" + uploadFileName);
+
+		File saveFile = new File(uploadFolder, uploadFileName);
+		try {
+			file.transferTo(saveFile);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("에러 발생");
+		}
+		//data 처리		
+		RecipeDTO params = new RecipeDTO();
+		params.setImgFile(uploadFileName);		
+		params.setTip((String)data.get("tip"));
+		params.setStorage((String)data.get("storage"));
+		params.setTitle((String)data.get("title"));
+		params.setStep((String)data.get("step"));
+		params.setFoodIngredients((String)data.get("foodIngredients")); 
+		// writer 지정
 		params.setWriter("test");
-		//recipe_no 지정
+		// recipe_no 지정
 		int recipe_no = recipeMapper.getRecipeNo();
 		recipe_no += 1;
 		params.setRecipeNo(recipe_no);
-		//upload 동작 수행.
+		// upload 동작 수행.
 		int count = recipeMapper.uploadRecipe(params);
-		 		
+
 		System.out.println("params:" + params);
 		return (count == 1) ? true : false;
 	}
+
+	
 
 }

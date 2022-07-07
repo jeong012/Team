@@ -126,13 +126,13 @@
 			for (var i = 1; i <= stepsCnt; i++) {
 				steps += "[" + i + "]  " + $("input[type=text][name=" + i + "]").val() + "\n";
 			}
-			var formData = new FormData(uploadform[0]);
-			
+			var formData = new FormData();
+			//input class 값
 			var inputFile = $("input[name='uploadFile']");
-			var files = inputFile[0].files;
-			//console.log(files);
+			var files = inputFile[0].files[0];
+			console.log(files);
 
-			formData.append('File', files[0]);
+			formData.append('File', files);
 			
 			for (let key of formData.keys()) {
 				console.log(key);
@@ -159,6 +159,7 @@
 				data: formData,
 				processData: false,
 				contentType: false,
+				enctype: 'multipart/form-data',
 				dataType: "text", // controller에서 return하는 데이터의 타입.
 				success: function (json) {
 					alert("레시피가 등록되었습니다");

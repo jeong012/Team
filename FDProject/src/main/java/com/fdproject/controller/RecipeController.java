@@ -114,53 +114,12 @@ public class RecipeController {
 	public String addRecipe(@RequestPart(value="File", required = false) MultipartFile file,
 							@RequestPart(value="Data") Map<String, Object> data){		
 		
-		String uploadFolder = "C:\\upload";
-    	for(MultipartFile multipartFile : params.getUploadFile()) {
-    		System.out.println("Upload File Name:" + multipartFile.getOriginalFilename());
-    		System.out.println("Upload File Size:" + multipartFile.getSize());
-    		
-    		String uploadFileName = multipartFile.getOriginalFilename();
-    		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
-    		
-    		System.out.println("only file name:" + uploadFileName);
-    		
-    		File saveFile = new File(uploadFolder, uploadFileName);
-    		try {
-    			multipartFile.transferTo(saveFile);
-    		}catch(Exception e) {
-    			System.out.println(e.getMessage());
-    			System.out.println("에러 발생");
-    		}
-    		
-    		}   
-		//
-		System.out.println("recipedto:" + params);
-		recipeService.uploadRecipe(params);
+		System.out.println("file:" + file);
+		System.out.println("data:" + data);
+		
+		recipeService.uploadRecipe(file,data);	
 		return "ok"; 
 	}
+
 	
-	@ResponseBody
-    @PostMapping(value="/upload")
-    public String uploadAjaxPost(MultipartFile[] uploadFile) {
-    	String uploadFolder = "C:\\upload";
-    	for(MultipartFile multipartFile : uploadFile) {
-    		System.out.println("Upload File Name:" + multipartFile.getOriginalFilename());
-    		System.out.println("Upload File Size:" + multipartFile.getSize());
-    		
-    		String uploadFileName = multipartFile.getOriginalFilename();
-    		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
-    		
-    		System.out.println("only file name:" + uploadFileName);
-    		
-    		File saveFile = new File(uploadFolder, uploadFileName);
-    		try {
-    			multipartFile.transferTo(saveFile);
-    		}catch(Exception e) {
-    			System.out.println(e.getMessage());
-    			System.out.println("에러 발생");
-    		}
-    		
-    		}    	
-    	return "ok"; 
-    }
 }
