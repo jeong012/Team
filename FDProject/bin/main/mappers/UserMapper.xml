@@ -85,7 +85,7 @@
             SELECT SEQ_USERS_NO.NEXTVAL FROM DUAL
         </selectKey>
 		INSERT INTO users ( <include refid="userColumns" /> )
-		VALUES (#{userNo}, #{userId}, #{pw}, #{name}, #{phoneNumber}, #{sex}, #{birthDate}, #{registrationId}, 'USER')
+		VALUES (#{userNo}, #{userId}, #{pw}, #{name}, #{phoneNumber}, #{sex}, #{birthDate}, #{registrationId}, #{role})
 	</insert>
 	
 	<select id="findById" parameterType="String" resultType="int">

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
@@ -13,8 +11,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,31 +52,30 @@ public class UserController {
 
 	@ResponseBody
 	@PostMapping(value="/joinForm2.do")	
-	public ModelAndView getJoinForm2(@RequestParam("userDTO") String userDTOString, ModelAndView mav) {
-		Gson gson = new Gson();
-        UserDTO userDTO = gson.fromJson(userDTOString, UserDTO.class);
-        mav.addObject("userDTO", userDTO);
+	public ModelAndView getJoinForm2(@RequestParam("userDTO") String userDTOJson, ModelAndView mav) {
+		mav.addObject("userDTO", userDTOJson);
         mav.setViewName("user/joinForm2");
 		
         return mav;
 	}
 	
 	@GetMapping(value="/loginForm.do")
-	public String getLoginForm(){
+	public String getLoginForm(Model model){
+		UserDTO userDTO = new UserDTO();
+		model.addAttribute("userDTO", userDTO);
 		return "user/loginForm";
 	}
 	
-	@GetMapping(value="/login/error")
+	@GetMapping(value="/login/error.do")
 	public String getLoginError(Model model){
 		model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
 		return "user/loginForm";
 	}
 	
-	@GetMapping(value="/login_access")
+	@GetMapping(value="/login/access.do")
     public String userAccess(Model model, Authentication authentication) {
         //Authentication 객체를 통해 유저 정보를 가져올 수 있다.
         UserDTO userDTO = (UserDTO) authentication.getPrincipal();  //userDetail 객체를 가져옴
-		System.out.println(">>>>>>>>>>>>>>>"+userDTO);
         model.addAttribute("info", userDTO.getUserId() +"의 "+ userDTO.getName()+ "님");      //유저 아이디
         return "redirect:/";
     }
@@ -121,15 +116,18 @@ public class UserController {
 	}
 	
 	/** OAuth2 기존 회원 여부 조회*/
-	@GetMapping(value="/findByUser.do")
-	public String findByOAuth2User(@SessionAttribute(value="oAuth2User", required = false) OAuth2UserDTO oAuth2UserDTO, Model model, HttpSession httpSession){
+	@GetMapping(value="/findByOAuth2User.do")
+	public String findByOAuth2User(@SessionAttribute(value="oAuth2User", required = false) OAuth2UserDTO oAuth2UserDTO, Model model, HttpSession httpSession, Authentication authentication){
 		UserDTO user = userService.findByOAuth2User(oAuth2UserDTO);
 		if(user != null) {
 			httpSession.removeAttribute("oAuth2User");
 			httpSession.invalidate();
 			
 			if(oAuth2UserDTO.getPathFlag().equals("login")) {
-				return "index";
+		        UserDTO userDTO = (UserDTO) authentication.getPrincipal();
+		        System.out.println(userDTO);
+		        model.addAttribute("info", userDTO.getUserId() +"의 "+ userDTO.getName()+ "님");
+		        return "redirect:/user/login_access";
 			} else {
 				model.addAttribute("existUser", user);
 				return "user/joinForm";
@@ -170,6 +168,7 @@ public class UserController {
     @ResponseBody
     @PostMapping("/join.do")
     public HashMap<String, Object> join(@RequestBody String params) {
+    	
     	UserDTO userDTO = new UserDTO();
 
     	int isInserted = 0;
@@ -180,15 +179,13 @@ public class UserController {
 	    	JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObj = (JSONObject) jsonParser.parse(params);
 			
-			JSONObject userObj = (JSONObject) jsonObj.get("userDTO");
 	        Gson gson = new Gson();
-	        userDTO = gson.fromJson(userObj.toString(), UserDTO.class);
+	        userDTO = gson.fromJson(jsonObj.get("userDTO").toString(), UserDTO.class);
+	        //userDTO.setRole(Role.USER);
+	        userDTO.setRole("USER");
 	        
 	    	if(userDTO.getRegistrationId() == null) {
 	    		userDTO.setRegistrationId("main");
-				
-	    		//String encodePw = passwordEncoder.encode(userDTO.getPw());
-				//userDTO.setPw(encodePw);
 	    	}
 
 	        JSONArray diseaseArr = (JSONArray) jsonObj.get("diseaseMap");
@@ -220,7 +217,6 @@ public class UserController {
 		if(userDiseaseList.size() == 0 && userDrugList.size() == 0) {
 			isInserted = 1;
 		}
-		
    
     	HashMap<String, Object> resultMap = new HashMap<String, Object>();
         if (isInserted == 1){

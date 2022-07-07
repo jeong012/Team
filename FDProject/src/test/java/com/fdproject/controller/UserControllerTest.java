@@ -12,7 +12,6 @@ import org.springframework.security.test.web.servlet.response.SecurityMockMvcRes
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fdproject.domain.OAuth2UserDTO;
 import com.fdproject.domain.UserDTO;
 import com.fdproject.service.UserService;
 
@@ -30,31 +29,29 @@ public class UserControllerTest {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
-	public int createUser(String userId, String pw) {
-		UserDTO userDto = new UserDTO();
-		String encodePw = passwordEncoder.encode(pw);
-		userDto.setUserId(userId);
-		userDto.setPw(encodePw);
-		userDto.setName("홍길동");
-		userDto.setPhoneNumber("010-1111-1111");
-		userDto.setSex("남자");
-		userDto.setBirthDate("2022-07-04");
-		return userService.joinUser(userDto, null, null);
-	}
-	
-	@Test
-    @DisplayName("로그인 성공 테스트")
-    public void loginSuccessTest() throws Exception{
-		UserDTO UserDTO = new UserDTO();
-		UserDTO.setUserId("userTest1");
-		UserDTO.setPw("userTest1");
-		UserDTO.setRegistrationId("main");
-		
-        mockMvc.perform(formLogin().userParameter("userId")
-                .loginProcessingUrl("/user/loginForm.do")
-                .user(UserDTO.getUserId()).password(UserDTO.getPassword()))
-                .andExpect(SecurityMockMvcResultMatchers.authenticated());
-    }
+//	public UserDTO createUser(String userId, String pw) {
+//		UserDTO userDto = new UserDTO();
+//		String encodePw = passwordEncoder.encode(userDto.getPw());
+//		userDto.setUserId(userId);
+//		userDto.setPw(encodePw);
+//		userDto.setName("홍길동");
+//		userDto.setPhoneNumber("010-1111-1111");
+//		userDto.setSex("남자");
+//		userDto.setBirthDate("2022-07-04");
+//		return userService.saveUser(userDto);
+//	}
+//	
+//	@Test
+//    @DisplayName("로그인 성공 테스트")
+//    public void loginSuccessTest() throws Exception{
+//        String userId = "test1";
+//        String pw = "1234";
+//        this.saveUser(userId, pw);
+//        mockMvc.perform(formLogin().userParameter("userId")
+//                .loginProcessingUrl("/user/loginForm.do")
+//                .user(userId).password(pw))
+//                .andExpect(SecurityMockMvcResultMatchers.authenticated());
+//    }
 //	
 //	@Test
 //    @DisplayName("로그인 실패 테스트")

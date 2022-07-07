@@ -512,6 +512,18 @@ body {
   left: -90px;
 }
 
+/* 마이페이지 버튼 */
+.btn-secondary {
+  color: #fff;
+  background-color: #767979;
+  border-color: #767979;
+}
+.btn-secondary:hover {
+  color: #fff;
+  background-color: #575858;
+  border-color: #575858;
+}
+
 /* 메인 검색 폼 */
 .form-control {
   display: block;
@@ -2534,6 +2546,13 @@ select.list-dt:focus {
   width: 70px;
   height: 70px;
   object-fit: cover;
+}
+
+/*--------------------------------------------------------------
+# usermodify
+--------------------------------------------------------------*/
+.modify-btn-group{
+	margin: 50px 0 20px;
 }
 
 

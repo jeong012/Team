@@ -43,6 +43,4 @@ public interface DrugMapper {
 	
 	List<DrugDTO> userdrugList(DrugDTO params);
     
-    
-
 }

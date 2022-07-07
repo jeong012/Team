@@ -1,12 +1,7 @@
 package com.fdproject.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,7 +22,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    
     
 	@Override
     @Transactional
@@ -68,12 +62,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return cnt;
 	}
 
-//	@Override
-//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
 	@Override
 	public UserDTO loadUserByUsername(String userId) throws UsernameNotFoundException {
 		UserDTO authUser = userMapper.findByUser(userId);
@@ -81,11 +69,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		if(authUser == null) {
 			throw new UsernameNotFoundException("userId" + userId + "not found");
 		}
-		System.out.println("**************Found user***************");
-		System.out.println("userDto : " + authUser);
-		System.out.println("id : " + authUser.getUserId());
-		System.out.println("pw : " + authUser.getPw());
 		
 		return authUser;
 	}
+
+//	@Override
+//	public UserDTO readUser(String userId) {
+//		UserDTO userDto = userMapper.findByUser(userId);
+//		userDto.set
+//		return null;
+//	}
 }

@@ -1,27 +1,119 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layout/basic">
-	
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/layout/basic">
+
 	<div layout:fragment="content">
 		<section id="list-page">
-     	 <div class="container" data-aos="fade-up">
+			<div class="container" data-aos="fade-up">
 	
-			<div class="container py-3">
-			    <div class="row">
-					<div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
-		     	 		<ul class="border-top"></ul>
-	    				<th:block layout:fragment="mypagebar">
-			                <div th:replace="fragments/common :: mypagebar">			     
-			                </div>
-			            </th:block>
-	  				</div>
-			    
-			        <div class="col-lg-10 mx-auto" style="margin-top: 15px;">
-			       		<div class="pagetitle m-2">회원 정보 수정</div>
-			        </div>
-			    </div>
-			    </div>
+				<div class="container">
+					<div class="row">
+						<div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
+							<ul class="border-top"></ul>
+							<th:block layout:fragment="mypagebar">
+								<div th:replace="fragments/common :: mypagebar"></div>
+							</th:block>
+						</div>
+	
+						<div class="col-lg-10 mx-auto" style="margin-top: 15px;">
+							<div class="pagetitle m-2">회원 정보 수정</div>
+		<!-- joinForm 시작 -->
+		<div class="join-form-wrap">
+          <form class="join-form" method="post" th:action="@{/mypage/user.do}" th:object="${user}">
+            <!-- <input type="hidden" class="form-control" th:field="*{userId}" th:readonly="readonly" >
+        	<input type="hidden" class="form-control" th:field="*{role}" th:readonly="readonly" > -->
+        	
+            <div class="form-group verify-box">
+              <label for="inputId" class="form-label mt-4">아이디</label>
+              <input type="text" class="form-control" disabled>
+            </div>
+            <div class="form-group has-success">
+              <label for="inputValid" class="form-label mt-4">비밀번호</label>
+              <input type="password" class="form-control is-valid" id="inputValid">
+              <div class="valid-feedback"></div>
+              <span class="error_next_box" id="pwd1Msg" aria-live="assertive">필수 정보입니다.</span>
+            </div>
+            <div class="form-group has-danger">
+              <label for="inputValid" class="form-label mt-4">비밀번호 재확인</label>
+              <input type="password" class="form-control is-valid" id="inputValid">
+              <span class="error_next_box" id="pwd2Msg" aria-live="assertive">필수 정보입니다.</span>
+              <div class="invalid-feedback">비밀번호가 일치하지 않습니다</div>
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputEmail1" class="form-label mt-4">이름</label>
+              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="" disabled>
+            </div>
+
+            <div class="form-group bir_wrap">
+              <label class="form-label mt-4">생년월일</label>
+              <div class="bir_yy">
+                <span class="ps_box">
+                  <input type="text" class="form-control" id="yy" placeholder="년(4자)" maxlength="4">
+                </span>
+              </div>
+              <div class="bir_mm">
+                <span class="ps_box focus">
+                  <select class="form-select form-control" aria-label="Default select example">
+                    <option selected>월</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                  </select>
+                </span>
+              </div>
+              <div class="bir_dd">
+                <span class="ps_box">
+                  <input type="text" class="form-control" id="dd" placeholder="일" maxlength="2">
+                </span>
+              </div>
+              <span class="error_next_box" id="birthdayMsg" style aria-live="assertive">태어난 년도 4자리를 정확하게 입력하세요.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
+              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="" disabled>
+            </div>
+            
+            <div class="form-group">
+              <label for="exampleSelect1" class="form-label mt-4">성별</label>
+              <div class="check-box">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked disabled>
+                  <label class="form-check-label" for="inlineRadio1">남자</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" disabled>
+                  <label class="form-check-label" for="inlineRadio2">여자</label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group row modify-btn-group">
+              <div class="col-sm d-grid gap-2">
+                <button type="button" class="btn btn-secondary">취소</button>
+              </div>
+              <div class="col-sm d-grid gap-2">
+                <button type="submit" class="btn btn-primary">수정</button>
+              </div>
+            </div>
+            
+          </form>
+      	</div>
+      	<!-- joinForm 끝 -->
+						</div>
+					</div>
+				</div>
 			</div>
 		</section>
 	</div>

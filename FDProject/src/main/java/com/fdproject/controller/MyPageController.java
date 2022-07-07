@@ -9,16 +9,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fdproject.constant.Method;
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
-
 import com.fdproject.domain.RecipeDTO;
-
+import com.fdproject.domain.UserDTO;
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.DrugService;
 import com.fdproject.service.RecipeService;
-import com.fdproject.util.GrammerUtils;
+import com.fdproject.service.UserService;
 import com.fdproject.util.UiUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -30,9 +28,11 @@ public class MyPageController extends UiUtils {
 
 	private final DiseaseService diseaseService;
 	private final DrugService drugService;
+	private final UserService userService;
 	
 	@GetMapping(value="/user.do")
-	public String UserModify(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
+	public String UserModify(@ModelAttribute("params") UserDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
+		
 		
 		return "mypage/usermodify";
 	}
