@@ -88,7 +88,7 @@
 													<h3 th:text="${Recipe.title}"></h3>
 													<!-- 이미지 부분 -->
 													<div style="padding:0px;">
-														<img th:src="|@{/assets/img/recipeImages/}${Recipe.imgFile}|"
+														<img th:src="|@{/assets/img/recipeimages/}${Recipe.imgFile}|"
 															style="width:230px; height:240px; margin: 19px;">
 													</div>
 													<!-- 버튼 부분 -->
@@ -115,23 +115,17 @@
 	<th:block layout:fragment="script">
 		<script th:inline="javascript">
 			/*<![CDATA[*/
-
+	
 			function movePage(uri, queryString, diseaseField, writer) {
-				if (writer == null && diseaseField == null) {					
-					location.href = uri + queryString;				
-				}
-				if (writer == null && diseaseField != null) {					
-					location.href = uri + queryString +"&diseaseField=" + diseaseField;					
-				}
-				if (writer != null && diseaseField == null) {
-					location.href = uri + queryString +"&writer=" + writer;
-				}
-				if (writer != null && diseaseField != null) {
-					location.href = uri + queryString +"&diseaseField=" + diseaseField + "&writer=" + writer;					
-				}
+				var url = uri + queryString;
 				
-				
-
+				if(writer != null)
+					url += "&writer=" + writer;
+					
+				if(diseaseField !=null)
+					url += "&diseaseField=" +diseaseField;
+					
+				location.href = url;					
 			}
 
 			/*]]>*/

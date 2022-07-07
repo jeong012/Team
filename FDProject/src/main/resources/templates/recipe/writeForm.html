@@ -3,11 +3,10 @@
 	layout:decorate="/layout/basic">
 
 <div layout:fragment="content">
-	<form id ="uploadform">
 	<section class="breadcrumbs">
 		<div class="container">
 			<div class="d-flex justify-content-between align-items-center">
-				<label for="InputForm1">음식 제목을 입력하세요</label>
+				<label for="InputForm1" style="font-size:18px;">음식 제목을 입력하세요</label>
 				<input type="text" class="form-control" id="Title" placeholder="해물 파전" style="width:800px;">
 				<ol id="list">
 					<!-- 이전단계 링크로 넣어줘야함 -->
@@ -26,9 +25,7 @@
 				<div class="col-lg-8">
 					<div class="portfolio-details-slider swiper">
 						<div class="swiper-wrapper align-items-center">
-							<div class="uploadDiv">
-								<input type="file" name="uploadFile">
-							</div>
+
 						</div>
 						<!--  section id 주목하자. -->
 						<section id="about" class="about section-bg" style="padding: 10px">
@@ -38,6 +35,39 @@
 										data-aos="fade-up" data-aos-delay="100">
 										<ul>
 											<!-- 여기가 추가란 -->
+											<li>
+												<i class="bx bx-camera"></i>
+												<div>
+													<h5>음식 사진 </h5>
+													
+													<img th:src="|@{/assets/img/recipeimages/food.png}|"
+														style="width: 400px; height: 400px;" id = "img_section";>
+													<br><br>
+													
+													<div class="filebox">
+														<label for="ex_file">사진 올리기</label>
+														<input type="file" id="ex_file" name="uploadFile"
+															accept="image/*" required=true value="업로드">
+														<script>
+															const reader = new FileReader();
+
+															reader.onload = (readerEvent) => {
+																document.querySelector("#img_section").setAttribute("src", readerEvent.target.result);
+																//파일을 읽는 이벤트가 발생하면 img_section의 src 속성을 readerEvent의 결과물로 대체함
+															};
+
+															document.querySelector("#ex_file").addEventListener("change", (changeEvent) => {
+																//upload_file 에 이벤트리스너를 장착
+
+																const imgFile = changeEvent.target.files[0];
+																reader.readAsDataURL(imgFile);
+																//업로드한 이미지의 URL을 reader에 등록
+															})
+														</script>
+													</div>
+													</p>
+												</div>
+											</li>
 											<li>
 												<i class="bx bx-store"></i>
 												<div>
@@ -98,7 +128,6 @@
 			</div>
 		</div>
 	</section><!-- End Portfolio Details Section -->
-	</form>
 </div>
 <th:block layout:fragment="script">
 	<!--  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
@@ -133,7 +162,7 @@
 			console.log(files);
 
 			formData.append('File', files);
-			
+
 			for (let key of formData.keys()) {
 				console.log(key);
 			}
@@ -150,9 +179,9 @@
 				//"storage": $("[id=food_store_content]").val(),//음식보관법
 				"foodIngredients": $("[id=ingredients]").val() //구성재료
 			}; //json data
-			
-			formData.append('Data',new Blob([JSON.stringify(data)], {type : "application/json"}));
-			
+
+			formData.append('Data', new Blob([JSON.stringify(data)], {type: "application/json"}));
+
 			$.ajax({
 				url: "/recipe/add",
 				type: "post",

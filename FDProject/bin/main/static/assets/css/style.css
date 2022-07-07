@@ -456,6 +456,41 @@ body {
 #hero .btn-get-started:hover {
   background: #247cf0;
 }
+
+.filebox label {
+  display: inline-block;
+  padding: .5em .75em;
+  color: #fff;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #87CEEB;
+  cursor: pointer;
+  border: 1px solid #87CEEB;
+  border-radius: .25em;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+}
+
+.filebox label:hover {
+  background-color: #6ed36e;
+}
+
+.filebox label:active {
+  background-color: #367c36;
+}
+
+.filebox input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 .btn {
   display: inline-block;
   font-weight: 400;
@@ -501,10 +536,12 @@ body {
 }
 .btn-primary:hover {
   color: #fff;
-  background-color: #4bb7e2;
-  border-color: #4bb7e2;
+  background-color: #6ed36e;
+  border-color: #6ed36e;
 }
-
+.btn-primary:active {
+  background-color: #367c36;
+}
 .btn-search {
   position: absolute;
   top: 0;
