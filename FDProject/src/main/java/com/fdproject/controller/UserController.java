@@ -31,10 +31,12 @@ import com.fdproject.domain.UserDiseaseDTO;
 import com.fdproject.domain.UserDrugDTO;
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.DrugService;
+import com.fdproject.service.MessageService;
 import com.fdproject.service.UserService;
 import com.google.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Controller
 @RequestMapping("/user")
@@ -45,11 +47,20 @@ public class UserController {
     private final DrugService drugService;
     private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
+	private final MessageService messageService;
 
 	@GetMapping(value="/joinForm.do")
 	public String getJoinForm(){
 		return "user/joinForm";
 	}
+	
+	@ResponseBody 
+	@GetMapping("/PhoneCheck")
+	public String PhoneCheck(@RequestParam(value="to") String to) throws CoolsmsException {
+			System.out.println("controller>>>>>>>>>>>>>>>>"+to);
+		return messageService.PhoneNumberCheck(to);
+	}
+	
 
 	@ResponseBody
 	@PostMapping(value="/joinForm2.do")	
@@ -221,4 +232,5 @@ public class UserController {
     	
     	return resultMap;
     }
+    
 }

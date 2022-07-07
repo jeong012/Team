@@ -38,6 +38,21 @@
                              	</div>
                             </form>
 	       				</div>
+	       				
+	       				<div class="modal-body" id="messageCheck">
+           					<label id="modalLabel" style="display: block; text-align: center; margin:15px;"> 인증번호를 입력하세요. </label>
+           					<div>
+								<input type="text" class="form-control" id="memberPhoneCertify" >
+								<button class="btn btn-info" id="messageFormCheck" style="float: right;">인증하기</button>				
+							</div>
+	       				</div>
+	       				
+	       				<div class="modal-body" id="messageCheckOk">
+           					<label id="modalLabel" style="display: block; text-align: center; ">휴대폰 인증이 완료되었습니다.</label>
+           					<button class="btn btn-info" th:onclick="closeModal()" style="float: right;">확인</button>
+	       				</div>
+	       				
+	       				
 	       			</div>
 	       		</div>
 	       	</div>
@@ -189,7 +204,7 @@
 		            <fieldset class="form-group verify-box">
 		              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
 		              <input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요" maxlength="11">
-		              <button class="btn btn-primary btn-verify" style="margin-top:10px;">인증</button>
+		              <button class="btn btn-primary btn-verify" id="memberPhoneCheck" style="margin-top:10px;">인증</button>
 		            </fieldset>
 		              <div class="ph_check textMsg"></div>
 		            
@@ -233,12 +248,16 @@
 						$("#existUser").show();
 						$("#newUser").hide();
 						$("#failUser").hide();
+						$("#messageCheck").hide();
+						$("#messageCheckOk").hide();
 					} else if(/*[[${oAuth2User}]]*/ != null){	/** 새로운 유저 **/
 						$("#joinModal").modal("hide");
 					} else{										/** 조인폼 첫 접근 **/
 						$("#joinModal").modal("show");
 						$("#existUser").hide();
 						$("#failUser").hide();
+						$("#messageCheck").hide();
+						$("#messageCheckOk").hide();
 					}
 				});
 			
@@ -440,6 +459,43 @@
 					}
 				});
 				
+				//휴대폰 본인인증
+				$('#memberPhoneCheck').click(function(){
+					$("#joinModal").modal("show");
+					$("#existUser").hide();
+					$("#newUser").hide();
+					$("#failUser").hide();
+					$("#messageCheck").show();
+					
+					var to = $('#phoneNum').val();
+					
+					$.ajax({
+						url : "/user/PhoneCheck",
+						type : "GET",
+						data : "to=" + to,
+						dataType : "json",
+						success : function(data) {
+							const checkNum = data;
+							alert('입력한 번호로 본인 확인 문자가 전송되었습니다.');		
+							
+				            //인증하기 버튼 클릭 이벤트
+							$('#messageFormCheck').click(function(){
+								const userNum = $('#memberPhoneCertify').val();		
+								if(checkNum == userNum){
+									//alert('인증 성공하였습니다.');
+									$("#messageCheck").hide();
+									$("#messageCheckOk").show();
+								}else {
+									alert('인증 실패하였습니다. 다시 입력해주세요.');
+								}
+							});
+				            
+						},
+						error : function() {
+							alert("에러")
+						}
+					});
+				});
 			/*]]*/
 		</script>
  	</th:block>
