@@ -13,7 +13,7 @@ public interface DiseaseMapper {
 
 	List<DiseaseDTO> diseaseList(DiseaseDTO params);
 	
-    List<DiseaseDTO> selectDiseaseListFive();
+    List<DiseaseDTO> selectDiseaseList();
 
     /** 회원가입 - 질병 리스트 조회 사용*/
     List<DiseaseDTO> joinDiseaseList();
