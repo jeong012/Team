@@ -37,12 +37,12 @@ public class UserDTO implements UserDetails {
 	private String registrationId;
 
 	/** 권한 */
-	private String role;
+	private String authority;
 
 	//사용자의 권한을 콜렉션 형태로 반환 (클래스 자료형은 GrantedAuthority를 구현해야함)
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singletonList(new SimpleGrantedAuthority(this.role));
+		return Collections.singletonList(new SimpleGrantedAuthority(this.authority));
 	}
 
 	//사용자의 id를 반환 (id는 unique한 값이여야함)

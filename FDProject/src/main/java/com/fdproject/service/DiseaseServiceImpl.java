@@ -20,8 +20,8 @@ public class DiseaseServiceImpl implements DiseaseService {
 	private final DiseaseMapper diseaseMapper;
 
 	@Override
-	public List<DiseaseDTO> getDiseaseListFive() {		
-		return diseaseMapper.selectDiseaseListFive();
+	public List<DiseaseDTO> getDiseaseList() {		
+		return diseaseMapper.selectDiseaseList();
 	}
 
 	@Override

@@ -60,25 +60,27 @@ public class UserController {
 	}
 	
 	@GetMapping(value="/loginForm.do")
-	public String getLoginForm(Model model){
+	public String getLoginForm(Model model, HttpSession httpSession){
+		if(httpSession.getAttribute("oAuth2User") != null) {
+			httpSession.removeAttribute("oAuth2User");
+			httpSession.invalidate();	
+		}
+		
 		UserDTO userDTO = new UserDTO();
 		model.addAttribute("userDTO", userDTO);
 		return "user/loginForm";
 	}
 	
 	@GetMapping(value="/login/error.do")
-	public String getLoginError(Model model){
+	public String getLoginError(Model model, HttpSession httpSession){
+		if(httpSession.getAttribute("oAuth2User") != null) {
+			httpSession.removeAttribute("oAuth2User");
+			httpSession.invalidate();	
+		}
+		
 		model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
 		return "user/loginForm";
 	}
-	
-	@GetMapping(value="/login/access.do")
-    public String userAccess(Model model, Authentication authentication) {
-        //Authentication 객체를 통해 유저 정보를 가져올 수 있다.
-        UserDTO userDTO = (UserDTO) authentication.getPrincipal();  //userDetail 객체를 가져옴
-        model.addAttribute("info", userDTO.getUserId() +"의 "+ userDTO.getName()+ "님");      //유저 아이디
-        return "redirect:/";
-    }
 
     /** 회원가입 - 질병 리스트 조회 사용*/
     @ResponseBody
@@ -101,9 +103,15 @@ public class UserController {
         drugMap.put("drugList", drugList);
         return drugMap;
     }
-    
+
+    /** OAuth2 접근 경로 확인 */
 	@GetMapping(value="/{pathFlag}/{registrationId}/oAuth2.do")
 	public String oAuth2Login(@PathVariable String registrationId, @PathVariable String pathFlag, HttpSession httpSession){
+		if(httpSession.getAttribute("oAuth2User") != null) {
+			httpSession.removeAttribute("oAuth2User");
+			httpSession.invalidate();	
+		}
+		
 		OAuth2UserDTO oAuth2UserDTO = new OAuth2UserDTO();
 		if(pathFlag.equals("login")) {
 			oAuth2UserDTO.setPathFlag("login");
@@ -120,14 +128,11 @@ public class UserController {
 	public String findByOAuth2User(@SessionAttribute(value="oAuth2User", required = false) OAuth2UserDTO oAuth2UserDTO, Model model, HttpSession httpSession, Authentication authentication){
 		UserDTO user = userService.findByOAuth2User(oAuth2UserDTO);
 		if(user != null) {
-			httpSession.removeAttribute("oAuth2User");
-			httpSession.invalidate();
-			
 			if(oAuth2UserDTO.getPathFlag().equals("login")) {
-		        UserDTO userDTO = (UserDTO) authentication.getPrincipal();
-		        System.out.println(userDTO);
-		        model.addAttribute("info", userDTO.getUserId() +"의 "+ userDTO.getName()+ "님");
-		        return "redirect:/user/login_access";
+				model.addAttribute("userId", user.getUserId());
+				model.addAttribute("OAuth2Login", "true");
+				
+		        return "user/loginForm";
 			} else {
 				model.addAttribute("existUser", user);
 				return "user/joinForm";
@@ -135,7 +140,7 @@ public class UserController {
 		} else {
 			if(oAuth2UserDTO.getPathFlag().equals("login")) {
 				httpSession.removeAttribute("oAuth2User");
-				httpSession.invalidate();
+				httpSession.invalidate();	
 				
 				model.addAttribute("result", "fail");
 				return "user/loginForm";
@@ -181,8 +186,7 @@ public class UserController {
 			
 	        Gson gson = new Gson();
 	        userDTO = gson.fromJson(jsonObj.get("userDTO").toString(), UserDTO.class);
-	        //userDTO.setRole(Role.USER);
-	        userDTO.setRole("USER");
+	        userDTO.setAuthority("ROLE_MEMBER");
 	        
 	    	if(userDTO.getRegistrationId() == null) {
 	    		userDTO.setRegistrationId("main");

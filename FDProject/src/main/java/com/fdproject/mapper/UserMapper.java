@@ -1,6 +1,7 @@
 package com.fdproject.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.fdproject.domain.OAuth2UserDTO;
 import com.fdproject.domain.UserDTO;
@@ -22,13 +23,13 @@ public interface UserMapper {
 	/** ID 중복체크*/
 	int findById(String userId);
 
-	/** 회원정보 저장*/
+	/** 회원가입 - 회원정보 저장*/
 	int saveUser(UserDTO userDto);
 	
 	/** 로그인*/
 	UserDTO findByUser(String userId);
 	
-	/** 회원정보 수정*/
-	UserDTO updateUser(UserDTO userDto);
+	/** OAuth2 로그인*/
+	UserDTO loginByOAuth2(@Param("userId") String userId, @Param("registraionId") String registraionId);
 
 }

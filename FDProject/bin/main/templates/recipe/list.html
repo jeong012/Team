@@ -29,12 +29,12 @@
 										<li><a th:href="@{/recipe/list}"
 												class="link-dark d-inline-flex text-decoration-none rounded">모든
 												레시피</a></li>
-										<th:block th:if="${Disease_List_Five != null}">
-											<th:block th:each="disease:${Disease_List_Five}">
+										<th:block th:if="${Disease_List != null}">
+											<th:block th:each="disease:${Disease_List}">
 												<!--디지즈 리스트 담아서 뷰어에 뿌려주는 걸 토대로 쭉 리스트 나열 -->
 												<li><a th:href="@{/recipe/list(diseaseField = ${disease.diseaseField})}"
 														class="link-dark d-inline-flex text-decoration-none rounded"
-														th:text="${disease.diseaseName}">디지즈네임</a></li>
+														th:text="${disease.diseaseField}">디지즈네임</a></li>
 											</th:block>
 										</th:block>
 									</ul>
@@ -43,7 +43,7 @@
 							<li class="mb-1">
 								<!-- 사용자 작성 레시피 -->
 								<form method="get" action="/recipe/list">
-									<button class="dropdown-none-toggle" type="submit">
+									<button class="dropdown-none-toggle" type="submit" name="writer" value="writer">
 										공유 레시피
 									</button>
 								</form>
@@ -88,7 +88,7 @@
 													<h3 th:text="${Recipe.title}"></h3>
 													<!-- 이미지 부분 -->
 													<div style="padding:0px;">
-														<img th:src="|@{/assets/img/recipeImages/}${Recipe.imgFile}|"
+														<img th:src="|@{/assets/img/recipeimages/}${Recipe.randomImgFile}|"
 															style="width:230px; height:240px; margin: 19px;">
 													</div>
 													<!-- 버튼 부분 -->
@@ -115,11 +115,19 @@
 	<th:block layout:fragment="script">
 		<script th:inline="javascript">
 			/*<![CDATA[*/
-
-			function movePage(uri, queryString) {
-				location.href = uri + queryString;
+	
+			function movePage(uri, queryString, diseaseField, writer) {
+				var url = uri + queryString;
+				
+				if(writer != null)
+					url += "&writer=" + writer;
+					
+				if(diseaseField !=null)
+					url += "&diseaseField=" +diseaseField;
+					
+				location.href = url;					
 			}
-			
+
 			/*]]>*/
 		</script>
 	</th:block>

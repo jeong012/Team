@@ -2,11 +2,15 @@ package com.fdproject.service;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fdproject.domain.OAuth2UserDTO;
 import com.fdproject.domain.UserDTO;
@@ -29,10 +33,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     	int isInserted = 0;
     	
     	/** 회원가입 - 사용자 정보 추가*/
-    	if(userDto.getRegistrationId().equals("main")) {
-    		String encodePw = passwordEncoder.encode(userDto.getPw());
-    		userDto.setPw(encodePw);
-    	}
+		String encodePw = passwordEncoder.encode(userDto.getPw());
+		userDto.setPw(encodePw);
     	isInserted = userMapper.saveUser(userDto);
     	
     	/** 회원가입 - 사용자 지병 데이터 추가*/
@@ -64,19 +66,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public UserDTO loadUserByUsername(String userId) throws UsernameNotFoundException {
-		UserDTO authUser = userMapper.findByUser(userId);
+		ServletRequestAttributes servletRequestAttribute = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+	    HttpSession httpSession = servletRequestAttribute.getRequest().getSession(true);
+		OAuth2UserDTO oAuth2User = (OAuth2UserDTO) httpSession.getAttribute("oAuth2User");
+
+		UserDTO authUser = new UserDTO();
+		if(oAuth2User == null) {
+			authUser = userMapper.findByUser(userId);
+		} else {
+			authUser = userMapper.loginByOAuth2(userId, oAuth2User.getRegistrationId());
+		}
 		
 		if(authUser == null) {
 			throw new UsernameNotFoundException("userId" + userId + "not found");
 		}
-		
 		return authUser;
 	}
-
-//	@Transactional
-//	public UserDTO updateUser(UserDTO userDto) {
-//		UserDTO persistance = userMapper.findByUser(userDto.getUserId());
-//		
-//		return null;
-//	}
 }
