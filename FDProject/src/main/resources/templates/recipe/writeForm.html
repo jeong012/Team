@@ -39,11 +39,11 @@
 												<i class="bx bx-camera"></i>
 												<div>
 													<h5>음식 사진 </h5>
-													
+
 													<img th:src="|@{/assets/img/recipeimages/food.png}|"
-														style="width: 400px; height: 400px;" id = "img_section";>
+														style="width: 400px; height: 400px;" id="img_section" ;>
 													<br><br>
-													
+
 													<div class="filebox">
 														<label for="ex_file">사진 올리기</label>
 														<input type="file" id="ex_file" name="uploadFile"
@@ -158,6 +158,7 @@
 			var formData = new FormData();
 			//input class 값
 			var inputFile = $("input[name='uploadFile']");
+			console.log(inputFile);
 			var files = inputFile[0].files[0];
 			console.log(files);
 
@@ -174,14 +175,34 @@
 			}; //json data
 
 			formData.append('Data', new Blob([JSON.stringify(data)], {type: "application/json"}));
-			for (let key of formData.keys()) {
-				console.log(key);
+			//formData.get(key)
+			if ($("[id=Title]").val() == "") {
+				alert("제목을 입력해주세요");
+				return;
+			}
+			if (inputFile.val() == "") {
+				console.log(inputFile.val());
+				alert("사진 등록해주세요");
+				return;
+			}
+			if ($("[id=storage]").val() == "") {
+				alert("음식 보관법을 입력해주세요");
+				return;
+			}
+			if ($("input[type=text][name=1]").val() == "") {
+				alert("조리단계를 입력해주세요");
+				return;
+			}
+			if ($("[id=tip]").val() == "") {
+				alert("tip을 입력해주세요");
+				return;
 			}
 			
-			for (let value of formData.values()) {
-				console.log(value);
+			if ($("[id=ingredients]").val() == "") {
+				alert("성분을 입력해주세요");
+				return;
 			}
-			console.log(formData);
+
 			$.ajax({
 				url: "/recipe/add",
 				type: "post",
@@ -193,10 +214,10 @@
 				success: function (json) {
 					alert("레시피가 등록되었습니다");
 					location.href = "/recipe/list";
-				},
+				},				
 				error: function (request, status, error) {
 					alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-				}
+				}				
 			}); //ajax
 		}; //function
 
