@@ -13,8 +13,7 @@ public class MessageService {
 
 	//휴대폰번호 인증문자 보내기
 	public String PhoneNumberCheck(String to) throws CoolsmsException{
-		
-		System.out.println("service>>>>>>>>>"+to);
+
 		String api_key = "NCSSK2YUCPXAELWM";
 		String api_secret = "2KD9GSUM1QEOT6NUASBJECSXLV2EQPQC";
 		Message coolsms = new Message(api_key, api_secret);
@@ -34,9 +33,9 @@ public class MessageService {
 	    params.put("text", "FDProject 인증번호는 [" + numStr + "] 입니다.");
 	 
 	    coolsms.send(params); // 메시지 전송
+	  
+	    System.out.println(numStr);
 	    
-			  
-			  
 		return numStr;
 		 
 	}

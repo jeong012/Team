@@ -54,13 +54,6 @@ public class UserController {
 		return "user/joinForm";
 	}
 	
-	@ResponseBody 
-	@GetMapping("/PhoneCheck")
-	public String PhoneCheck(@RequestParam(value="to") String to) throws CoolsmsException {
-			System.out.println("controller>>>>>>>>>>>>>>>>"+to);
-		return messageService.PhoneNumberCheck(to);
-	}
-	
 
 	@ResponseBody
 	@PostMapping(value="/joinForm2.do")	
@@ -244,5 +237,13 @@ public class UserController {
     	
     	return resultMap;
     }
+    
+    /*본인 인증 메세지*/
+	@ResponseBody 
+	@PostMapping("/PhoneCheck")
+	public String PhoneCheck(@RequestParam(value="to") String to) throws CoolsmsException {
+			
+		return messageService.PhoneNumberCheck(to);
+	}
     
 }
