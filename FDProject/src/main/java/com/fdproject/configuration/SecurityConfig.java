@@ -42,7 +42,7 @@ public class SecurityConfig{
 		        .usernameParameter("userId") //로그인시 사용할 파라미터 이름
 		        .passwordParameter("pw") //로그인시 사용할 파라미터 이름
 		        .loginProcessingUrl("/login_proc") //사용자 이름과 암호를 제출할 URL
-		        .defaultSuccessUrl("/user/login/access.do") //로그인 성공 시 제공할 페이지
+		        .defaultSuccessUrl("/") //로그인 성공 시 제공할 페이지
 		        .failureUrl("/user/login/error.do") //로그인 실패 시 제공할 페이지
             .and()
                 .logout()

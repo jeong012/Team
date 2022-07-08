@@ -73,10 +73,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return authUser;
 	}
 
-//	@Override
-//	public UserDTO readUser(String userId) {
-//		UserDTO userDto = userMapper.findByUser(userId);
-//		userDto.set
+//	@Transactional
+//	public UserDTO updateUser(UserDTO userDto) {
+//		UserDTO persistance = userMapper.findByUser(userDto.getUserId());
+//		
 //		return null;
 //	}
 }

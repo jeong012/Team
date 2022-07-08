@@ -1,5 +1,6 @@
 package com.fdproject.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -31,7 +32,8 @@ public class MyPageController extends UiUtils {
 	private final UserService userService;
 	
 	@GetMapping(value="/user.do")
-	public String UserModify(@ModelAttribute("params") UserDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
+	public String UserModify(@ModelAttribute("params") UserDTO params, @RequestParam(value = "id", required = false) String id, Principal principal, Model model) {
+		String userId = principal.getName();
 		
 		
 		return "mypage/usermodify";

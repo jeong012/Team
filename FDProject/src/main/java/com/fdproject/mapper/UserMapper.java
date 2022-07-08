@@ -27,5 +27,8 @@ public interface UserMapper {
 	
 	/** 로그인*/
 	UserDTO findByUser(String userId);
+	
+	/** 회원정보 수정*/
+	UserDTO updateUser(UserDTO userDto);
 
 }
