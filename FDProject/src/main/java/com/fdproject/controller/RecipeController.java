@@ -1,6 +1,6 @@
 package com.fdproject.controller;
 
-import java.io.File;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.RecipeDTO;
+import com.fdproject.domain.UserDiseaseDTO;
+
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.RecipeService;
 
@@ -32,11 +34,17 @@ public class RecipeController {
 	private RecipeService recipeService;
 	@Autowired
 	private DiseaseService diseaseService;
-
+	
 	@GetMapping(value = "/list")
-	public String getRecipeList(@ModelAttribute("params") RecipeDTO params, Model model) {
+	public String getRecipeList(@ModelAttribute("params") RecipeDTO params, Model model, Principal principal) {
+		
+		//로그인 세션이 있으면
+		if(principal!=null)
+		{
+			List<DiseaseDTO> list = diseaseService.getUserDiseaseList(principal);
+			model.addAttribute("user_disease_list",list);
+		}
 		// 레시피 리스트 뽑아오기
-
 		List<RecipeDTO> Recipe_List = recipeService.getRecipeList(params);
 		model.addAttribute("Recipe_List", Recipe_List);
 		System.out.println("Recipe_List:" + Recipe_List);

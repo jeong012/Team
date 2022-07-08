@@ -1,5 +1,6 @@
 package com.fdproject.service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fdproject.domain.RecipeDTO;
 import com.fdproject.domain.RecipesCartDTO;
+import com.fdproject.domain.UserDiseaseDTO;
 
 public interface RecipeService {
 	
@@ -25,5 +27,6 @@ public interface RecipeService {
 	public boolean uploadRecipe(MultipartFile file, Map<String, Object> data) throws Exception;
 	
 	public String randomFileName(String uploadFileName,byte[] file) throws Exception;
+	
 		
 }

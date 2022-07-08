@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="/layout/basic">
+	layout:decorate="/layout/basic" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div layout:fragment="content">
 	<section id="list-page">
@@ -29,12 +29,12 @@
 										<li><a th:href="@{/recipe/list}"
 												class="link-dark d-inline-flex text-decoration-none rounded">모든
 												레시피</a></li>
-										<th:block th:if="${Disease_List != null}">
-											<th:block th:each="disease:${Disease_List}">
+										<th:block th:if="${Disease_List_Five != null}">
+											<th:block th:each="disease:${Disease_List_Five}">
 												<!--디지즈 리스트 담아서 뷰어에 뿌려주는 걸 토대로 쭉 리스트 나열 -->
 												<li><a th:href="@{/recipe/list(diseaseField = ${disease.diseaseField})}"
 														class="link-dark d-inline-flex text-decoration-none rounded"
-														th:text="${disease.diseaseField}">디지즈네임</a></li>
+														th:text="${disease.diseaseName}">디지즈네임</a></li>
 											</th:block>
 										</th:block>
 									</ul>
@@ -43,13 +43,13 @@
 							<li class="mb-1">
 								<!-- 사용자 작성 레시피 -->
 								<form method="get" action="/recipe/list">
-									<button class="dropdown-none-toggle" type="submit" name="writer" value="writer">
+									<button class="dropdown-none-toggle" type="submit">
 										공유 레시피
 									</button>
 								</form>
 							</li>
 							<!-- 로그인 세션이 있을 경우 표시-->
-							<th:block th:if="${authUser != null}">
+							<th:block sec:authorize="hasAnyRole('ROLE_MEMBER', 'ROLE_ADMIN')">
 								<li class="mb-1">
 									<!-- 사용자 질병 관련 레시피 -->
 									<button class="dropdown-toggle" data-bs-toggle="collapse"
@@ -58,15 +58,14 @@
 									</button>
 									<div class="collapse" id="userDiseases-collapse">
 										<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-											<li><a href="#"
-													class="link-dark d-inline-flex text-decoration-none rounded">내
-													질병1</a></li>
-											<li><a href="#"
-													class="link-dark d-inline-flex text-decoration-none rounded">내
-													질병2</a></li>
-											<li><a href="#"
-													class="link-dark d-inline-flex text-decoration-none rounded">내
-													질병3</a></li>
+											<th:block th:if="${user_disease_list != null}">
+												<th:block th:each="disease:${user_disease_list}">
+													<li><a href="@{/recipe/list(diseaseName = ${disease.diseaseName})}"
+															class="link-dark d-inline-flex text-decoration-none rounded" th:text="${disease.diseaseName}">
+															</a>
+													</li>
+												</th:block>
+											</th:block>
 										</ul>
 									</div>
 								</li>
@@ -88,7 +87,7 @@
 													<h3 th:text="${Recipe.title}"></h3>
 													<!-- 이미지 부분 -->
 													<div style="padding:0px;">
-														<img th:src="|@{/assets/img/recipeimages/}${Recipe.randomImgFile}|"
+														<img th:src="|@{/assets/img/recipeImages/}${Recipe.imgFile}|"
 															style="width:230px; height:240px; margin: 19px;">
 													</div>
 													<!-- 버튼 부분 -->
@@ -115,17 +114,9 @@
 	<th:block layout:fragment="script">
 		<script th:inline="javascript">
 			/*<![CDATA[*/
-	
-			function movePage(uri, queryString, diseaseField, writer) {
-				var url = uri + queryString;
-				
-				if(writer != null)
-					url += "&writer=" + writer;
-					
-				if(diseaseField !=null)
-					url += "&diseaseField=" +diseaseField;
-					
-				location.href = url;					
+
+			function movePage(uri, queryString) {
+				location.href = uri + queryString;
 			}
 
 			/*]]>*/

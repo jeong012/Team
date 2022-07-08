@@ -1,5 +1,6 @@
 package com.fdproject.service;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,6 +64,11 @@ public class DiseaseServiceImpl implements DiseaseService {
         diseaseList = diseaseMapper.joinDiseaseList();
         
 		return diseaseList;
+	}
+
+	@Override
+	public List<DiseaseDTO> getUserDiseaseList(Principal principal) {		
+		return diseaseMapper.selectUserDiseaseList(principal.getName());
 	}
 
 }

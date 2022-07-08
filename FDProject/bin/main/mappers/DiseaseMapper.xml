@@ -27,6 +27,14 @@
         ]]>
     </sql>
     
+    <sql id = "UserDiseaseColumns">
+    	<![CDATA[
+        u.user_disease_no,
+        u.disease_no,
+        u.user_id
+        ]]>
+    </sql>
+    
     <select id="getUserDisease" parameterType="UserDiseaseDTO" resultType="String">
         select
         disease_no as diseaseNo
@@ -50,5 +58,14 @@
 	        ORDER BY DISEASE_NO
         ]]>
     </select>
+    
+    <select id= "selectUserDiseaseList" resultType="DiseaseDTO" parameterType="String">
+    	select d.disease_name    	
+    	from user_Diseases ud, diseases d 
+    	where ud.user_id = #{userId} and 
+        	  d.disease_no = ud.disease_no     	
+    </select>
+    
+    
     
 </mapper>
