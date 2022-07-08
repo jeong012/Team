@@ -2,7 +2,6 @@ package com.fdproject.controller;
 
 import java.util.List;
 
-import com.fdproject.service.DrugService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fdproject.constant.Method;
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
+
+import com.fdproject.domain.RecipeDTO;
+
 import com.fdproject.service.DiseaseService;
+import com.fdproject.service.DrugService;
+import com.fdproject.service.RecipeService;
 import com.fdproject.util.GrammerUtils;
 import com.fdproject.util.UiUtils;
 
@@ -27,6 +31,7 @@ public class MyPageController extends UiUtils {
 	private final DiseaseService diseaseService;
 	private final DrugService drugService;
 	
+
 	@GetMapping(value="/user.do")
 	public String UserModify(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
 		
@@ -35,6 +40,8 @@ public class MyPageController extends UiUtils {
 	
 	
 	//내 질병 관리
+	private final RecipeService recipeService;
+	
 	@GetMapping(value="/disease.do")
 	public String getDiseaseList(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model){
 		 if (GrammerUtils.isStringEmpty(id) == true) {
@@ -62,10 +69,18 @@ public class MyPageController extends UiUtils {
 	}
 	
 	@GetMapping(value = "/myDrug.do")
-	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model) {
-		List<DrugDTO> drugList = drugService.getMyDrugList(params);
+	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model) {		
+		List<DrugDTO> drugList = drugService.getMyDrugList(params);		
 		model.addAttribute("drugList", drugList);
 		return "mypage/myDrugList";
+	}
+	
+	@GetMapping(value = "/myRecipe.do") 
+	public String getMyRecipeList(@ModelAttribute(value = "params") RecipeDTO params, Model model) {
+		//Recipe_List
+		List<RecipeDTO> Recipe_List = recipeService.getMyRecipeList(params);		
+		model.addAttribute("Recipe_List", Recipe_List);
+		return "mypage/myRecipeList";
 	}
 	
 
