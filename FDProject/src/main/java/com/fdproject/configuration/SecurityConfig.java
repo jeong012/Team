@@ -32,27 +32,29 @@ public class SecurityConfig{
             .and()
                 .authorizeRequests()
                 .antMatchers("/**/**", "/assets/**").permitAll()
-		        .mvcMatchers("/**/view/*").hasRole("USER")
+		        .mvcMatchers("/*/view").hasRole("MEMBER")
 		        .mvcMatchers("/admin/**").hasRole("ADMIN")
 		        .antMatchers().rememberMe()
 		        .anyRequest().authenticated()
             .and()
 	            .formLogin()
-		        .loginPage("/user/loginForm")
-		        .defaultSuccessUrl("/") //로그인 성공 시 제공할 페이지
+		        .loginPage("/user/loginForm.do")
 		        .usernameParameter("userId") //로그인시 사용할 파라미터 이름
-		        .failureUrl("/user/login/error") //로그인 실패 시 제공할 페이지
+		        .passwordParameter("pw") //로그인시 사용할 파라미터 이름
+		        .loginProcessingUrl("/login_proc") //사용자 이름과 암호를 제출할 URL
+		        .defaultSuccessUrl("/") //로그인 성공 시 제공할 페이지
+		        .failureUrl("/user/login/error.do") //로그인 실패 시 제공할 페이지
             .and()
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout.do"))
                 .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
+                .invalidateHttpSession(true).deleteCookies("JSESSIONID")
             .and()
                 .oauth2Login()
                 	.userInfoEndpoint()
                 		.userService(customOAuth2UserService)
             .and()
-            	.defaultSuccessUrl("/user/findByUser.do")
+            	.defaultSuccessUrl("/user/findByOAuth2User.do")
             .and()
             	.exceptionHandling()
             	.authenticationEntryPoint(new CustomAuthenticationEntryPoint());	// 인증되지 않은 사용자가 리소스에 접근하였을 때 수행되는 핸들러

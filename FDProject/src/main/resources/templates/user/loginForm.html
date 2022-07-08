@@ -40,17 +40,13 @@
 	              <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
 	                  <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
 	                    <h2><img src="/assets/img/main-logo.png" alt="로고이미지" width="70px"></h2>
-	                    <!--
-	                      <h2><strong>Sign Up Your User Account</strong></h2>
-	                      <p>Fill all form field to go to next step</p>
-	                      -->
-	                      <div class="row">
+	                    	<div class="row">
 	                          <div class="col-md-12 mx-0">
-	                              <form id="msform">
+	                              <form id="msform" th:action="@{/login_proc}" method="post">
 	                                  <fieldset>
 	                                      <div class="form-card">
 	                                      	<div>
-	                                          <input type="text" name="username" placeholder="아이디"/>
+	                                          <input type="text" name="userId" placeholder="아이디"/>
 	                                          <input type="password" name="pw" placeholder="비밀번호"/>
 	                                        </div>
 	                                        <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
@@ -80,6 +76,27 @@
 		<script th:inline="javascript">
 			/*<![CDATA[*/
 				$(document).ready(function() {
+					if(/*[[${OAuth2Login}]]*/ === 'true'){
+		            	var form = document.createElement('form');
+		            	form.setAttribute('method', 'post');
+		            	form.setAttribute('action', '/login_proc');
+		            	document.charset = "utf-8";
+						
+		            	var hiddenField1 = document.createElement('input');
+		            	hiddenField1.setAttribute('type','hidden');
+		            	hiddenField1.setAttribute('name','userId');
+		            	hiddenField1.setAttribute('value',/*[[${userId}]]*/);
+		            	form.appendChild(hiddenField1);
+		            	
+		            	hiddenField2 = document.createElement('input');
+		            	hiddenField2.setAttribute('name','pw');
+		            	hiddenField2.setAttribute('value', "1111");
+		            	form.appendChild(hiddenField2);
+		            	
+		            	document.body.appendChild(form);
+		            	form.submit();
+					}
+					
 					if(/*[[${result}]]*/ === 'fail'){
 						$("#loginModal").modal("show");
 					}

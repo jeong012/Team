@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layout/basic">
+      layout:decorate="/layout/basic"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 	<div layout:fragment="content">
 	    <section class="bg-light">
 	      <div class="container">
-	      	
 			<!--  Modal -->
 	       	<div id="joinModal" class="modal fade" role="dialog">
 	       		<div class="modal-dialog">
@@ -101,7 +101,6 @@
 			                  <select class="form-select form-control" id="mm" aria-label="Default select example">
 			                    <option selected>월</option>
 						        <th:block th:each="m : ${#numbers.sequence(1,12)}">
-						        	<span th:text="${m}"></span>
 			                    	<option th:value="${m}" th:text="${m}"></option>
 						        </th:block>
 			                  </select>
@@ -130,7 +129,7 @@
 		              	<input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요" maxlength="11">
 		              </th:block>
 		              
-		              <button type="submit" class="btn btn-primary btn-verify">인증</button>
+		              <button type="submit" class="btn btn-primary btn-verify" style="margin-top:10px;">인증</button>
 		            </fieldset>
 		            
 		            <fieldset class="form-group">
@@ -141,11 +140,11 @@
 		              <th:block th:unless="${oAuth2User.sex != null}">
 			              <div class="check-box">
 			                <div class="form-check form-check-inline">
-			                  <input class="form-check-input" type="radio" name="sex" id="inlineRadio1" value="option1">
+			                  <input class="form-check-input" type="radio" name="sex" id="inlineRadio1" value="남자">
 			                  <label class="form-check-label" for="inlineRadio1">남자</label>
 			                </div>
 			                <div class="form-check form-check-inline">
-			                  <input class="form-check-input" type="radio" name="sex" id="inlineRadio2" value="option2">
+			                  <input class="form-check-input" type="radio" name="sex" id="inlineRadio2" value="여자">
 			                  <label class="form-check-label" for="inlineRadio2">여자</label>
 			                </div>
 			              </div>
@@ -276,20 +275,41 @@
 				function showModal(){
 					$("#joinModal").modal("show");
 					$("#newUser").hide();
+					$("#existUser").hide();
 					$("#failUser").show();
+				}
+
+				function checkValidDate(value) {
+					var result = true;
+					try {
+					    var date = value.split("-");
+					    var y = parseInt(date[0], 10),
+					        m = parseInt(date[1], 10),
+					        d = parseInt(date[2], 10);
+					    
+					    var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+					    result = dateRegex.test(d+'-'+m+'-'+y);
+					} catch (err) {
+						result = false;
+					}    
+				    return result;
 				}
 			
 				function saveUserInfo(){
 					var userId = $("#userId").val();
 					var pw = $("#pw2").val();
 					var name = $("#name").val();
-					var birthDate = $("#yy").val() + $("#mm").val() + $("#dd").val();
+					var yy = $("#yy").val();
+					var mm = $("#mm").val();
+					var dd = $("#dd").val();
+					var birthDate = yy + "-" + mm + "-" + dd;
 					var phoneNum = $("#phoneNum").val();
 					var sex = $('input[type=radio][name=sex]:checked').val();
 					if(sex == null){
 						sex = $("#sex").val();
 					}
 					var registrationId = $("#registrationId").val();
+					
 					/** 유효성 검사 */
 					if(userId == ""){
 						showModal();
@@ -297,7 +317,7 @@
 						return false;
 					}
 					
-					if(!isChecked){
+					if(!isChecked && !registrationId){
 						showModal();
 						$("#modalLabel").text("아이디 중복확인을 해주세요.");
 						return false;
@@ -309,33 +329,34 @@
 						$("#modalLabel").text("비밀번호를 입력해주세요.");
 						return false;
 					}
+					
 			        var pwCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
-			        /*if(!pwCheck.test(pw1)){
+			        if(!pwCheck.test(pw1) && !registrationId){
 						alert("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
 						return false;
-					}*/
+			        }
+			        
 					if($('#pw1').val() != $('#pw2').val() && !registrationId){
 						showModal();
 						$("#modalLabel").text("비밀번호가 일치하지 않습니다.");
 						return false;
 					}
+					
 					if(name == ""){
 						showModal();
 						$("#modalLabel").text("이름을 입력해주세요.");
 						return false;
 					}
-					var reg = /^[0-9]+/g;
-					var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
-					var yy = $("#yy").val();
-					var dd = $("#dd").val();
+					
+					var reg =/[0-9]/;
 					if(yy == ""){
 						showModal();
 						$("#modalLabel").text("연도를 입력해주세요.");
 						return false;
 					}
-					if(!reg.test(yy && dd)){
+					if(mm == "월"){
 						showModal();
-						$("#modalLabel").text("날짜는 숫자만 입력할 수 있습니다.");
+						$("#modalLabel").text("월을 선택해주세요.");
 						return false;
 					}
 					if(dd == ""){
@@ -343,18 +364,29 @@
 						$("#modalLabel").text("일자를 입력해주세요.");
 						return false;
 					}
+					if(!reg.test(yy) || !reg.test(mm) || !reg.test(dd)){
+						showModal();
+						$("#modalLabel").text("날짜는 숫자만 입력할 수 있습니다.");
+						return false;
+					}
+					if(!checkValidDate(birthDate)){
+						showModal();
+						$("#modalLabel").text("유효하지 않은 날짜입니다.");
+						return false;
+					}
+					
+					var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 					if(phoneNum == ""){
 						showModal();
-						$("#modalLabel").text("휴대폰번호를 입력해주세요.");
+						$("#modalLabel").text("휴대폰 번호를 입력해주세요.");
 						return false;
 					}
 					if(!regPhone.test(phoneNum)){
 						showModal();
-						$("#modalLabel").text("휴대폰번호 형식이 아닙니다.");
+						$("#modalLabel").text("휴대폰 번호 형식이 아닙니다.");
 						return false;
 					}
-					var male = $("#male").val();
-					var female = $("#female").val();
+					
 					if(sex == null){
 						showModal();
 						$("#modalLabel").text("성별을 선택해주세요.");
@@ -377,7 +409,7 @@
 			            url : "/user/saveUserInfo.do",
 			            dataType : "json",
 			            contentType: "application/json; charset=utf-8",
-			            success : function(data){	            
+			            success : function(data){
 			            	var form = document.createElement('form');
 			            	form.setAttribute('method', 'post');
 			            	form.setAttribute('action', '/user/joinForm2.do');
@@ -415,11 +447,11 @@
 			            dataType : "text",
 			            success : function(data) {
 			            	if (data == 1) {
-			            		isChecked = true;
 			                	$('.id_check').text("사용중인 아이디입니다.");
 			                	$('.id_check').css("color","red");
 			                	$(".id_check").focus();
 			                } else {
+			            		isChecked = true;
 			                	$('.id_check').text("사용 가능한 아이디입니다.");
 			                	$('.id_check').css("color","blue");
 			                    $(".id_check").focus();
