@@ -43,14 +43,16 @@ public class RecipeController {
 		{
 			List<DiseaseDTO> list = diseaseService.getUserDiseaseList(principal);
 			model.addAttribute("user_disease_list",list);
+			System.out.println("user_disease_list:" + list);
 		}
 		// 레시피 리스트 뽑아오기
 		List<RecipeDTO> Recipe_List = recipeService.getRecipeList(params);
 		model.addAttribute("Recipe_List", Recipe_List);
-		System.out.println("Recipe_List:" + Recipe_List);
+		//System.out.println("Recipe_List:" + Recipe_List);
 		// disease_list 상위 5개 가져오는 객체
 		List<DiseaseDTO> Disease_List = diseaseService.getDiseaseList();
 		model.addAttribute("Disease_List", Disease_List);
+		System.out.println("Disease_List:" + Disease_List);
 		// System.out.println("Disease_List_Five:" + Disease_List_Five);
 
 		return "recipe/list";

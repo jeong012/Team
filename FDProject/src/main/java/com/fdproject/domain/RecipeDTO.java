@@ -13,6 +13,8 @@ public class RecipeDTO extends CommonDTO {
 	/** 질병 필드명 */
 	private String diseaseField;
 	
+	// 접근 쉽게 하려고 만든 변수
+	private String diseaseName;
 	/** 제목 */
 	private String title;
 	

@@ -60,7 +60,7 @@
     </select>
     
     <select id= "selectUserDiseaseList" resultType="DiseaseDTO" parameterType="String">
-    	select d.disease_name    	
+    	select d.disease_name, d.disease_field    	
     	from user_Diseases ud, diseases d 
     	where ud.user_id = #{userId} and 
         	  d.disease_no = ud.disease_no     	
