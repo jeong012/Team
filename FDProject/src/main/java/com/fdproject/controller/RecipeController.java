@@ -41,8 +41,8 @@ public class RecipeController {
 		model.addAttribute("Recipe_List", Recipe_List);
 		System.out.println("Recipe_List:" + Recipe_List);
 		// disease_list 상위 5개 가져오는 객체
-		List<DiseaseDTO> Disease_List_Five = diseaseService.getDiseaseListFive();
-		model.addAttribute("Disease_List_Five", Disease_List_Five);
+		List<DiseaseDTO> Disease_List = diseaseService.getDiseaseList();
+		model.addAttribute("Disease_List", Disease_List);
 		// System.out.println("Disease_List_Five:" + Disease_List_Five);
 
 		return "recipe/list";
