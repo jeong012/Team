@@ -13,7 +13,7 @@ public interface UserService {
 	int joinUser(UserDTO userDto, ArrayList<UserDiseaseDTO> userDiseaseList, ArrayList<UserDrugDTO> userDrugList);
 
 	/** OAuth2 기존 회원 여부 조회*/
-	UserDTO findByUser(OAuth2UserDTO oAuth2UserDTO);
+	UserDTO findByOAuth2User(OAuth2UserDTO oAuth2UserDTO);
 
 	/** ID 중복체크*/
 	int findById(String userId);

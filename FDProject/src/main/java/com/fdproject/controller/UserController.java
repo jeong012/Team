@@ -10,7 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +44,6 @@ public class UserController {
     private final DiseaseService diseaseService;
     private final DrugService drugService;
     private final UserService userService;
-	private final PasswordEncoder passwordEncoder;
 
 	@GetMapping(value="/joinForm.do")
 	public String getJoinForm(){
@@ -53,23 +52,32 @@ public class UserController {
 
 	@ResponseBody
 	@PostMapping(value="/joinForm2.do")	
-	public ModelAndView getJoinForm2(@RequestParam("userDTO") String userDTOString, ModelAndView mav) {
-		System.out.println(">>>>>>>>>" + userDTOString);
-		Gson gson = new Gson();
-        UserDTO userDTO = gson.fromJson(userDTOString, UserDTO.class);
-        mav.addObject("userDTO", userDTO);
+	public ModelAndView getJoinForm2(@RequestParam("userDTO") String userDTOJson, ModelAndView mav) {
+		mav.addObject("userDTO", userDTOJson);
         mav.setViewName("user/joinForm2");
 		
         return mav;
 	}
 	
 	@GetMapping(value="/loginForm.do")
-	public String getLoginForm(){
+	public String getLoginForm(Model model, HttpSession httpSession){
+		if(httpSession.getAttribute("oAuth2User") != null) {
+			httpSession.removeAttribute("oAuth2User");
+			httpSession.invalidate();	
+		}
+		
+		UserDTO userDTO = new UserDTO();
+		model.addAttribute("userDTO", userDTO);
 		return "user/loginForm";
 	}
 	
-	@GetMapping(value="/login/error")
-	public String getLoginError(Model model){
+	@GetMapping(value="/login/error.do")
+	public String getLoginError(Model model, HttpSession httpSession){
+		if(httpSession.getAttribute("oAuth2User") != null) {
+			httpSession.removeAttribute("oAuth2User");
+			httpSession.invalidate();	
+		}
+		
 		model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
 		return "user/loginForm";
 	}
@@ -95,9 +103,15 @@ public class UserController {
         drugMap.put("drugList", drugList);
         return drugMap;
     }
-    
+
+    /** OAuth2 접근 경로 확인 */
 	@GetMapping(value="/{pathFlag}/{registrationId}/oAuth2.do")
 	public String oAuth2Login(@PathVariable String registrationId, @PathVariable String pathFlag, HttpSession httpSession){
+		if(httpSession.getAttribute("oAuth2User") != null) {
+			httpSession.removeAttribute("oAuth2User");
+			httpSession.invalidate();	
+		}
+		
 		OAuth2UserDTO oAuth2UserDTO = new OAuth2UserDTO();
 		if(pathFlag.equals("login")) {
 			oAuth2UserDTO.setPathFlag("login");
@@ -110,15 +124,15 @@ public class UserController {
 	}
 	
 	/** OAuth2 기존 회원 여부 조회*/
-	@GetMapping(value="/findByUser.do")
-	public String findByUser(@SessionAttribute(value="oAuth2User", required = false) OAuth2UserDTO oAuth2UserDTO, Model model, HttpSession httpSession){
-		UserDTO user = userService.findByUser(oAuth2UserDTO);
+	@GetMapping(value="/findByOAuth2User.do")
+	public String findByOAuth2User(@SessionAttribute(value="oAuth2User", required = false) OAuth2UserDTO oAuth2UserDTO, Model model, HttpSession httpSession, Authentication authentication){
+		UserDTO user = userService.findByOAuth2User(oAuth2UserDTO);
 		if(user != null) {
-			httpSession.removeAttribute("oAuth2User");
-			httpSession.invalidate();
-			
 			if(oAuth2UserDTO.getPathFlag().equals("login")) {
-				return "index";
+				model.addAttribute("userId", user.getUserId());
+				model.addAttribute("OAuth2Login", "true");
+				
+		        return "user/loginForm";
 			} else {
 				model.addAttribute("existUser", user);
 				return "user/joinForm";
@@ -126,7 +140,7 @@ public class UserController {
 		} else {
 			if(oAuth2UserDTO.getPathFlag().equals("login")) {
 				httpSession.removeAttribute("oAuth2User");
-				httpSession.invalidate();
+				httpSession.invalidate();	
 				
 				model.addAttribute("result", "fail");
 				return "user/loginForm";
@@ -159,6 +173,7 @@ public class UserController {
     @ResponseBody
     @PostMapping("/join.do")
     public HashMap<String, Object> join(@RequestBody String params) {
+    	
     	UserDTO userDTO = new UserDTO();
 
     	int isInserted = 0;
@@ -169,15 +184,12 @@ public class UserController {
 	    	JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObj = (JSONObject) jsonParser.parse(params);
 			
-			JSONObject userObj = (JSONObject) jsonObj.get("userDTO");
 	        Gson gson = new Gson();
-	        userDTO = gson.fromJson(userObj.toString(), UserDTO.class);
+	        userDTO = gson.fromJson(jsonObj.get("userDTO").toString(), UserDTO.class);
+	        userDTO.setAuthority("ROLE_MEMBER");
 	        
 	    	if(userDTO.getRegistrationId() == null) {
 	    		userDTO.setRegistrationId("main");
-				
-	    		String encodePw = passwordEncoder.encode(userDTO.getPw());
-				userDTO.setPw(encodePw);
 	    	}
 
 	        JSONArray diseaseArr = (JSONArray) jsonObj.get("diseaseMap");
@@ -209,7 +221,6 @@ public class UserController {
 		if(userDiseaseList.size() == 0 && userDrugList.size() == 0) {
 			isInserted = 1;
 		}
-		
    
     	HashMap<String, Object> resultMap = new HashMap<String, Object>();
         if (isInserted == 1){

@@ -38,7 +38,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // 세션에 사용자 정보를 저장하기 위한 Dto 클래스
         String name = attributes.getName();
         String userId = attributes.getUserId();
-        String pw = attributes.getPw();
+        //String pw = attributes.getPw();
 
         String birthYear = attributes.getBirthYear();
         String birthMonth = null;
@@ -70,7 +70,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         
         OAuth2UserDTO oAuth2UserDTO = (OAuth2UserDTO) httpSession.getAttribute("oAuth2User");
         oAuth2UserDTO.setUserId(userId);
-        oAuth2UserDTO.setPw(pw);
+        oAuth2UserDTO.setPw("1111");
         oAuth2UserDTO.setName(name);
         oAuth2UserDTO.setPhoneNumber(phoneNumber);
         oAuth2UserDTO.setSex(sex);

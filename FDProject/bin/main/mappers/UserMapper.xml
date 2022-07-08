@@ -11,6 +11,7 @@
         <result property="sex" column="sex"/>
         <result property="birthDate" column="birth_date"/>
         <result property="registrationId" column="registration_id"/>
+        <result property="authority" column="authority"/>
 	</resultMap>
 
     <resultMap id="userDisease" type="UserDiseaseDTO">
@@ -33,7 +34,8 @@
         PHONE_NUMBER,
         SEX,
         BIRTH_DATE,
-        REGISTRATION_ID
+        REGISTRATION_ID,
+        AUTHORITY
     </sql>
     
     <sql id="userDiseaseColumns">
@@ -64,7 +66,7 @@
 		VALUES(#{userDrugNo}, #{drugNo}, #{userId})
     </insert>
     
-    <select id="findByUser" parameterType="OAuth2UserDTO" resultMap="user">
+    <select id="findByOAuth2User" parameterType="OAuth2UserDTO" resultMap="user">
     	<![CDATA[
 	       	SELECT  
 	    ]]>
@@ -73,7 +75,6 @@
 	        FROM USERS
 	        WHERE 1=1
 	        AND USER_ID = #{userId}
-	        AND PW = #{pw}
 	        AND REGISTRATION_ID = #{registrationId}
         ]]>
     </select>
@@ -83,7 +84,7 @@
             SELECT SEQ_USERS_NO.NEXTVAL FROM DUAL
         </selectKey>
 		INSERT INTO users ( <include refid="userColumns" /> )
-		VALUES (#{userNo}, #{userId}, #{pw}, #{name}, #{phoneNumber}, #{sex}, #{birthDate}, #{registrationId})
+		VALUES (#{userNo}, #{userId}, #{pw}, #{name}, #{phoneNumber}, #{sex}, #{birthDate}, #{registrationId}, #{authority})
 	</insert>
 	
 	<select id="findById" parameterType="String" resultType="int">
@@ -92,5 +93,31 @@
  		WHERE USER_ID = #{userId}
  		AND REGISTRATION_ID = 'main'
  	</select>
+ 	
+ 	<select id="findByUser" parameterType="String" resultMap="user">
+    	<![CDATA[
+	       	SELECT  
+	    ]]>
+	    	<include refid="userColumns"/>
+    	<![CDATA[
+	        FROM USERS
+	        WHERE 1=1
+	        AND USER_ID = #{userId}
+	        AND REGISTRATION_ID = 'main'
+        ]]>
+    </select>
+ 	
+ 	<select id="loginByOAuth2" parameterType="String" resultMap="user">
+    	<![CDATA[
+	       	SELECT  
+	    ]]>
+	    	<include refid="userColumns"/>
+    	<![CDATA[
+	        FROM USERS
+	        WHERE 1=1
+	        AND USER_ID = #{userId}
+	        AND REGISTRATION_ID = #{registraionId}
+        ]]>
+    </select>
 	
 </mapper>
