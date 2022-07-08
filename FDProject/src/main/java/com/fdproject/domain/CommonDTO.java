@@ -1,7 +1,5 @@
 package com.fdproject.domain;
 
-import java.time.LocalDateTime;
-
 import com.fdproject.paging.Criteria;
 import com.fdproject.paging.PaginationInfo;
 
