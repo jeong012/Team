@@ -1,12 +1,15 @@
 package com.fdproject.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fdproject.domain.DrugsCartDTO;
@@ -106,19 +109,21 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public boolean uploadRecipe(MultipartFile file, Map<String, Object> data) {
+	public boolean uploadRecipe(MultipartFile file, Map<String, Object> data)throws Exception {
 		// 파일 처리
-		String uploadFolder = "C:\\Users\\i\\Documents\\workspace-spring-tool-suite-4-4.14.1.RELEASE\\Team\\Team\\FDProject\\src\\main\\resources\\static\\assets\\img\\recipeImages";
+		String uploadFolder = "C:\\Users\\USER\\Documents\\workspace-spring-tool-suite-4-4.14.1.RELEASE\\Team\\Team\\FDProject\\src\\main\\resources\\static\\assets\\img\\recipeImages\\";
 
 		System.out.println("Upload File Name:" + file.getOriginalFilename());
 		System.out.println("Upload File Size:" + file.getSize());
 
 		String uploadFileName = file.getOriginalFilename();
-		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
-
 		System.out.println("only file name:" + uploadFileName);
+		
+		String savedName = randomFileName(uploadFileName,file.getBytes());
+		System.out.println("random file name:" + savedName); 
 
-		File saveFile = new File(uploadFolder, uploadFileName);
+		File saveFile = new File(uploadFolder, savedName);
+		System.out.println("full path filename:" + uploadFolder + savedName);
 		try {
 			file.transferTo(saveFile);
 		} catch (Exception e) {
@@ -127,7 +132,8 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 		//data 처리		
 		RecipeDTO params = new RecipeDTO();
-		params.setImgFile(uploadFileName);		
+		params.setImgFile(uploadFileName);
+		params.setRandomImgFile(savedName);
 		params.setTip((String)data.get("tip"));
 		params.setStorage((String)data.get("storage"));
 		params.setTitle((String)data.get("title"));
@@ -146,6 +152,19 @@ public class RecipeServiceImpl implements RecipeService {
 		return (count == 1) ? true : false;
 	}
 
+	@Override
+	public String randomFileName(String uploadFileName, byte[] file) throws Exception {
+		
+		UUID uid = UUID.randomUUID();
+		
+		String savedName = uid.toString() + "_" + uploadFileName;
+		String uploadPath = "C:\\Users\\USER\\Documents\\workspace-spring-tool-suite-4-4.14.1.RELEASE\\Team\\Team\\FDProject\\src\\main\\resources\\static\\assets\\img\\recipeImages\\";
+		File target = new File(uploadPath, savedName);
+		FileCopyUtils.copy(file, target);
+		
+		return savedName;
+	}
+	
 	
 
 }

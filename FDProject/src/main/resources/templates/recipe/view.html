@@ -35,8 +35,7 @@
 				<div class="col-lg-8">
 					<div class="portfolio-details-slider swiper">
 						<div class="swiper-wrapper align-items-center">
-							<img th:src="|@{/assets/img/recipeimages/}${Recipe_info.imgFile}|" alt=""
-								style="width:900px; height:600px;">
+
 						</div>
 						<section id="about" class="about section-bg" style="padding: 10px">
 							<div class="container" data-aos="fade-up">
@@ -44,6 +43,14 @@
 									<div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center"
 										data-aos="fade-up" data-aos-delay="100">
 										<ul>
+											<li>
+												<i class="bx bx-camera"></i>
+												<div>
+													<h5>음식 사진 </h5>													
+													<img th:src="|@{/assets/img/recipeimages/}${Recipe_info.randomImgFile}|" alt=""
+														style="width: 400px; height: 400px;">
+													<br><br>													
+											</li>
 											<th:block th:if="${Recipe_info.storage != null}">
 												<li>
 													<i class="bx bx-store"></i>
@@ -52,7 +59,7 @@
 														<p th:text="${Recipe_info.storage}"></p>
 													</div>
 												</li>
-											</th:block>	
+											</th:block>
 											<th:block th:each="recipe_step, status : ${AL_rs_split}">
 												<li>
 													<i class="bx bx-food-menu"></i>
@@ -67,7 +74,7 @@
 													<i class="bx bx-bulb"></i>
 													<div>
 														<h5>꿀팁</h5>
-														<p th:text="${Recipe_info.tip}"></p>																										
+														<p th:text="${Recipe_info.tip}"></p>
 													</div>
 												</li>
 											</th:block>
@@ -99,130 +106,130 @@
 		</div>
 	</section><!-- End Portfolio Details Section -->
 	<th:block layout:fragment="script">
-        <script th:inline="javascript">
-            /*<![CDATA[*/
+		<script th:inline="javascript">
+			/*<![CDATA[*/
 
-            // var i = 0;
-            // $('img').on('click', function () {
-            //     if (i == 0) {
-            //         $(this).attr('src', '/assets/img/star-fill.svg');
-            //
-            //         i++;
-            //     } else if (i == 1) {
-            //         $(this).attr('src', '/assets/img/star.svg');
-            //         i--;
-            //     }
-            //
-            // });
-            var i = 0;
-            function addCart(myRecipe) {
-                if (myRecipe == null && i == 0) {
+			// var i = 0;
+			// $('img').on('click', function () {
+			//     if (i == 0) {
+			//         $(this).attr('src', '/assets/img/star-fill.svg');
+			//
+			//         i++;
+			//     } else if (i == 1) {
+			//         $(this).attr('src', '/assets/img/star.svg');
+			//         i--;
+			//     }
+			//
+			// });
+			var i = 0;
+			function addCart(myRecipe) {
+				if (myRecipe == null && i == 0) {
 
-                    // json 형식으로 데이터 set
+					// json 형식으로 데이터 set
 
-                    var params = {
-                        recipeNo: $("#recipeNo").val(),
+					var params = {
+						recipeNo: $("#recipeNo").val(),
 
-                    }
+					}
 
-                    $.ajax({
-                        url: "/cart/addRecipe",
-                        type: "post",
-                        data: params,
-                        dataType: "json",
-                        cache: false,
-                        success: function (isExist) {
-                            if (isExist == true) {
-                                $('.cart').attr('src', '/assets/img/star-fill.svg');
-                                alert("추가 성공")
-                                i++;
-                            }else {
-                                alert("추가 실패");
-                            }
-                        },
-                        error: function (XHR, status, error) {
-                            console.error(status + " : " + error);
-                        }
-                    });
-                } else if (myRecipe == null && i == 1) {
-                    var params = {
-                        recipeNo: $("#recipeNo").val(),
-                    }
+					$.ajax({
+						url: "/cart/addRecipe",
+						type: "post",
+						data: params,
+						dataType: "json",
+						cache: false,
+						success: function (isExist) {
+							if (isExist == true) {
+								$('.cart').attr('src', '/assets/img/star-fill.svg');
+								alert("추가 성공")
+								i++;
+							} else {
+								alert("추가 실패");
+							}
+						},
+						error: function (XHR, status, error) {
+							console.error(status + " : " + error);
+						}
+					});
+				} else if (myRecipe == null && i == 1) {
+					var params = {
+						recipeNo: $("#recipeNo").val(),
+					}
 
-                    $.ajax({
-                        url: "/cart/deleteRecipe",
-                        type: "post",
-                        data: params,
-                        dataType: "json",
-                        success: function (isExist) {
-                            console.log(isExist);
-                            if (isExist == true) {
-                                $('.cart').attr('src', '/assets/img/star.svg');
-                                alert("삭제 성공")
-                                i--;
-                            } else {
-                                alert("삭제 실패");
-                            }
-                        },
-                        error: function (XHR, status, error) {
-                            console.error(status + " : " + error);
-                        }
-                    });
-                } else if (myRecipe != null && i == 0) {
-                    var params = {
-                        recipeNo: $("#recipeNo").val(),
-                    }
+					$.ajax({
+						url: "/cart/deleteRecipe",
+						type: "post",
+						data: params,
+						dataType: "json",
+						success: function (isExist) {
+							console.log(isExist);
+							if (isExist == true) {
+								$('.cart').attr('src', '/assets/img/star.svg');
+								alert("삭제 성공")
+								i--;
+							} else {
+								alert("삭제 실패");
+							}
+						},
+						error: function (XHR, status, error) {
+							console.error(status + " : " + error);
+						}
+					});
+				} else if (myRecipe != null && i == 0) {
+					var params = {
+						recipeNo: $("#recipeNo").val(),
+					}
 
-                    $.ajax({
-                        url: "/cart/deleteRecipe",
-                        type: "post",
-                        data: params,
-                        dataType: "json",
-                        success: function (isExist) {
-                            console.log(isExist);
-                            if (isExist == true) {
-                                $('.cart').attr('src', '/assets/img/star.svg');
-                                alert("삭제 성공")
-                                i++;
-                            } else {
-                                alert("삭제 실패");
-                            }
-                        },
-                        error: function (XHR, status, error) {
-                            console.error(status + " : " + error);
-                        }
-                    });
-                } else {
-                    var params = {
-                        recipeNo: $("#recipeNo").val(),
+					$.ajax({
+						url: "/cart/deleteRecipe",
+						type: "post",
+						data: params,
+						dataType: "json",
+						success: function (isExist) {
+							console.log(isExist);
+							if (isExist == true) {
+								$('.cart').attr('src', '/assets/img/star.svg');
+								alert("삭제 성공")
+								i++;
+							} else {
+								alert("삭제 실패");
+							}
+						},
+						error: function (XHR, status, error) {
+							console.error(status + " : " + error);
+						}
+					});
+				} else {
+					var params = {
+						recipeNo: $("#recipeNo").val(),
 
-                    }
+					}
 
-                    $.ajax({
-                        url: "/cart/addRecipe",
-                        type: "post",
-                        data: params,
-                        dataType: "json",
-                        cache: false,
-                        success: function (isExist) {
-                            if (isExist == true) {
-                                $('.cart').attr('src', '/assets/img/star-fill.svg');
-                                alert("추가 성공")
-                                i--;
-                            }else {
-                                alert("추가 실패");
-                            }
-                        },
-                        error: function (XHR, status, error) {
-                            console.error(status + " : " + error);
-                        }
-                    });
-                }
-            }
+					$.ajax({
+						url: "/cart/addRecipe",
+						type: "post",
+						data: params,
+						dataType: "json",
+						cache: false,
+						success: function (isExist) {
+							if (isExist == true) {
+								$('.cart').attr('src', '/assets/img/star-fill.svg');
+								alert("추가 성공")
+								i--;
+							} else {
+								alert("추가 실패");
+							}
+						},
+						error: function (XHR, status, error) {
+							console.error(status + " : " + error);
+						}
+					});
+				}
+			}
 
-            /*]]>*/
-        </script>
-    </th:block>
+			/*]]>*/
+		</script>
+	</th:block>
 </div>
 
 </html>

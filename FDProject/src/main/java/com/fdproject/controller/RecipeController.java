@@ -108,7 +108,7 @@ public class RecipeController {
 	@ResponseBody
 	@PostMapping(value = "/add")
 	public String addRecipe(@RequestPart(value = "File", required = false) MultipartFile file,
-			@RequestPart(value = "Data") Map<String, Object> data) {
+			@RequestPart(value = "Data") Map<String, Object> data) throws Exception {
 
 		System.out.println("file:" + file);
 		System.out.println("data:" + data);

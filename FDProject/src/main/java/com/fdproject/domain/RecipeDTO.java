@@ -46,5 +46,7 @@ public class RecipeDTO extends CommonDTO {
 	private String storage;
 	
 	private String tip;
+	
+	private String randomImgFile;
 		
 }

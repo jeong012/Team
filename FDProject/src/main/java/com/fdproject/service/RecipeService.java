@@ -22,7 +22,8 @@ public interface RecipeService {
 	
 	public boolean deleteMyRecipe(RecipesCartDTO cartDTO);
 	
-	public boolean uploadRecipe(MultipartFile file, Map<String, Object> data);
-		
+	public boolean uploadRecipe(MultipartFile file, Map<String, Object> data) throws Exception;
+	
+	public String randomFileName(String uploadFileName,byte[] file) throws Exception;
 		
 }

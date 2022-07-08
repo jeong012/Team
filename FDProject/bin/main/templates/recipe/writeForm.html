@@ -163,14 +163,7 @@
 
 			formData.append('File', files);
 
-			for (let key of formData.keys()) {
-				console.log(key);
-			}
 
-			/* value 확인하기 */
-			for (let value of formData.values()) {
-				console.log(value);
-			}
 			var data = {
 				"tip": $("[id=tip]").val(),
 				"storage": $("[id=storage]").val(),
@@ -181,7 +174,14 @@
 			}; //json data
 
 			formData.append('Data', new Blob([JSON.stringify(data)], {type: "application/json"}));
-
+			for (let key of formData.keys()) {
+				console.log(key);
+			}
+			
+			for (let value of formData.values()) {
+				console.log(value);
+			}
+			console.log(formData);
 			$.ajax({
 				url: "/recipe/add",
 				type: "post",

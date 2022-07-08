@@ -16,7 +16,8 @@
 		recommended_Number,
 		delete_Yn,
 		storage,
-		tip
+		tip,
+		RANDOM_IMG_FILE
 		]]>
 	</sql>
 	
@@ -34,7 +35,8 @@
 		r.recommended_Number,
 		r.delete_Yn,
 		r.storage,
-		r.tip
+		r.tip,
+		r.RANDOM_IMG_FILE
 		]]>
 	</sql>
 
@@ -168,8 +170,8 @@
      </update>
       
 	 <insert id ="uploadRecipe" parameterType="RecipeDTO">
-	 	insert into recipes(recipe_no, title, writer,food_ingredients,step,reg_Date,recommended_number,storage,tip,img_file) 
-	 	values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{recommendedNumber},#{storage},#{tip},#{imgFile})
+	 	insert into recipes(recipe_no, title, writer,food_ingredients,step,reg_Date,recommended_number,storage,tip,img_file,random_img_file) 
+	 	values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{recommendedNumber},#{storage},#{tip},#{imgFile}, #{randomImgFile})
 	 </insert>
 	
 	<select id = "getRecipeNo" resultType = "int">
