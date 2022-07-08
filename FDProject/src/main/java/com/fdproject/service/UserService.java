@@ -16,5 +16,5 @@ public interface UserService {
 	UserDTO findByUser(OAuth2UserDTO oAuth2UserDTO);
 
 	/** ID 중복체크*/
-	int idCheck(String userId);
+	int findById(String userId);
 }

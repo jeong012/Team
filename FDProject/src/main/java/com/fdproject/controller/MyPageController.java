@@ -31,7 +31,6 @@ public class MyPageController extends UiUtils {
 	private final DiseaseService diseaseService;
 	private final DrugService drugService;
 	
-
 	@GetMapping(value="/user.do")
 	public String UserModify(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
 		
@@ -44,13 +43,11 @@ public class MyPageController extends UiUtils {
 	
 	@GetMapping(value="/disease.do")
 	public String getDiseaseList(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model){
-		 if (GrammerUtils.isStringEmpty(id) == true) {
-	            return showMessageWithRedirect("접근 권한이 없습니다.", "/", Method.GET, null, model);
-	        } else {
-	            List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
-	            model.addAttribute("diseaseList", diseaseList);
-	            model.addAttribute("id", id);
-	        }
+		
+        List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
+        model.addAttribute("diseaseList", diseaseList);
+        model.addAttribute("id", id);
+	        
 		 
 		return "mypage/diseaselist";
 	}
@@ -58,18 +55,18 @@ public class MyPageController extends UiUtils {
 	//내 복용약 관리
 	@GetMapping(value="/drug.do")
 	public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, Model model){
-		if (GrammerUtils.isStringEmpty(id) == true) {		
-            return showMessageWithRedirect("접근 권한이 없습니다.", "/", Method.GET, null, model);
-        } else {
-        	List<DrugDTO> userdrugList = drugService.getUserDrugList(id, params);
-            model.addAttribute("userdrugList", userdrugList);
-            model.addAttribute("id", id);
-        }
+		
+    	List<DrugDTO> userdrugList = drugService.getUserDrugList(id, params);
+        model.addAttribute("userdrugList", userdrugList);
+        model.addAttribute("id", id);
+        
 		return "mypage/druglist";
 	}
 	
+	//찜한 약 리스트
 	@GetMapping(value = "/myDrug.do")
 	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model) {		
+		
 		List<DrugDTO> drugList = drugService.getMyDrugList(params);		
 		model.addAttribute("drugList", drugList);
 		return "mypage/myDrugList";

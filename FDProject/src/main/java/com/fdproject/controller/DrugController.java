@@ -78,7 +78,8 @@ public class DrugController extends UiUtils {
     //회원가입시 입력한 약 정보
     @GetMapping(value = "/myview.do")
     public String getMyDrug(@ModelAttribute(value = "params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "no", required = false) int drugNo, Model model) {
-        
+    	
+    	//상비약 리스트에서 비로그인시 로그인창으로 보내는 모달창
     	if (GrammerUtils.isStringEmpty(id) == true) {
             return showMessageWithRedirect("로그인이 필요한 서비스 입니다.", "/user/loginForm.do", Method.GET, null, model);
         }
@@ -112,7 +113,7 @@ public class DrugController extends UiUtils {
     //상비약 리스트
     @GetMapping(value="/store.do")
 	public String getFindStore(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, Model model){
-    	id="[Manager]";
+    	
     	List<DrugDTO> housedrugList = drugService.getHouseDrugList(params);
         model.addAttribute("housedrugList", housedrugList);
         model.addAttribute("id", id);

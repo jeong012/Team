@@ -32,10 +32,7 @@
                             <i class="bx bx-file"></i>
                             <div>
                                 <h5>
-                                    <button class="dropdown-toggle" data-bs-toggle="collapse"
-                                            data-bs-target="#manufacturer-collapse" aria-expanded="false">
-                                        제조사
-                                    </button>
+                                    제조사
                                 </h5>
                                 <p class="collapse" id="manufacturer-collapse" th:text="${drug.manufacturer}"></p>
                             </div>
@@ -44,10 +41,7 @@
                             <i class="bx bx-file"></i>
                             <div>
                                 <h5>
-                                    <button class="dropdown-toggle" data-bs-toggle="collapse"
-                                            data-bs-target="#basis-collapse" aria-expanded="false">
-                                        주성분
-                                    </button>
+                                    주성분
                                 </h5>
                                 <p class="collapse" id="basis-collapse" th:text="${drug.basis}"></p>
                             </div>
@@ -56,10 +50,7 @@
                             <i class="bx bx-file"></i>
                             <div>
                                 <h5>
-                                    <button class="dropdown-toggle" data-bs-toggle="collapse"
-                                            data-bs-target="#effect-collapse" aria-expanded="false">
-                                        효능
-                                    </button>
+                                    효능
                                 </h5>
                                 <p class="collapse" id="effect-collapse" th:text="${drug.effect}"></p>
                             </div>
@@ -76,7 +67,7 @@
                                 <p class="collapse" id="method-collapse" th:text="${drug.method}"></p>
                             </div>
                         </li>
-                        <li>
+                        <li th:if="${#strings.isEmpty(drug.warning1)}">
                             <i class="bx bx-file"></i>
                             <div>
                                 <h5>
@@ -88,7 +79,7 @@
                                 <p class="collapse" id="warning1-collapse" th:text="${drug.warning1}"></p>
                             </div>
                         </li>
-                        <li>
+                        <li th:if="${#strings.isEmpty(drug.warning2)}">
                             <i class="bx bx-file"></i>
                             <div>
                                 <h5>
@@ -100,7 +91,7 @@
                                 <p class="collapse" id="warning2-collapse" th:text="${drug.warning2}"></p>
                             </div>
                         </li>
-                        <li>
+                        <li th:if="${#strings.isEmpty(drug.sideEffect)}">
                             <i class="bx bx-file"></i>
                             <div>
                                 <h5>
@@ -114,7 +105,7 @@
                                 <p class="collapse" id="sideEffect-collapse" th:text="${drug.sideEffect}"></p>
                             </div>
                         </li>
-                        <li>
+                        <li th:if="${#strings.isEmpty(drug.storage)}">
                             <i class="bx bx-file"></i>
                             <div>
                                 <h5>

@@ -67,6 +67,12 @@ public class UserController {
 	public String getLoginForm(){
 		return "user/loginForm";
 	}
+	
+	@GetMapping(value="/login/error")
+	public String getLoginError(Model model){
+		model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
+		return "user/loginForm";
+	}
 
     /** 회원가입 - 질병 리스트 조회 사용*/
     @ResponseBody
@@ -132,10 +138,10 @@ public class UserController {
 	}
 
 	/** ID 중복체크 */
-	@GetMapping(value = "/idCheck.do")
+	@GetMapping(value = "/findById.do")
 	@ResponseBody
-	public int idCheck(@RequestParam("userId") String userId) {
-		int cnt = userService.idCheck(userId);
+	public int findById(@RequestParam("userId") String userId) {
+		int cnt = userService.findById(userId);
 		return cnt;
 	}
 	

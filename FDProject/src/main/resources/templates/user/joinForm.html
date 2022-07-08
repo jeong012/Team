@@ -17,6 +17,11 @@
 	       					<button onclick="closeModal()" style="border:0; background-color:#FFF">X</button>
 	       				</div>
 	       				
+	       				<div class="modal-body" id="failUser">
+           					<label id="modalLabel" style="display: block; text-align: center; "></label>
+           					<button class="btn btn-info" th:onclick="closeModal()" style="float: right;">확인</button>
+	       				</div>
+	       				
 	       				<div class="modal-body" id="existUser">
            					<label id="modalLabel" style="display: block; text-align: center; "> 이미 가입된 회원입니다. </label>
            					<button class="btn btn-info" th:onclick="location.href='/user/loginForm.do';" style="float: right;">확인</button>
@@ -136,28 +141,26 @@
 	            <th:block th:unless="${oAuth2User != null}">
 		            <fieldset class="form-group id-check-box">
 		              <label for="inputId" class="form-label mt-4">아이디</label>
-		              <input type="text" class="form-control" id="userId" name="userId" autofocus required>
-		              <input type="button" id="idCheck" class="btn btn-primary btn-verify" value="중복확인">
-		              <div id="id_check"></div>
-		              <span th:text="${valid_userId}"></span>
+		              <input type="text" class="form-control" id="userId" name="userId" autofocus>
+		              <input type="button" id="idCheck" class="btn btn-primary btn-verify" value="중복확인" style="margin-top:10px;">
 		            </fieldset>
+		            <div class="id_check textMsg"></div>
 	            
 		            <fieldset class="form-group has-success">
 		              <label for="inputPwd" class="form-label mt-4">비밀번호</label>
 		              <input type="password" class="form-control pw" name="pw" id="pw1">
-		              <div class="valid-pw"></div>
-		              <span th:text="${valid_pw}"></span>
+		              <div class="pw_check textMsg"></div>
 		            </fieldset>
 		            <fieldset class="form-group has-danger">
 		              <label for="inputPwd2" class="form-label mt-4">비밀번호 재확인</label>
 		              <input type="password" class="form-control pw" name="pw" id="pw2">
-		              <div class="invalid-pw"></div>
-		              <span th:text="${valid_pw}"></span>
+		              <div class="pw_valid textMsg"></div>
 		            </fieldset>
 		
 		            <fieldset class="form-group">
 		              <label for="inputName" class="form-label mt-4">이름</label>
 		              <input type="text" class="form-control" id="name" aria-describedby="emailHelp">
+		              <div class="name_check textMsg"></div>
 		            </fieldset>
 		
 		            <fieldset class="form-group bir_wrap">
@@ -180,33 +183,35 @@
 		                  <input type="text" class="form-control" id="dd" placeholder="일" maxlength="2">
 		                </span>
 		              </div>
-		              <span class="error_next_box" id="birthdayMsg" style aria-live="assertive">태어난 년도 4자리를 정확하게 입력하세요.</span>
+		              <div class="bd_check textMsg"></div>
 		            </fieldset>
 		
 		            <fieldset class="form-group verify-box">
 		              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
 		              <input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요" maxlength="11">
-		              <button class="btn btn-primary btn-verify">인증</button>
+		              <button class="btn btn-primary btn-verify" style="margin-top:10px;">인증</button>
 		            </fieldset>
+		              <div class="ph_check textMsg"></div>
 		            
 		            <fieldset class="form-group">
 		              <label for="exampleSelect1" class="form-label mt-4">성별</label>
 		              <div class="check-box">
 		                <div class="form-check form-check-inline">
-		                  <input class="form-check-input" type="radio" name="sex" id="inlineRadio1" value="남자">
+		                  <input class="form-check-input" type="radio" name="sex" id="male" value="남자">
 		                  <label class="form-check-label" for="inlineRadio1">남자</label>
 		                </div>
 		                <div class="form-check form-check-inline">
-		                  <input class="form-check-input" type="radio" name="sex" id="inlineRadio2" value="여자">
+		                  <input class="form-check-input" type="radio" name="sex" id="female" value="여자">
 		                  <label class="form-check-label" for="inlineRadio2">여자</label>
 		                </div>
 		              </div>
+		              <div class="sex_check textMsg"></div>
 		            </fieldset>
 	            </th:block>
 	             
 	          	<fieldset class="form-group">
 	          		<div class="d-grid gap-2">
-		                <input type="button" class="btn btn-primary next-btn" value="다음" onclick="saveUserInfo()"></input>
+		                <input type="button" class="btn btn-primary next-btn" value="다음" onclick="saveUserInfo(); cheked();"></input>
 					</div>
 	          	</fieldset>
 	        </div>
@@ -218,6 +223,8 @@
 		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 		<script th:inline="javascript">
 			/*<![CDATA[*/
+				var isChecked = false;
+			
 				$(document).ready(function() {
 					$('#joinModal').modal({backdrop: 'static', keyboard: false});
 					
@@ -225,11 +232,13 @@
 						$("#joinModal").modal("show");
 						$("#existUser").show();
 						$("#newUser").hide();
+						$("#failUser").hide();
 					} else if(/*[[${oAuth2User}]]*/ != null){	/** 새로운 유저 **/
 						$("#joinModal").modal("hide");
 					} else{										/** 조인폼 첫 접근 **/
 						$("#joinModal").modal("show");
 						$("#existUser").hide();
+						$("#failUser").hide();
 					}
 				});
 			
@@ -244,6 +253,12 @@
 				function closeModal(){
 					$("#joinModal").modal("hide");
 				}
+				
+				function showModal(){
+					$("#joinModal").modal("show");
+					$("#newUser").hide();
+					$("#failUser").show();
+				}
 			
 				function saveUserInfo(){
 					var userId = $("#userId").val();
@@ -256,6 +271,76 @@
 						sex = $("#sex").val();
 					}
 					var registrationId = $("#registrationId").val();
+					/** 유효성 검사 */
+					if(userId == ""){
+						showModal();
+						$("#modalLabel").text("아이디를 입력해주세요.");
+						return false;
+					}
+					
+					if(!isChecked){
+						showModal();
+						$("#modalLabel").text("아이디 중복확인을 해주세요.");
+						return false;
+					}
+					
+					var pw1 = $("#pw1").val();
+					if(pw1 == ""){
+						showModal();
+						$("#modalLabel").text("비밀번호를 입력해주세요.");
+						return false;
+					}
+			        var pwCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+			        /*if(!pwCheck.test(pw1)){
+						alert("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
+						return false;
+					}*/
+					if($('#pw1').val() != $('#pw2').val() && !registrationId){
+						showModal();
+						$("#modalLabel").text("비밀번호가 일치하지 않습니다.");
+						return false;
+					}
+					if(name == ""){
+						showModal();
+						$("#modalLabel").text("이름을 입력해주세요.");
+						return false;
+					}
+					var reg = /^[0-9]+/g;
+					var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+					var yy = $("#yy").val();
+					var dd = $("#dd").val();
+					if(yy == ""){
+						showModal();
+						$("#modalLabel").text("연도를 입력해주세요.");
+						return false;
+					}
+					if(!reg.test(yy && dd)){
+						showModal();
+						$("#modalLabel").text("날짜는 숫자만 입력할 수 있습니다.");
+						return false;
+					}
+					if(dd == ""){
+						showModal();
+						$("#modalLabel").text("일자를 입력해주세요.");
+						return false;
+					}
+					if(phoneNum == ""){
+						showModal();
+						$("#modalLabel").text("휴대폰번호를 입력해주세요.");
+						return false;
+					}
+					if(!regPhone.test(phoneNum)){
+						showModal();
+						$("#modalLabel").text("휴대폰번호 형식이 아닙니다.");
+						return false;
+					}
+					var male = $("#male").val();
+					var female = $("#female").val();
+					if(sex == null){
+						showModal();
+						$("#modalLabel").text("성별을 선택해주세요.");
+						return false;
+					}
 					
 					var data = {
 						"userId": userId,
@@ -295,24 +380,30 @@
 					});   
 				}
 				
-				//idcheck/ 버튼을 클릭했을 때 
+				//idcheck 아이디 중복체크
 			    $("#idCheck").click(function() {
 			        var userId =  $("#userId").val();
+			        if(userId == ""){
+						showModal();
+						$("#modalLabel").text("아이디를 입력하세요.");
+						return false;
+			        }
 			        
 			        $.ajax({
 			            type : 'GET',
 			            data : {"userId" : userId},
-			            url : "/user/idCheck.do",
+			            url : "/user/findById.do",
 			            dataType : "text",
 			            success : function(data) {
-			            	if (data == 1) { //
-			                	$('#id_check').text("사용중인 아이디입니다.");
-			                	$('#id_check').css("color","red");
-			                	$("#id_check").focus();
-			                } else { // 
-			                	$('#id_check').text("사용 가능한 아이디입니다.");
-			                	$('#id_check').css("color","blue");
-			                    $("#id_check").focus();
+			            	if (data == 1) {
+			            		isChecked = true;
+			                	$('.id_check').text("사용중인 아이디입니다.");
+			                	$('.id_check').css("color","red");
+			                	$(".id_check").focus();
+			                } else {
+			                	$('.id_check').text("사용 가능한 아이디입니다.");
+			                	$('.id_check').css("color","blue");
+			                    $(".id_check").focus();
 			                }
 			            },
 						error : function(error) {
@@ -320,6 +411,35 @@
 					    }
 			        });
 			    });
+				
+				// 비밀번호 유효형 검사 keyup
+			    $('#pw1').keyup(function(){
+			    	let pw = $(".pw").val();
+			        var reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+				        
+			        if (!reg.test(pw)) {
+			            $('.pw_check').text("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
+			            $('.pw_check').css('color', 'red');
+			            return false;
+			
+			        }  else {
+			            $('.pw_check').text("비밀번호가 정상적으로 입력되었습니다.");
+			            $('.pw_check').css('color', 'blue');
+			            return true;
+			        }
+				
+			    });
+				// 비밀번호 일치여부
+				$('#pw2').keyup(function(){
+					if( $('#pw1').val() != $('#pw2').val() ){
+						$('.pw_valid').text('비밀번호가 일치하지 않습니다.');
+						$('.pw_valid').css('color', 'red');
+					} else{
+						$('.pw_valid').text('비밀번호가 일치합니다.');
+						$('.pw_valid').css('color', 'blue');
+					}
+				});
+				
 			/*]]*/
 		</script>
  	</th:block>
