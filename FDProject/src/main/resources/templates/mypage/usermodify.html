@@ -19,97 +19,89 @@
 						<div class="col-lg-10 mx-auto" style="margin-top: 15px;">
 							<div class="pagetitle m-2">회원 정보 수정</div>
 		<!-- joinForm 시작 -->
-		<div class="join-form-wrap">
-          <form class="join-form" method="post" th:action="@{/mypage/user.do}" th:object="${user}">
-            <!-- <input type="hidden" class="form-control" th:field="*{userId}" th:readonly="readonly" >
-        	<input type="hidden" class="form-control" th:field="*{role}" th:readonly="readonly" > -->
-        	
-            <div class="form-group verify-box">
-              <label for="inputId" class="form-label mt-4">아이디</label>
-              <input type="text" class="form-control" disabled>
-            </div>
-            <div class="form-group has-success">
-              <label for="inputValid" class="form-label mt-4">비밀번호</label>
-              <input type="password" class="form-control is-valid" id="inputValid">
-              <div class="valid-feedback"></div>
-              <span class="error_next_box" id="pwd1Msg" aria-live="assertive">필수 정보입니다.</span>
-            </div>
-            <div class="form-group has-danger">
-              <label for="inputValid" class="form-label mt-4">비밀번호 재확인</label>
-              <input type="password" class="form-control is-valid" id="inputValid">
-              <span class="error_next_box" id="pwd2Msg" aria-live="assertive">필수 정보입니다.</span>
-              <div class="invalid-feedback">비밀번호가 일치하지 않습니다</div>
-            </div>
-
-            <div class="form-group">
-              <label for="exampleInputEmail1" class="form-label mt-4">이름</label>
-              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="" disabled>
-            </div>
-
-            <div class="form-group bir_wrap">
-              <label class="form-label mt-4">생년월일</label>
-              <div class="bir_yy">
-                <span class="ps_box">
-                  <input type="text" class="form-control" id="yy" placeholder="년(4자)" maxlength="4">
-                </span>
-              </div>
-              <div class="bir_mm">
-                <span class="ps_box focus">
-                  <select class="form-select form-control" aria-label="Default select example">
-                    <option selected>월</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                  </select>
-                </span>
-              </div>
-              <div class="bir_dd">
-                <span class="ps_box">
-                  <input type="text" class="form-control" id="dd" placeholder="일" maxlength="2">
-                </span>
-              </div>
-              <span class="error_next_box" id="birthdayMsg" style aria-live="assertive">태어난 년도 4자리를 정확하게 입력하세요.</span>
-            </div>
-
-            <div class="form-group">
-              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
-              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="" disabled>
-            </div>
-            
-            <div class="form-group">
-              <label for="exampleSelect1" class="form-label mt-4">성별</label>
-              <div class="check-box">
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked disabled>
-                  <label class="form-check-label" for="inlineRadio1">남자</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" disabled>
-                  <label class="form-check-label" for="inlineRadio2">여자</label>
-                </div>
-              </div>
-            </div>
-            
-            <div class="form-group row modify-btn-group">
-              <div class="col-sm d-grid gap-2">
-                <button type="button" class="btn btn-secondary">취소</button>
-              </div>
-              <div class="col-sm d-grid gap-2">
-                <button type="submit" class="btn btn-primary">수정</button>
-              </div>
-            </div>
-            
-          </form>
-      	</div>
+		<th:block th:unless="${oAuth2User != null}">
+			<div class="join-form-wrap">
+			<!-- <input type="hidden" class="form-control" th:field="*{userId}" th:readonly="readonly" >
+	        	<input type="hidden" class="form-control" th:field="*{role}" th:readonly="readonly" > -->
+	        	
+	          <fieldset class="form-group id-check-box">
+	            <label for="inputId" class="form-label mt-4">아이디</label>
+	            <input type="text" class="form-control" id="userId" name="userId" th:value="${#authentication.principal.userId}" th:readonly="readonly" disabled>
+	            <input type="button" id="idCheck" class="btn btn-primary btn-verify" value="중복확인" style="margin-top:10px;">
+	          </fieldset>
+	          <div class="id_check textMsg"></div>
+	         
+	          <fieldset class="form-group has-success">
+	            <label for="inputPwd" class="form-label mt-4">비밀번호</label>
+	            <input type="password" class="form-control pw" name="pw" id="pw1">
+	            <div class="pw_check textMsg"></div>
+	          </fieldset>
+	          <fieldset class="form-group has-danger">
+	            <label for="inputPwd2" class="form-label mt-4">비밀번호 재확인</label>
+	            <input type="password" class="form-control pw" name="pw" id="pw2">
+	            <div class="pw_valid textMsg"></div>
+	          </fieldset>
+	
+	          <fieldset class="form-group">
+	            <label for="inputName" class="form-label mt-4">이름</label>
+	            <input type="text" class="form-control" id="name" th:value="${#authentication.principal.name}" th:readonly="readonly" disabled>
+	            <div class="name_check textMsg"></div>
+	          </fieldset>
+	
+	          <fieldset class="form-group bir_wrap">
+	            <label class="form-label mt-4">생년월일</label>
+	            <div class="bir_yy">
+	              <span class="ps_box">
+	                <input type="text" class="form-control" id="yy" placeholder="년(4자)" maxlength="4">
+	              </span>
+	            </div>
+	            <div class="bir_mm">
+	              <span class="ps_box focus">
+	                <select class="form-select form-control" id="mm" aria-label="Default select example">
+	                  <option selected>월</option>
+	                  <option th:each="mm : ${#numbers.sequence(1,12)}" th:text="${mm}"></option>
+	                </select>
+	              </span>
+	            </div>
+	            <div class="bir_dd">
+	              <span class="ps_box">
+	                <input type="text" class="form-control" id="dd" placeholder="일" maxlength="2">
+	              </span>
+	            </div>
+	            <div class="bd_check textMsg"></div>
+	          </fieldset>
+	
+	          <fieldset class="form-group verify-box">
+	            <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
+	            <input type="text" class="form-control" id="phoneNum" th:value="${#authentication.principal.phoneNumber}" th:readonly="readonly" disabled>
+	            <button class="btn btn-primary btn-verify" style="margin-top:10px;">인증</button>
+	          </fieldset>
+	            <div class="ph_check textMsg"></div>
+	          
+	          <fieldset class="form-group">
+	            <label for="exampleSelect1" class="form-label mt-4">성별</label>
+	            <div class="check-box">
+	              <div class="form-check form-check-inline">
+	                <!-- <input class="form-check-input" type="radio" name="sex" id="male" value="남자" th:attr="${authenrication.principal.sex eq '남자' ? checked : ''}"> -->
+	                <label class="form-check-label" for="inlineRadio1">남자</label>
+	              </div>
+	              <div class="form-check form-check-inline">
+	                <!-- <input class="form-check-input" type="radio" name="sex" id="female" value="여자" th:checked="${authenrication.principal.sex == 'true'}"> -->
+	                <label class="form-check-label" for="inlineRadio2">여자</label>
+	              </div>
+	            </div>
+	          </fieldset>
+	            
+	          <fieldset class="form-group row modify-btn-group">
+	            <div class="col-sm d-grid gap-2">
+	              <button type="button" class="btn btn-secondary">취소</button>
+	            </div>
+	            <div class="col-sm d-grid gap-2">
+	              <button type="submit" class="btn btn-primary">수정</button>
+	            </div>
+	          </fieldset>
+          	</div>
+         </th:block>
       	<!-- joinForm 끝 -->
 						</div>
 					</div>
@@ -117,4 +109,62 @@
 			</div>
 		</section>
 	</div>
+	
+	
+	<th:block layout:fragment="script">
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+				function updateUserInfo(){
+					var userId = $("#userId").val();
+					var pw = $("#pw2").val();
+					var name = $("#name").val();
+					var yy = $("#yy").val();
+					var mm = $("#mm").val();
+					var dd = $("#dd").val();
+					var birthDate = yy + "-" + mm + "-" + dd;
+					var phoneNum = $("#phoneNum").val();
+					var registrationId = $("#registrationId").val();
+					
+					var data = {
+							"userId": userId,
+							"pw": pw,
+							"name": name,
+							"birthDate": birthDate,
+							"phoneNumber": phoneNum,
+							"sex": sex,
+							"registrationId": registrationId
+						}
+						
+						$.ajax({
+							type : 'POST',
+				            data : JSON.stringify(data),
+				            url : "/user/saveUserInfo.do",
+				            dataType : "json",
+				            contentType: "application/json; charset=utf-8",
+				            success : function(data){
+				            	var form = document.createElement('form');
+				            	form.setAttribute('method', 'post');
+				            	form.setAttribute('action', '/user/joinForm2.do');
+				            	document.charset = "utf-8";
+								
+				            	var hiddenField = document.createElement('input');
+				            	hiddenField.setAttribute('type','hidden');
+				            	hiddenField.setAttribute('name','userDTO');
+				            	hiddenField.setAttribute('value',JSON.stringify(data.userDTO));
+				            	
+				            	form.appendChild(hiddenField);
+				            	
+				            	document.body.appendChild(form);
+				            	form.submit();
+				            },
+							error : function(error) {
+								console.error(error);
+						    }
+						});
+				}
+				/*]]*/
+		</script>
+ 	</th:block>
+ 	
 </html>
