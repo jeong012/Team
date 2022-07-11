@@ -2,6 +2,7 @@ package com.fdproject.controller;
 
 
 import java.io.File;
+import java.security.Principal;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,15 +38,15 @@ public class ApiCartController {
     }
     
     @PostMapping("/addRecipe")
-    public @ResponseBody boolean insert2(@ModelAttribute RecipesCartDTO cartDTO) {
-
-        return recipeService.addMyRecipe(cartDTO);
+    public @ResponseBody boolean insert2(@ModelAttribute RecipesCartDTO cartDTO, Principal principal) {
+    	cartDTO.setUserId(principal.getName());
+        return recipeService.addMyRecipe(cartDTO, principal);
     }
 
     @PostMapping("/deleteRecipe")
-    public @ResponseBody boolean delete2(@ModelAttribute RecipesCartDTO cartDTO) {
-
-        return recipeService.deleteMyRecipe(cartDTO);
+    public @ResponseBody boolean delete2(@ModelAttribute RecipesCartDTO cartDTO, Principal principal) {
+    	cartDTO.setUserId(principal.getName());
+        return recipeService.deleteMyRecipe(cartDTO, principal);
     }
 	
 }

@@ -14,17 +14,17 @@ public interface RecipeService {
 	
 	public List<RecipeDTO> getRecipeList(RecipeDTO params); //recipe list
 	
-	public List<RecipeDTO> getMyRecipeList(RecipeDTO params); // my recipe list		
+	public List<RecipeDTO> getMyRecipeList(RecipeDTO params, Principal principal); // my recipe list		
 	
-	public RecipeDTO getRecipeInfo(String Recipe_info);
+	public RecipeDTO getRecipeInfo(String Recipe_info, Principal principal);
 	
 	public Integer uphit(String Recipe_No);
 	
-	public boolean addMyRecipe(RecipesCartDTO cartDTO);
+	public boolean addMyRecipe(RecipesCartDTO cartDTO, Principal principal);
 	
-	public boolean deleteMyRecipe(RecipesCartDTO cartDTO);
+	public boolean deleteMyRecipe(RecipesCartDTO cartDTO, Principal principal);
 	
-	public boolean uploadRecipe(MultipartFile file, Map<String, Object> data) throws Exception;
+	public boolean uploadRecipe(MultipartFile file, Map<String, Object> data, Principal principal) throws Exception;
 	
 	public String randomFileName(String uploadFileName,byte[] file) throws Exception;
 	

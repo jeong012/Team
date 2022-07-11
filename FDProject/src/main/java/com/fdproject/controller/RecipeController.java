@@ -19,8 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.RecipeDTO;
-import com.fdproject.domain.UserDiseaseDTO;
-
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.RecipeService;
 
@@ -59,10 +57,10 @@ public class RecipeController {
 	}
 
 	@GetMapping(value = "/view")
-	public String getRecipe(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Model model) {
+	public String getRecipe(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Principal principal, Model model) {
 
 		// recipe_info
-		RecipeDTO Recipe_info = recipeService.getRecipeInfo(Recipe_No);
+		RecipeDTO Recipe_info = recipeService.getRecipeInfo(Recipe_No, principal);
 		model.addAttribute("Recipe_info", Recipe_info);
 		System.out.println("Recipe_info" + Recipe_info);
 		// foodIngredients split해서 배열에 차곡차곡 넣음
@@ -118,12 +116,12 @@ public class RecipeController {
 	@ResponseBody
 	@PostMapping(value = "/add")
 	public String addRecipe(@RequestPart(value = "File", required = false) MultipartFile file,
-			@RequestPart(value = "Data") Map<String, Object> data) throws Exception {
+			@RequestPart(value = "Data") Map<String, Object> data, Principal principal) throws Exception {
 
 		System.out.println("file:" + file);
 		System.out.println("data:" + data);
 
-		recipeService.uploadRecipe(file, data);
+		recipeService.uploadRecipe(file, data, principal);
 		return "ok";
 	}
 

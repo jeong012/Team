@@ -1,5 +1,6 @@
 package com.fdproject.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -64,18 +65,18 @@ public class MyPageController extends UiUtils {
 	}
 	
 	//찜한 약 리스트
-	@GetMapping(value = "/myDrug.do")
+	@GetMapping(value = "/mydrug.do")
 	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model) {		
 		
 		List<DrugDTO> drugList = drugService.getMyDrugList(params);		
 		model.addAttribute("drugList", drugList);
 		return "mypage/myDrugList";
 	}
-	
+	//찜한 레시피 리스트
 	@GetMapping(value = "/myRecipe.do") 
-	public String getMyRecipeList(@ModelAttribute(value = "params") RecipeDTO params, Model model) {
+	public String getMyRecipeList(@ModelAttribute(value = "params") RecipeDTO params, Model model, Principal principal) {
 		//Recipe_List
-		List<RecipeDTO> Recipe_List = recipeService.getMyRecipeList(params);		
+		List<RecipeDTO> Recipe_List = recipeService.getMyRecipeList(params, principal);		
 		model.addAttribute("Recipe_List", Recipe_List);
 		return "mypage/myRecipeList";
 	}

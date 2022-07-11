@@ -82,7 +82,7 @@
 										<th:block th:each="Recipe : ${Recipe_List}">
 											<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100"
 												style="margin-bottom:30px;">
-												<div class="box">
+												<div class="box" style ="min-height:500px; max-height:500px;">
 													<!-- 메뉴 이름 -->
 													<h3 th:text="${Recipe.title}"></h3>
 													<!-- 이미지 부분 -->
@@ -115,9 +115,17 @@
 		<script th:inline="javascript">
 			/*<![CDATA[*/
 
-			function movePage(uri, queryString) {
-				location.href = uri + queryString;
-			}
+			function movePage(uri, queryString, diseaseField, writer) {
+            var url = uri + queryString;
+            
+            if(writer != null)
+               url += "&writer=" + writer;
+               
+            if(diseaseField !=null)
+               url += "&diseaseField=" +diseaseField;
+               
+            location.href = url;               
+         }
 
 			/*]]>*/
 		</script>
