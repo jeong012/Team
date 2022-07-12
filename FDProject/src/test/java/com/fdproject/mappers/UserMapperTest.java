@@ -25,7 +25,7 @@ class UserMapperTest {
 		userDto.setSex("남자");
 		userDto.setBirthDate("2022-06-22");
 		userDto.setRegistrationId("main");
-		userDto.setRole("USER");
+		userDto.setAuthority("USER");
 		
 		int savedUsers = userMapper.saveUser(userDto);
 		System.out.println("userDto: " + userDto);

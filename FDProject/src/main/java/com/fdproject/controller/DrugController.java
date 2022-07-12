@@ -44,7 +44,6 @@ public class DrugController extends UiUtils {
 
     private final DrugService drugService;
 
-    //약 리스트
     @GetMapping(value = "/list.do")
     public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "takeYn", required = false) String takeYn, Model model) {
   

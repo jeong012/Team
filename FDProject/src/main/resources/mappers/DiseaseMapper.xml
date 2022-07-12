@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fdproject.mapper.DiseaseMapper">
 
-	<select id ="selectDiseaseListFive" resultType="DiseaseDTO">
-		SELECT 
-			<include refid="diseaseColumns" />							
-		FROM DISEASES d 
-		where d.disease_no <![CDATA[<]]> 6 						
+	<select id ="selectDiseaseList" resultType="DiseaseDTO">		 			
+		SELECT DISTINCT d.disease_field		
+		FROM  diseases d, recipes r
+		WHERE d.disease_field = r.disease_field
+		order by d.disease_field							
 	</select>	
 	
     <resultMap id="disease" type="DiseaseDTO">
@@ -25,6 +25,14 @@
         d.DISEASE_NAME,
         d.DESCRIPTION,
         d.SYMPTOM
+        ]]>
+    </sql>
+    
+    <sql id = "UserDiseaseColumns">
+    	<![CDATA[
+        u.user_disease_no,
+        u.disease_no,
+        u.user_id
         ]]>
     </sql>
     
@@ -51,5 +59,14 @@
 	        ORDER BY DISEASE_NO
         ]]>
     </select>
+    
+    <select id= "selectUserDiseaseList" resultType="DiseaseDTO" parameterType="String">
+    	select d.disease_name, d.disease_field    	
+    	from user_Diseases ud, diseases d 
+    	where ud.user_id = #{userId} and 
+        	  d.disease_no = ud.disease_no     	
+    </select>
+    
+    
     
 </mapper>

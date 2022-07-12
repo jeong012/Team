@@ -14,7 +14,10 @@
 		reg_Date,
 		hit,
 		recommended_Number,
-		delete_Yn
+		delete_Yn,
+		storage,
+		tip,
+		RANDOM_IMG_FILE
 		]]>
 	</sql>
 	
@@ -30,10 +33,12 @@
 		r.reg_Date,
 		r.hit,
 		r.recommended_Number,
-		r.delete_Yn
+		r.delete_Yn,
+		r.storage,
+		r.tip,
+		r.RANDOM_IMG_FILE
 		]]>
 	</sql>
-	
 
 	<!-- new -->
 	<select id="selectRecipeList" resultType="RecipeDTO">
@@ -45,6 +50,20 @@
 		where
 		1=1
 		<include refid="CommonMapper.search_R" />
+		order by title asc
+		<include refid="CommonMapper.pagingFooter" />
+	</select>
+		
+	<select id="selectWriterRecipeList" resultType="RecipeDTO">
+		<include refid="CommonMapper.pagingHeader" />
+		SELECT
+		<include refid="recipeColumns" />
+		FROM
+		recipes
+		where
+		1=1
+		and writer != '[Manager]'		
+		<include refid="CommonMapper.search_R" />		
 		order by title asc
 		<include refid="CommonMapper.pagingFooter" />
 	</select>
@@ -75,7 +94,7 @@
     
 	<select id="selectRecipeTotalCount" parameterType="RecipeDTO"
 		resultType="int">
-        <![CDATA[
+        <![CDATA[ 
         	SELECT
 	        COUNT(*)
 	        FROM
@@ -94,24 +113,25 @@
 		WHERE Recipe_no = #{Recipe_no}
 	</select>
 
-	<select id="selectMyRecipe" parameterType="String"
+	<select id="selectMyRecipe" parameterType="RecipesCartDTO"
 		resultType="RecipesCartDTO">
 		select
 		*
 		from
-		recipes_cart
-		where recipe_no = #{Recipe_no}
+		recipes_cart rc 
+		where rc.recipe_no = #{recipeNo}
+		and rc.user_id = #{userId}
 	</select>
 
-	<select id="UpdateUphit" parameterType="String"
-		resultType="Integer">
+	<update id="UpdateUphit" parameterType="String">
 		UPDATE recipes
 
 		SET hit = hit + 1
 
 		WHERE Recipe_no =
 		#{Recipe_no}
-	</select>
+	</update>
+	
 	
 	 <select id="myRecipeList" parameterType="String" resultType="RecipesCartDTO">
         select
@@ -137,6 +157,34 @@
         from RECIPES_CART
         where RECIPE_NO = #{recipeNo}
     </delete>    
-
+    
+    <update id ="updateRecommendedNumber" parameterType="RecipesCartDTO">     	
+     	update recipes
+     	set RECOMMENDED_NUMBER = RECOMMENDED_NUMBER + 1
+     	where recipe_no = #{recipeNo}     	     	
+     </update>
+     
+     <update id ="minusRecommendedNumber" parameterType="RecipesCartDTO">     	
+     	update recipes
+     	set RECOMMENDED_NUMBER = RECOMMENDED_NUMBER - 1
+     	where recipe_no = #{recipeNo}     	     	
+     </update>
+     
+     <select id ="checkAuthority" parameterType ="RecipesCartDTO" resultType ="int">
+     	select count(*)
+     	from recipes_cart
+     	where recipe_no = #{recipeNo} 
+     	and user_id = #{userId}
+     </select>
+      
+	 <insert id ="uploadRecipe" parameterType="RecipeDTO">
+	 	insert into recipes(recipe_no, title, writer,food_ingredients,step,reg_Date,recommended_number,storage,tip,img_file,random_img_file) 
+	 	values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{recommendedNumber},#{storage},#{tip},#{imgFile}, #{randomImgFile})
+	 </insert>
+	
+	<select id = "getRecipeNo" resultType = "int">
+		select max(r.recipe_no)
+		from recipes r
+	</select>
 
 </mapper>
