@@ -34,7 +34,7 @@ public class MessageService {
 	 
 	    coolsms.send(params); // 메시지 전송
 	  
-	    System.out.println(numStr);
+	    System.out.println("문자인증 >>> " + numStr);
 	    
 		return numStr;
 		 
