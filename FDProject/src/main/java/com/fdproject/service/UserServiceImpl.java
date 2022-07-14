@@ -70,16 +70,33 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	    HttpSession httpSession = servletRequestAttribute.getRequest().getSession(true);
 		OAuth2UserDTO oAuth2User = (OAuth2UserDTO) httpSession.getAttribute("oAuth2User");
 
-		UserDTO authUser = new UserDTO();
+		UserDTO principal = new UserDTO();
 		if(oAuth2User == null) {
-			authUser = userMapper.findByUser(userId);
+			principal = userMapper.findByUser(userId);
 		} else {
-			authUser = userMapper.loginByOAuth2(userId, oAuth2User.getRegistrationId());
+			principal = userMapper.loginByOAuth2(userId, oAuth2User.getRegistrationId());
 		}
 		
-		if(authUser == null) {
-			throw new UsernameNotFoundException("userId" + userId + "not found");
+		if(principal == null) {
+			throw new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다. : " + userId);
 		}
-		return authUser;
+		return principal;
+	}
+
+	@Transactional
+	public int updateUser(UserDTO userDto) {
+		System.out.println("UserServiceImpl updateUser 호출!! >>>>>>>>>>>>>>>" + userDto);
+		
+		if(userDto.getUserId() == null) {
+			throw new IllegalArgumentException("회원 찾기 실패!!");
+		}
+		String rawPassword = userDto.getPw();
+        String encPassword = passwordEncoder.encode(rawPassword);
+        userDto.setPw(encPassword);
+		
+		int count = userMapper.updateUser(userDto);
+		
+        
+		return count;
 	}
 }

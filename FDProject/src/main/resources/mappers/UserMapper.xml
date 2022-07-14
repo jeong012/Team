@@ -119,5 +119,15 @@
 	        AND REGISTRATION_ID = #{registraionId}
         ]]>
     </select>
+    
+    <update id="updateUser" parameterType="UserDTO">
+    	<![CDATA[
+	       	UPDATE USERS
+	       	SET	PW = #{pw},
+		        NAME = #{name}
+	       	WHERE USER_ID = #{userId}
+	       	AND REGISTRATION_ID = 'main'
+	    ]]>
+    </update>
 	
 </mapper>
