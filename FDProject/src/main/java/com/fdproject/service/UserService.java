@@ -19,5 +19,5 @@ public interface UserService {
 	int findById(String userId);
 	
 	/** 회원 정보 수정*/
-//	UserDTO readUser(String userId);
+	int updateUser(UserDTO userDTO);
 }

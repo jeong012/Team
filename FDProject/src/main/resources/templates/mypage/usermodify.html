@@ -7,105 +7,97 @@
 		<section id="list-page">
 			<div class="container" data-aos="fade-up">
 	
-				<div class="container">
-					<div class="row">
-						<div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
-							<ul class="border-top"></ul>
-							<th:block layout:fragment="mypagebar">
-								<div th:replace="fragments/common :: mypagebar"></div>
-							</th:block>
+				<div class="row">
+					<div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">
+						<ul class="border-top"></ul>
+						<th:block layout:fragment="mypagebar">
+							<div th:replace="fragments/common :: mypagebar"></div>
+						</th:block>
+					</div>
+
+					<div class="col-lg-10 mx-auto" style="margin-top: 15px;">
+						<div class="pagetitle m-2">회원 정보 수정</div>
+						<!-- joinForm 시작 -->
+						<th:block th:unless="${oAuth2User != null}">
+							<div class="join-form-wrap join-form2">
+							
+					          <fieldset class="form-group id-check-box">
+					            <label for="inputId" class="form-label mt-4">아이디</label>
+					            <input type="text" class="form-control" id="userId" name="userId" th:value="${#authentication.principal.userId}" th:readonly="readonly" disabled>
+					          </fieldset>
+					         
+					          <fieldset class="form-group has-success">
+					            <label for="inputPwd" class="form-label mt-4">비밀번호</label>
+					            <input type="password" class="form-control pw" name="pw" id="pw1">
+					            <div class="pw_check textMsg"></div>
+					          </fieldset>
+					          <fieldset class="form-group has-danger">
+					            <label for="inputPwd2" class="form-label mt-4">비밀번호 재확인</label>
+					            <input type="password" class="form-control pw" name="pw" id="pw2">
+					            <div class="pw_valid textMsg"></div>
+					          </fieldset>
+					
+					          <fieldset class="form-group">
+					            <label for="inputName" class="form-label mt-4">이름</label>
+					            <input type="text" class="form-control" id="name" th:value="${#authentication.principal.name}">
+						        <div class="name_check textMsg"></div>
+					          </fieldset>
+					
+					          <fieldset class="form-group bir_wrap">
+					            <label class="form-label mt-4">생년월일</label>
+					            <div class="birthDate">
+					              <input type="text" class="form-control" id="phoneNum" th:value="${#authentication.principal.birthDate}" th:readonly="readonly" disabled>
+					            </div>
+					          </fieldset>
+					
+					          <fieldset class="form-group verify-box">
+					            <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
+					            <input type="text" class="form-control" id="phoneNum" th:value="${#authentication.principal.phoneNumber}" th:readonly="readonly" disabled>
+					          </fieldset>
+					          
+					          <fieldset class="form-group">
+					            <label for="exampleSelect1" class="form-label mt-4">성별</label>
+					            <div class="check-box">
+					              <input type="text" class="form-control" id="phoneNum" th:value="${#authentication.principal.sex}" th:readonly="readonly" disabled>
+					            </div>
+					          </fieldset>
+					            
+					          <fieldset class="form-group row modify-btn-group">
+					            <div class="col-sm d-grid gap-2">
+					              <button type="button" class="btn btn-secondary">취소</button>
+					            </div>
+					            <div class="col-sm d-grid gap-2">
+					              <button type="button" class="btn btn-primary" onclick="updateUserInfo()">수정</button>
+					            </div>
+					          </fieldset>
+
+							<!--  Modal -->
+							<div id="myModal" class="modal fade" role="dialog">
+								<div class="modal-dialog">
+									<!--  Modal content -->
+									<div class="modal-content">
+										<div class="modal-header">
+											<h4 class="modal-title">아프면찾아조</h4>
+										</div>
+
+										<div class="modal-body">
+											<label id="modalLabel"> 회원가입에 성공하였습니다. </label>
+										</div>
+
+										<div class="modal-footer">
+											<button id='btnModal' class="btn btn-info"
+												onclick="clickModal()"></button>
+										</div>
+									</div>
+								</div>
+							</div>
+
 						</div>
-	
-						<div class="col-lg-10 mx-auto" style="margin-top: 15px;">
-							<div class="pagetitle m-2">회원 정보 수정</div>
-		<!-- joinForm 시작 -->
-		<th:block th:unless="${oAuth2User != null}">
-			<div class="join-form-wrap">
-			<!-- <input type="hidden" class="form-control" th:field="*{userId}" th:readonly="readonly" >
-	        	<input type="hidden" class="form-control" th:field="*{role}" th:readonly="readonly" > -->
-	        	
-	          <fieldset class="form-group id-check-box">
-	            <label for="inputId" class="form-label mt-4">아이디</label>
-	            <input type="text" class="form-control" id="userId" name="userId" th:value="${#authentication.principal.userId}" th:readonly="readonly" disabled>
-	            <input type="button" id="idCheck" class="btn btn-primary btn-verify" value="중복확인" style="margin-top:10px;">
-	          </fieldset>
-	          <div class="id_check textMsg"></div>
-	         
-	          <fieldset class="form-group has-success">
-	            <label for="inputPwd" class="form-label mt-4">비밀번호</label>
-	            <input type="password" class="form-control pw" name="pw" id="pw1">
-	            <div class="pw_check textMsg"></div>
-	          </fieldset>
-	          <fieldset class="form-group has-danger">
-	            <label for="inputPwd2" class="form-label mt-4">비밀번호 재확인</label>
-	            <input type="password" class="form-control pw" name="pw" id="pw2">
-	            <div class="pw_valid textMsg"></div>
-	          </fieldset>
-	
-	          <fieldset class="form-group">
-	            <label for="inputName" class="form-label mt-4">이름</label>
-	            <input type="text" class="form-control" id="name" th:value="${#authentication.principal.name}" th:readonly="readonly" disabled>
-	            <div class="name_check textMsg"></div>
-	          </fieldset>
-	
-	          <fieldset class="form-group bir_wrap">
-	            <label class="form-label mt-4">생년월일</label>
-	            <div class="bir_yy">
-	              <span class="ps_box">
-	                <input type="text" class="form-control" id="yy" placeholder="년(4자)" maxlength="4">
-	              </span>
-	            </div>
-	            <div class="bir_mm">
-	              <span class="ps_box focus">
-	                <select class="form-select form-control" id="mm" aria-label="Default select example">
-	                  <option selected>월</option>
-	                  <option th:each="mm : ${#numbers.sequence(1,12)}" th:text="${mm}"></option>
-	                </select>
-	              </span>
-	            </div>
-	            <div class="bir_dd">
-	              <span class="ps_box">
-	                <input type="text" class="form-control" id="dd" placeholder="일" maxlength="2">
-	              </span>
-	            </div>
-	            <div class="bd_check textMsg"></div>
-	          </fieldset>
-	
-	          <fieldset class="form-group verify-box">
-	            <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
-	            <input type="text" class="form-control" id="phoneNum" th:value="${#authentication.principal.phoneNumber}" th:readonly="readonly" disabled>
-	            <button class="btn btn-primary btn-verify" style="margin-top:10px;">인증</button>
-	          </fieldset>
-	            <div class="ph_check textMsg"></div>
-	          
-	          <fieldset class="form-group">
-	            <label for="exampleSelect1" class="form-label mt-4">성별</label>
-	            <div class="check-box">
-	              <div class="form-check form-check-inline">
-	                <!-- <input class="form-check-input" type="radio" name="sex" id="male" value="남자" th:attr="${authenrication.principal.sex eq '남자' ? checked : ''}"> -->
-	                <label class="form-check-label" for="inlineRadio1">남자</label>
-	              </div>
-	              <div class="form-check form-check-inline">
-	                <!-- <input class="form-check-input" type="radio" name="sex" id="female" value="여자" th:checked="${authenrication.principal.sex == 'true'}"> -->
-	                <label class="form-check-label" for="inlineRadio2">여자</label>
-	              </div>
-	            </div>
-	          </fieldset>
-	            
-	          <fieldset class="form-group row modify-btn-group">
-	            <div class="col-sm d-grid gap-2">
-	              <button type="button" class="btn btn-secondary">취소</button>
-	            </div>
-	            <div class="col-sm d-grid gap-2">
-	              <button type="submit" class="btn btn-primary">수정</button>
-	            </div>
-	          </fieldset>
-          	</div>
-         </th:block>
-      	<!-- joinForm 끝 -->
-						</div>
+				         </th:block>
+				      	<!-- joinForm 끝 -->
 					</div>
 				</div>
+				
 			</div>
 		</section>
 	</div>
@@ -119,50 +111,111 @@
 					var userId = $("#userId").val();
 					var pw = $("#pw2").val();
 					var name = $("#name").val();
-					var yy = $("#yy").val();
-					var mm = $("#mm").val();
-					var dd = $("#dd").val();
-					var birthDate = yy + "-" + mm + "-" + dd;
-					var phoneNum = $("#phoneNum").val();
-					var registrationId = $("#registrationId").val();
 					
+					/** 유효성 검사 */
+					var pw1 = $("#pw1").val();
+					if(pw1 == ""){
+						//$("#myModal").modal("show");
+						$("#modalLabel").text("비밀번호를 입력해주세요.");
+					    $("#btnModal").text("확인");
+						alert("비밀번호를 입력해주세요.");
+						return false;
+					}
+					
+			        var pwCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+			        if(!pwCheck.test(pw1)){
+			        	//$("#myModal").modal("show");
+						$("#modalLabel").text("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
+					    $("#btnModal").text("확인");
+			        	alert("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
+						return false;
+			        }
+			        
+			        if(pw == ""){
+						//$("#myModal").modal("show");
+						$("#modalLabel").text("비밀번호를 입력해주세요.");
+					    $("#btnModal").text("확인");
+						alert("비밀번호를 재확인해주세요.");
+						return false;
+					}
+			        
+					if($('#pw1').val() != $('#pw2').val()){
+						//$("#myModal").modal("show");
+						$("#modalLabel").text("비밀번호가 일치하지 않습니다.");
+					    $("#btnModal").text("확인");
+						alert("비밀번호가 일치하지 않습니다.");
+						return false;
+					}
+					
+					if(name == ""){
+						//$("#myModal").modal("show");
+						$("#modalLabel").text("이름을 입력해주세요.");
+					    $("#btnModal").text("확인");
+						alert("이름을 입력해주세요.");
+						return false;
+					}
+					
+					/** Ajax 데이터 전송 */
 					var data = {
 							"userId": userId,
 							"pw": pw,
-							"name": name,
-							"birthDate": birthDate,
-							"phoneNumber": phoneNum,
-							"sex": sex,
-							"registrationId": registrationId
+							"name": name
 						}
 						
 						$.ajax({
-							type : 'POST',
+							type : 'PUT',
 				            data : JSON.stringify(data),
-				            url : "/user/saveUserInfo.do",
-				            dataType : "json",
+				            url : "/mypage/modify.do",
+				            dataType : "text",
 				            contentType: "application/json; charset=utf-8",
-				            success : function(data){
-				            	var form = document.createElement('form');
-				            	form.setAttribute('method', 'post');
-				            	form.setAttribute('action', '/user/joinForm2.do');
-				            	document.charset = "utf-8";
-								
-				            	var hiddenField = document.createElement('input');
-				            	hiddenField.setAttribute('type','hidden');
-				            	hiddenField.setAttribute('name','userDTO');
-				            	hiddenField.setAttribute('value',JSON.stringify(data.userDTO));
-				            	
-				            	form.appendChild(hiddenField);
-				            	
-				            	document.body.appendChild(form);
-				            	form.submit();
-				            },
-							error : function(error) {
-								console.error(error);
-						    }
+				            async:false
+						}).done(function () {
+							alert("회원수정이 완료되었습니다.");
+						    location.href="/";
+						}).fail(function (error) {
+							alert(JSON.stringify(error));
 						});
 				}
+			
+				// 비밀번호 유효형 검사 keyup
+			    $('#pw1').keyup(function(){
+			    	let pw = $(".pw").val();
+			        var reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+				        
+			        if (!reg.test(pw)) {
+			            $('.pw_check').text("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
+			            $('.pw_check').css('color', 'red');
+			            return false;
+			
+			        }  else {
+			            $('.pw_check').text("비밀번호가 정상적으로 입력되었습니다.");
+			            $('.pw_check').css('color', 'blue');
+			            return true;
+			        }
+				
+			    });
+				// 비밀번호 일치여부
+				$('#pw2').keyup(function(){
+					if( $('#pw1').val() != $('#pw2').val() ){
+						$('.pw_valid').text('비밀번호가 일치하지 않습니다.');
+						$('.pw_valid').css('color', 'red');
+					} else{
+						$('.pw_valid').text('비밀번호가 일치합니다.');
+						$('.pw_valid').css('color', 'blue');
+					}
+				});
+				
+				function clickModal(){
+					var flag = $("#btnModal").text();
+					if(flag === '로그인하기'){
+						location.replace("/user/loginForm.do");
+					} else if(flag == '다시 가입하기'){
+						location.replace("/user/joinForm.do");
+					} else{
+						$("#myModal").modal("hide");
+					}
+				}
+				
 				/*]]*/
 		</script>
  	</th:block>
