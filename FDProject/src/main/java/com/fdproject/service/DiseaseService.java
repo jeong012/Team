@@ -1,4 +1,5 @@
 package com.fdproject.service;
+import java.security.Principal;
 import java.util.List;
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
@@ -11,5 +12,7 @@ public interface DiseaseService {
 	
     /** 회원가입 - 질병 리스트 조회 사용*/
 	List<DiseaseDTO> getJoinDiseaseList();
+	
+	public List<DiseaseDTO> getUserDiseaseList(Principal principal);
 }
 

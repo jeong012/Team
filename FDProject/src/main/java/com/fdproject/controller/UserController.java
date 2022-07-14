@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +32,12 @@ import com.fdproject.domain.UserDiseaseDTO;
 import com.fdproject.domain.UserDrugDTO;
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.DrugService;
+import com.fdproject.service.MessageService;
 import com.fdproject.service.UserService;
 import com.google.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Controller
 @RequestMapping("/user")
@@ -44,11 +47,13 @@ public class UserController {
     private final DiseaseService diseaseService;
     private final DrugService drugService;
     private final UserService userService;
+	private final MessageService messageService;
 
 	@GetMapping(value="/joinForm.do")
 	public String getJoinForm(){
 		return "user/joinForm";
 	}
+	
 
 	@ResponseBody
 	@PostMapping(value="/joinForm2.do")	
@@ -232,4 +237,13 @@ public class UserController {
     	
     	return resultMap;
     }
+    
+    /*본인 인증 메세지*/
+	@ResponseBody 
+	@PostMapping("/PhoneCheck")
+	public String PhoneCheck(@RequestParam(value="to") String to) throws CoolsmsException {
+			
+		return messageService.PhoneNumberCheck(to);
+	}
+    
 }

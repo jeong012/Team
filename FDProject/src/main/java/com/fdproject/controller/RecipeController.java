@@ -1,6 +1,6 @@
 package com.fdproject.controller;
 
-import java.io.File;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,27 +32,35 @@ public class RecipeController {
 	private RecipeService recipeService;
 	@Autowired
 	private DiseaseService diseaseService;
-
+	
 	@GetMapping(value = "/list")
-	public String getRecipeList(@ModelAttribute("params") RecipeDTO params, Model model) {
+	public String getRecipeList(@ModelAttribute("params") RecipeDTO params, Model model, Principal principal) {
+		
+		//로그인 세션이 있으면
+		if(principal!=null)
+		{
+			List<DiseaseDTO> list = diseaseService.getUserDiseaseList(principal);
+			model.addAttribute("user_disease_list",list);
+			System.out.println("user_disease_list:" + list);
+		}
 		// 레시피 리스트 뽑아오기
-
 		List<RecipeDTO> Recipe_List = recipeService.getRecipeList(params);
 		model.addAttribute("Recipe_List", Recipe_List);
-		System.out.println("Recipe_List:" + Recipe_List);
+		//System.out.println("Recipe_List:" + Recipe_List);
 		// disease_list 상위 5개 가져오는 객체
 		List<DiseaseDTO> Disease_List = diseaseService.getDiseaseList();
 		model.addAttribute("Disease_List", Disease_List);
+		System.out.println("Disease_List:" + Disease_List);
 		// System.out.println("Disease_List_Five:" + Disease_List_Five);
 
 		return "recipe/list";
 	}
 
 	@GetMapping(value = "/view")
-	public String getRecipe(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Model model) {
+	public String getRecipe(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Principal principal, Model model) {
 
 		// recipe_info
-		RecipeDTO Recipe_info = recipeService.getRecipeInfo(Recipe_No);
+		RecipeDTO Recipe_info = recipeService.getRecipeInfo(Recipe_No, principal);
 		model.addAttribute("Recipe_info", Recipe_info);
 		System.out.println("Recipe_info" + Recipe_info);
 		// foodIngredients split해서 배열에 차곡차곡 넣음
@@ -108,12 +116,12 @@ public class RecipeController {
 	@ResponseBody
 	@PostMapping(value = "/add")
 	public String addRecipe(@RequestPart(value = "File", required = false) MultipartFile file,
-			@RequestPart(value = "Data") Map<String, Object> data) throws Exception {
+			@RequestPart(value = "Data") Map<String, Object> data, Principal principal) throws Exception {
 
 		System.out.println("file:" + file);
 		System.out.println("data:" + data);
 
-		recipeService.uploadRecipe(file, data);
+		recipeService.uploadRecipe(file, data, principal);
 		return "ok";
 	}
 

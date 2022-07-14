@@ -14,7 +14,6 @@
 	       			<div class="modal-content">
 	       				<div class="modal-header">
 	       					<h4 class="modal-title">아프면찾아조</h4>
-	       					<button onclick="closeModal()" style="border:0; background-color:#FFF">X</button>
 	       				</div>
 	       				
 	       				<div class="modal-body" id="failUser">
@@ -38,6 +37,22 @@
                              	</div>
                             </form>
 	       				</div>
+						<div class="modal-body" id="messageCheck">
+	       					<label id="modalLabel" style="display: block; text-align: center; margin:7px;">입력한 번호로 본인 확인 문자가 전송되었습니다. </label>
+           					<label id="modalLabel" style="display: block; text-align: center; margin-bottom:15px;">인증번호를 입력하세요. </label>
+           					<div>
+								<input type="text" class="form-control" id="memberPhoneCertify" >
+								<h6 id="checkCode" style="display: none; color:red; text-align: center; margin:10px;">인증 실패하였습니다. 다시 입력해주세요.</h6>
+								<button class="btn btn-info" style="float: right;" onclick="closeModal()">취소</button>		
+								<button class="btn btn-info" style="float: right;" id = "messageFormCheck">인증하기</button>		
+							</div>
+	       				</div>
+	       				
+	       				<div class="modal-body" id="messageCheckOk">
+           					<label id="modalLabel" style="display: block; text-align: center; ">휴대폰 인증이 완료되었습니다.</label>
+           					<button class="btn btn-info" th:onclick="closeModal()" style="float: right;">확인</button>
+	       				</div>
+
 	       			</div>
 	       		</div>
 	       	</div>
@@ -114,7 +129,7 @@
 		              	<input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요" maxlength="11">
 		              </th:block>
 		              
-		              <button type="submit" class="btn btn-primary btn-verify" style="margin-top:10px;">인증</button>
+		              <button type="submit" class="btn btn-primary btn-verify" style="margin-top:10px;" id="phoneNumCertify">인증</button>
 		            </fieldset>
 		            
 		            <fieldset class="form-group">
@@ -188,8 +203,9 @@
 		            <fieldset class="form-group verify-box">
 		              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
 		              <input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요" maxlength="11">
-		              <button class="btn btn-primary btn-verify" style="margin-top:10px;">인증</button>
+		              <button class="btn btn-primary btn-verify" id="memberPhoneCheck" style="margin-top:10px;">인증</button>
 		            </fieldset>
+		            <h6 id="finishCertify" style="display: none; color:red; text-align: center; margin:10px;">본인 인증이 완료되었습니다.</h6>
 		              <div class="ph_check textMsg"></div>
 		            
 		            <fieldset class="form-group">
@@ -223,6 +239,7 @@
 		<script th:inline="javascript">
 			/*<![CDATA[*/
 				var isChecked = false;
+				var isMessageChecked = false;
 			
 				$(document).ready(function() {
 					$('#joinModal').modal({backdrop: 'static', keyboard: false});
@@ -232,12 +249,16 @@
 						$("#existUser").show();
 						$("#newUser").hide();
 						$("#failUser").hide();
+						$("#messageCheck").hide();
+						$("#messageCheckOk").hide();
 					} else if(/*[[${oAuth2User}]]*/ != null){	/** 새로운 유저 **/
 						$("#joinModal").modal("hide");
 					} else{										/** 조인폼 첫 접근 **/
 						$("#joinModal").modal("show");
 						$("#existUser").hide();
 						$("#failUser").hide();
+						$("#messageCheck").hide();
+						$("#messageCheckOk").hide();
 					}
 				});
 			
@@ -251,6 +272,7 @@
 				
 				function closeModal(){
 					$("#joinModal").modal("hide");
+					$("#checkCode").hide();
 				}
 				
 				function showModal(){
@@ -258,6 +280,8 @@
 					$("#newUser").hide();
 					$("#existUser").hide();
 					$("#failUser").show();
+					$("#messageCheck").hide();
+					$("#messageCheckOk").hide();
 				}
 
 				function checkValidDate(value) {
@@ -356,7 +380,12 @@
 						return false;
 					}
 					
-					var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+					if(!isMessageChecked){
+						showModal();
+						$("#modalLabel").text("휴대폰 인증을 완료해주세요.");
+						return false;
+					}
+					/*var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 					if(phoneNum == ""){
 						showModal();
 						$("#modalLabel").text("휴대폰 번호를 입력해주세요.");
@@ -366,7 +395,7 @@
 						showModal();
 						$("#modalLabel").text("휴대폰 번호 형식이 아닙니다.");
 						return false;
-					}
+					}*/
 					
 					if(sex == null){
 						showModal();
@@ -472,6 +501,64 @@
 					}
 				});
 				
+				//휴대폰 본인인증
+				$('#memberPhoneCheck').click(function(){
+					
+					var phoneNum = $("#phoneNum").val();
+					
+					var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+					if(phoneNum == ""){
+						showModal();
+						$("#modalLabel").text("휴대폰번호를 입력해주세요.");
+						return false;
+					}
+					else if(!regPhone.test(phoneNum)){
+						showModal();
+						$("#modalLabel").text("휴대폰번호 형식이 아닙니다.");
+						return false;
+					}else{
+					
+						$("#joinModal").modal("show");
+						$("#existUser").hide();
+						$("#newUser").hide();
+						$("#failUser").hide();
+						$("#messageCheck").show();
+						
+						var to = $('#phoneNum').val();						
+						
+						$.ajax({
+							url : "/user/PhoneCheck",
+							type : "post",
+							data : "to=" + to,
+							dataType : "json",
+							success : function(data) {
+								data = "";
+								const checkNum = data;
+					            //인증하기 버튼 클릭 이벤트
+								$('#messageFormCheck').click(function(){
+									var userNum = $('#memberPhoneCertify').val();	//입력한 값
+									
+									if(checkNum == userNum){
+										$("#messageCheck").hide();
+										$("#messageCheckOk").show();
+										$("#memberPhoneCheck").attr("disabled", true);
+										$("#phoneNum").attr("disabled", true);
+										$("#finishCertify").show();
+										isMessageChecked = true;
+									}else {	
+										$("#checkCode").show();
+										$('#memberPhoneCertify').val('');	
+									}
+										
+								});
+					            
+							},
+							error : function() {
+								alert("에러")
+							}
+						});
+					}
+				});
 			/*]]*/
 		</script>
  	</th:block>

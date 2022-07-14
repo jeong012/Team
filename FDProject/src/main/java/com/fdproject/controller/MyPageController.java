@@ -1,6 +1,9 @@
 package com.fdproject.controller;
 
+import java.security.Principal;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +39,7 @@ public class MyPageController extends UiUtils {
 	
 //    @Autowired
 //    private AuthenticationManager authenticationManager;
+	private final RecipeService recipeService;
 	
 	@GetMapping(value="/user.do")
 	public String UserModify(@ModelAttribute("params") UserDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
@@ -58,19 +62,31 @@ public class MyPageController extends UiUtils {
 	}
 	
 	
-	//내 질병 관리
-	private final RecipeService recipeService;
+//	//내 질병 관리
+//	
+//	@GetMapping(value="/disease.do")
+//	public String getDiseaseList(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model){
+//		
+//        List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
+//        model.addAttribute("diseaseList", diseaseList);
+//        model.addAttribute("id", id);
+//	        
+//		 
+//		return "mypage/diseaselist";
+//	}
 	
-	@GetMapping(value="/disease.do")
-	public String getDiseaseList(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model){
 		
-        List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
-        model.addAttribute("diseaseList", diseaseList);
-        model.addAttribute("id", id);
-	        
-		 
-		return "mypage/diseaselist";
-	}
+		@GetMapping(value="/disease.do")
+		public String getDiseaseList(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model, HttpSession httpSession){
+			
+	        List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
+	        model.addAttribute("diseaseList", diseaseList);
+	        model.addAttribute("id", id);
+		        
+			 
+			return "mypage/diseaselist";
+		}
+		
 	
 	//내 복용약 관리
 	@GetMapping(value="/drug.do")
@@ -84,7 +100,7 @@ public class MyPageController extends UiUtils {
 	}
 	
 	//찜한 약 리스트
-	@GetMapping(value = "/myDrug.do")
+	@GetMapping(value = "/mydrug.do")
 	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model) {		
 		
 		List<DrugDTO> drugList = drugService.getMyDrugList(params);		
@@ -92,10 +108,11 @@ public class MyPageController extends UiUtils {
 		return "mypage/myDrugList";
 	}
 	
+	//찜한 레시피 리스트
 	@GetMapping(value = "/myRecipe.do") 
-	public String getMyRecipeList(@ModelAttribute(value = "params") RecipeDTO params, Model model) {
+	public String getMyRecipeList(@ModelAttribute(value = "params") RecipeDTO params, Model model, Principal principal) {
 		//Recipe_List
-		List<RecipeDTO> Recipe_List = recipeService.getMyRecipeList(params);		
+		List<RecipeDTO> Recipe_List = recipeService.getMyRecipeList(params, principal);		
 		model.addAttribute("Recipe_List", Recipe_List);
 		return "mypage/myRecipeList";
 	}

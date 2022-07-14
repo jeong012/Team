@@ -15,7 +15,7 @@ public interface RecipeMapper {
 	RecipeDTO selectRecipeInfo(String Recipe_no);
     Integer UpdateUphit(String Recipe_no);
 	int selectRecipeTotalCount(RecipeDTO params);
-	RecipesCartDTO selectMyRecipe(String Recipe_no);
+	RecipesCartDTO selectMyRecipe(RecipesCartDTO cartDTO);
 	int addCart(RecipesCartDTO cartDTO);
 	int deleteCart(RecipesCartDTO cartDTO);
 	 List<RecipesCartDTO> myRecipeList(String id);
@@ -23,6 +23,7 @@ public interface RecipeMapper {
 	 int selectMyRecipeTotalCount(RecipeDTO params);
 	 int updateRecommendedNumber(RecipesCartDTO params);
 	 int minusRecommendedNumber(RecipesCartDTO params);
+	 int checkAuthority(RecipesCartDTO params);
 	 int uploadRecipe(RecipeDTO params);
 	 int getRecipeNo();	 
 	 

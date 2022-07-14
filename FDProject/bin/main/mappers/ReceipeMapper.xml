@@ -94,7 +94,7 @@
     
 	<select id="selectRecipeTotalCount" parameterType="RecipeDTO"
 		resultType="int">
-        <![CDATA[
+        <![CDATA[ 
         	SELECT
 	        COUNT(*)
 	        FROM
@@ -113,13 +113,14 @@
 		WHERE Recipe_no = #{Recipe_no}
 	</select>
 
-	<select id="selectMyRecipe" parameterType="String"
+	<select id="selectMyRecipe" parameterType="RecipesCartDTO"
 		resultType="RecipesCartDTO">
 		select
 		*
 		from
-		recipes_cart
-		where recipe_no = #{Recipe_no}
+		recipes_cart rc 
+		where rc.recipe_no = #{recipeNo}
+		and rc.user_id = #{userId}
 	</select>
 
 	<update id="UpdateUphit" parameterType="String">
@@ -168,6 +169,13 @@
      	set RECOMMENDED_NUMBER = RECOMMENDED_NUMBER - 1
      	where recipe_no = #{recipeNo}     	     	
      </update>
+     
+     <select id ="checkAuthority" parameterType ="RecipesCartDTO" resultType ="int">
+     	select count(*)
+     	from recipes_cart
+     	where recipe_no = #{recipeNo} 
+     	and user_id = #{userId}
+     </select>
       
 	 <insert id ="uploadRecipe" parameterType="RecipeDTO">
 	 	insert into recipes(recipe_no, title, writer,food_ingredients,step,reg_Date,recommended_number,storage,tip,img_file,random_img_file) 
