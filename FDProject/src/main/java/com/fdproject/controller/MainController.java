@@ -12,7 +12,6 @@ public class MainController {
 	public String getIndex(HttpSession httpSession){
 		if(httpSession.getAttribute("oAuth2User") != null) {
 			httpSession.removeAttribute("oAuth2User");
-			httpSession.invalidate();	
 		}
 		return "index";
 	}
