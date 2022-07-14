@@ -36,10 +36,10 @@ public class MyPageController extends UiUtils {
 	private final DiseaseService diseaseService;
 	private final DrugService drugService;
 	private final UserService userService;
-	
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
 	private final RecipeService recipeService;
+	
+//  @Autowired
+//  private AuthenticationManager authenticationManager;
 	
 	@GetMapping(value="/user.do")
 	public String UserModify(@ModelAttribute("params") UserDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
