@@ -85,9 +85,4 @@ public class SecurityConfig{
 	    return authenticationConfiguration.getAuthenticationManager();
 	}
 	
-//	@Bean
-//    public AuthenticationProvider authenticationProvider() {
-//        return new CustomAuthenticationProvider();
-//    }
-	
 }
