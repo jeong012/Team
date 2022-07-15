@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="/layout/basic">
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="/layout/basic">
 
 <div layout:fragment="content">
 	<section class="breadcrumbs">
@@ -46,10 +46,10 @@
 											<li>
 												<i class="bx bx-camera"></i>
 												<div>
-													<h5>음식 사진 </h5>													
-													<img th:src="|@{/assets/img/recipeimages/}${Recipe_info.randomImgFile}|" alt=""
-														style="width: 400px; height: 400px;">
-													<br><br>													
+													<h5>음식 사진 </h5>
+													<img th:src="|@{/assets/img/recipeimages/}${Recipe_info.randomImgFile}|"
+														alt="" style="width: 400px; height: 400px;">
+													<br><br>
 											</li>
 											<th:block th:if="${Recipe_info.storage != null}">
 												<li>
@@ -88,8 +88,6 @@
 				<div class="col-lg-4">
 					<div class="portfolio-info">
 						<div>
-							<!--<img src="/assets/img/empty_star.jpg" alt="" style="width:27px; height:27px;"> -->
-
 							<h3 style="display:inline-block;">&nbsp;구성 재료 &amp; 조리 영상 </h3>
 						</div>
 						<ul>
@@ -97,30 +95,41 @@
 								<li th:text="${split}"></li>
 							</th:block>
 						</ul>
-					</div> <!-- portfolio-info -->
+					</div> <!-- 수정하기 -->
+					<th:block sec:authorize="hasAnyRole('ROLE_MEMBER')">
+						<th:block th:if="${#authentication.principal.userId == Recipe_info.writer}">
 
-					<!-- 들어가야할곳 -->
-					<!--  -->
+							<a th:href="@{/recipe/writeForm(Recipe_No = ${Recipe_info.recipeNo})}" type="button"
+								class="btn btn-primary" id="btn_First"
+								style="font-size : 15px; position: relative; top: 15px; left: 0px;">수정 하기</a>
+
+							<button id="btn_First" onclick="btn_delete();" type="button" class="btn btn-primary"
+								style="font-size : 15px; position: relative; top: 15px; left: 0px;">삭제 하기</button>
+						</th:block>
 				</div>
 			</div>
 		</div>
 	</section><!-- End Portfolio Details Section -->
 	<th:block layout:fragment="script">
 		<script th:inline="javascript">
-			/*<![CDATA[*/
-
-			// var i = 0;
-			// $('img').on('click', function () {
-			//     if (i == 0) {
-			//         $(this).attr('src', '/assets/img/star-fill.svg');
-			//
-			//         i++;
-			//     } else if (i == 1) {
-			//         $(this).attr('src', '/assets/img/star.svg');
-			//         i--;
-			//     }
-			//
-			// });
+			function btn_delete() {
+				var Recipe_No = /*[[${Recipe_info.recipeNo}]]*/					
+				
+				$.ajax({
+					url: "/recipe/delete",
+					type: "post",
+					data: JSON.stringify(Recipe_No),
+					dataType: "text",
+					success: function (value) {
+						alert("레시피가 삭제되었습니다");
+						location.href ="/recipe/list";
+					},
+					error: function (request, status, error) {
+						alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+					}
+				});
+			};
+			
 			var i = 0;
 			function addCart(myRecipe) {
 				if (myRecipe == null && i == 0) {
@@ -225,9 +234,7 @@
 						}
 					});
 				}
-			}
-
-			/*]]>*/
+			}			
 		</script>
 	</th:block>
 </div>

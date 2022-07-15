@@ -28,5 +28,6 @@ public interface RecipeService {
 	
 	public String randomFileName(String uploadFileName,byte[] file) throws Exception;
 	
+	public int deleteRecipe(String Recipe_No);
 		
 }
