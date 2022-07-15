@@ -40,10 +40,11 @@ public class MyPageController extends UiUtils {
 //  @Autowired
 //  private AuthenticationManager authenticationManager;
 	
+	//회원정보수정
 	@GetMapping(value="/user.do")
 	public String UserModify(@ModelAttribute("params") UserDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
 		
-		return "mypage/usermodify";
+		return "mypage/userModify";
 	}
 	
 	//회원 정보 수정
@@ -68,12 +69,13 @@ public class MyPageController extends UiUtils {
 		UserDTO userDTO = (UserDTO) authentication.getPrincipal();
 		id = userDTO.getUserId();
 		
+
         List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
         model.addAttribute("diseaseList", diseaseList);
         model.addAttribute("id", id);
 	        
 		 
-		return "mypage/diseaselist";
+		return "mypage/diseaseList";
 	}
 		
 	
@@ -88,7 +90,7 @@ public class MyPageController extends UiUtils {
         model.addAttribute("userdrugList", userdrugList);
         model.addAttribute("id", id);
         
-		return "mypage/druglist";
+		return "mypage/drugList";
 	}
 	
 	//찜한 약 리스트

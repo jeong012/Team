@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
+<script src="https://use.fontawesome.com/your-embed-code.js"></script>
 	<div class="footer" th:fragment="footer">
 	    <!-- ======= Footer ======= -->
 	  	<footer id="footer">
@@ -39,8 +39,16 @@
 			            	</ul>
 			          	</div>
 			          	
-			          
-	      		</div>
+			          	<div class="col-lg-3 col-md-6 footer-links">
+			            	<div class="mx-5 mt-3"><img src="/assets/img/main-logo.png" style="height:80px;"></div><br>
+			            	
+			            	<!-- <a th:href="@{https://github.com/jeong012/Team.git}" style="color:rgb(66, 66, 66)"><i class="fab fa-github fa-fw fa-3x m-3"></i></a>-->
+			            	<a th:href="@{https://github.com/jeong012/Team.git}" style="color:rgb(66, 66, 66)"><i class="bi bi-github fs-3 m-3"></i></a>
+			            	<a th:href="@{mailto:fdprojectemail@gmail.com}" style="color:rgb(66, 66, 66)"><i class="bi bi-envelope-fill fs-3 m-3"></i></a>        
+							<a th:href="@{/}" style="color:rgb(66, 66, 66)"><i class="bi bi-house fs-3 m-3"></i></a>  
+			          	</div>
+			        </div>
+	      		</div>	
 	    	</div>
 	
 	    	<div class="container py-4">
@@ -68,5 +76,4 @@
 	
 	  	<!-- Template Main JS File -->
 	  	<script src="/assets/js/main.js"></script>
-</div>
 </div>
