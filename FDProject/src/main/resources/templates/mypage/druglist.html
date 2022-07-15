@@ -45,7 +45,17 @@
                                     </div>
                                 </div> <!-- End -->
                             </li> <!-- End -->
+                             <li class="list-group-item" th:unless="${not #lists.isEmpty(userdrugList)}">
+                                <!-- Custom content-->
+                                <div class="media align-items-lg-center flex-column flex-lg-row p-4">
+                                    <div class="media-body order-2 order-lg-1">
+                                            <h4 class="mt-0 font-weight-bold"> 저장된 정보가 없습니다. </h4>
+		                           			<h6> - 회원 정보 수정 페이지에서 정보를 추가하실 수 있습니다.</h6>
+				                    </div>
+			                    </div>
+		                    </li>
                         </ul> <!-- End -->
+                    
                     </div>
                 </div>
             </div>

@@ -17,4 +17,7 @@ public interface UserService {
 
 	/** ID 중복체크*/
 	int findById(String userId);
+	
+	/** 회원 정보 수정*/
+	int updateUser(UserDTO userDTO);
 }
