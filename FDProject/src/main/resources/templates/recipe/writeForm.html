@@ -7,7 +7,13 @@
 		<div class="container">
 			<div class="d-flex justify-content-between align-items-center">
 				<label for="InputForm1" style="font-size:18px;">음식 제목을 입력하세요</label>
-				<input type="text" class="form-control" id="Title" placeholder="해물 파전" style="width:800px;">
+				<th:block th:if="${Recipe_info == null}">
+					<input type="text" class="form-control" id="Title" placeholder="해물 파전" style="width:800px;">
+				</th:block>
+				<th:block th:unless="${Recipe_info == null}">
+					<input type="text" class="form-control" id="Title" th:value="${Recipe_info.title}"
+						style="width:800px;">
+				</th:block>
 				<ol id="list">
 					<!-- 이전단계 링크로 넣어줘야함 -->
 					<li><a th:href="@{/}">Home</a></li> <!--  홈 링크 -->
@@ -39,15 +45,21 @@
 												<i class="bx bx-camera"></i>
 												<div>
 													<h5>음식 사진 </h5>
-
-													<img th:src="|@{/assets/img/recipeimages/food.png}|"
-														style="width: 400px; height: 400px;" id="img_section" ;>
+													<th:block th:if="${Recipe_info == null}">
+														<img th:src="|@{/assets/img/recipeimages/food.png}|"
+															id="img_section" value="basic">
+													</th:block>
+													<th:block th:unless="${Recipe_info == null}">
+														<img th:src="|@{/assets/img/recipeimages/}${Recipe_info.randomImgFile}|"
+															id="img_section" value="non-basic">
+													</th:block>
 													<br><br>
 
 													<div class="filebox">
 														<label for="ex_file">사진 올리기</label>
 														<input type="file" id="ex_file" name="uploadFile"
-															accept="image/*" required=true value="업로드">
+															accept="image/*" required=true
+															value="org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@2a3cdc78">
 														<script>
 															const reader = new FileReader();
 
@@ -72,9 +84,18 @@
 												<i class="bx bx-store"></i>
 												<div>
 													<h5>음식 보관법 </h5>
-													<p><input type="text" id="storage" value="" placeholder="내용을 입력하세요"
-															class="form-control"
-															style="border:1px solid #BDD0E7; border-radius:10px;"></p>
+													<th:block th:if="${Recipe_info == null}">
+														<p><input type="text" id="storage" value=""
+																placeholder="내용을 입력하세요" class="form-control"
+																style="border:1px solid #BDD0E7; border-radius:10px;">
+														</p>
+													</th:block>
+													<th:block th:unless="${Recipe_info == null}">
+														<p><input type="text" id="storage"
+																th:value="${Recipe_info.storage}" class="form-control"
+																style="border:1px solid #BDD0E7; border-radius:10px;">
+														</p>
+													</th:block>
 												</div>
 											</li>
 											<!-- 여기가 핵심임-->
@@ -99,11 +120,27 @@
 												<i class="bx bx-bulb"></i>
 												<div>
 													<h5>꿀팁</h5>
-													<p><textarea id="tip" class="form-control"
-															style="border:1px solid #BDD0E7; border-radius:10px; width: 700px; height: 250px;"></textarea>
-													</p>
-													<button id="btn_submit" onclick="btn2_click();" type="button"
-														class="btn btn-primary" style="font-size : 15px;">등록</button>
+													<th:block th:if="${Recipe_info == null}">
+														<p><textarea id="tip" class="form-control"
+																style="border:1px solid #BDD0E7; border-radius:10px; width: 700px; height: 250px;"></textarea>
+														</p>
+													</th:block>
+													<th:block th:unless="${Recipe_info == null}">
+														<p><textarea id="tip" class="form-control"
+																th:text="${Recipe_info.tip}"
+																style="border:1px solid #BDD0E7; border-radius:10px; width: 700px; height: 250px;"></textarea>
+														</p>
+													</th:block>
+													<th:block th:if="${Recipe_info == null}">
+														<button id="btn_submit" onclick="btn2_click();" type="button"
+															class="btn btn-primary" value="add"
+															style="font-size : 15px;">등록</button>
+													</th:block>
+													<th:block th:unless="${Recipe_info == null}">
+														<button id="btn_submit" onclick="btn2_click();" type="button"
+															class="btn btn-primary" value="modify"
+															style="font-size : 15px;">수정완료하기</button>
+													</th:block>
 												</div>
 											</li>
 
@@ -118,8 +155,16 @@
 					<div class="portfolio-info">
 						<h3>&nbsp;구성 재료 &amp; 조리 영상 </h3>
 						<div class="form-group">
-							<textarea class="form-control" id="ingredients" rows="10" placeholder="필요한 내용을 입력"
-								style="border:1px solid #BDD0E7; border-radius:10px; width: 355px;"></textarea>
+							<th:block th:if="${Recipe_info == null}">
+								<textarea class="form-control" id="ingredients" rows="10" placeholder="필요한 내용을 입력"
+									style="border:1px solid #BDD0E7; border-radius:10px; width: 355px;"></textarea>
+							</th:block>
+							<th:block th:unless="${Recipe_info == null}">
+								<th:block th:each="split : ${AL_ri_split}">
+									<textarea class="form-control" id="ingredients" rows="10" th:text="${split}"
+										style="border:1px solid #BDD0E7; border-radius:10px; width: 355px;"></textarea>
+								</th:block>
+							</th:block>
 						</div>
 					</div>
 					<!-- 들어가야할곳 -->
@@ -133,8 +178,31 @@
 	<!--  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
 	<script th:inline="javascript">
 		var cnt = 2;
-		function btn1_click() {
+		$(document).ready(function () {			
+			var arr = /*[[${AL_rs_split}]]*/;
+			//alert(arr.length);
+			//alert(arr[0]);
+			//alert(arr[1]);
+			if(arr.length > 0)
+				document.getElementById("order_content1").value = arr[0];
+			for (var i = 1; i < arr.length; i++) {
+				var data = '<li id="add' + cnt + '" class="steps">'
+					+ '<i class="bx bx-food-menu"></i>'
+					+ '<div>'
+					+ '<h5>조리법 ' + cnt + '</h5>'
+					+ '<p><input type="text" id="order_content' + cnt + '" value="'+ arr[i] +'" name="' + cnt + '"'
+					+ 'class="form-control"'
+					+ 'style="border:1px solid #BDD0E7; border-radius:10px;"></p>'
+					+ '</div>'
+					+ '</li>';
 
+				$("#recipeStep").append(data);
+				cnt += 1;
+			}
+		});
+		
+		function btn1_click() {
+			
 			var data = '<li id="add' + cnt + '" class="steps">'
 				+ '<i class="bx bx-food-menu"></i>'
 				+ '<div>'
@@ -166,6 +234,7 @@
 
 
 			var data = {
+				"type": $("[id=btn_submit]").val(),
 				"tip": $("[id=tip]").val(),
 				"storage": $("[id=storage]").val(),
 				"title": $("[id=Title]").val(), //음식제목
@@ -197,7 +266,7 @@
 				alert("tip을 입력해주세요");
 				return;
 			}
-			
+
 			if ($("[id=ingredients]").val() == "") {
 				alert("성분을 입력해주세요");
 				return;
@@ -214,13 +283,13 @@
 				success: function (json) {
 					alert("레시피가 등록되었습니다");
 					location.href = "/recipe/list";
-				},				
+				},
 				error: function (request, status, error) {
 					alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-				}				
+				}
 			}); //ajax
-		}; //function
-
+		}; //function	
+		
 		/*]]>*/
 	</script>
 </th:block>
