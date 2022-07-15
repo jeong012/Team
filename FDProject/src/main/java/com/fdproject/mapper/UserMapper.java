@@ -31,5 +31,8 @@ public interface UserMapper {
 	
 	/** OAuth2 로그인*/
 	UserDTO loginByOAuth2(@Param("userId") String userId, @Param("registraionId") String registraionId);
+	
+	/** 회원정보 수정*/
+	int updateUser(UserDTO userDto);
 
 }

@@ -8,8 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
@@ -18,6 +21,7 @@ import com.fdproject.domain.UserDTO;
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.DrugService;
 import com.fdproject.service.RecipeService;
+import com.fdproject.service.UserService;
 import com.fdproject.util.UiUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -27,14 +31,33 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MyPageController extends UiUtils {
 
+//	private static final Logger log = LoggerFactory.getLogger(MyPageController.class);
 	private final DiseaseService diseaseService;
 	private final DrugService drugService;
+	private final UserService userService;
 	private final RecipeService recipeService;
 	
+//  @Autowired
+//  private AuthenticationManager authenticationManager;
+	
 	@GetMapping(value="/user.do")
-	public String UserModify(@ModelAttribute("params") DiseaseDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
+	public String UserModify(@ModelAttribute("params") UserDTO params, @RequestParam(value = "id", required = false) String id, Model model) {
 		
 		return "mypage/usermodify";
+	}
+	
+	//회원 정보 수정
+	@ResponseBody
+	@PutMapping(value="/modify.do")
+	public String UserModify(@RequestBody UserDTO userDTO) {
+		System.out.println(userDTO);
+		userService.updateUser(userDTO);
+		// 트랜젝션 종료, DB값 변경 완료
+		// 세션값 변경
+//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUserId(), userDTO.getPw()));
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+	    return "success";
 	}
 	
 	
