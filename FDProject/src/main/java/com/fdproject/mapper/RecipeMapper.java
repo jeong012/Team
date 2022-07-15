@@ -11,10 +11,13 @@ import com.fdproject.domain.RecipesCartDTO;
 @Mapper
 public interface RecipeMapper {
 	List<RecipeDTO> selectRecipeList(RecipeDTO params);
-	List<RecipeDTO> selectWriterRecipeList(RecipeDTO params);	
+	List<RecipeDTO> selectWriterRecipeList(RecipeDTO params);
+	List<RecipeDTO> selectMyWriteRecipeList(RecipeDTO params);
 	RecipeDTO selectRecipeInfo(String Recipe_no);
     Integer UpdateUphit(String Recipe_no);
 	int selectRecipeTotalCount(RecipeDTO params);
+	int selectWriterRecipeTotalCount(RecipeDTO params);
+	int selectMyWriterRecipeTotalCount(RecipeDTO params);
 	RecipesCartDTO selectMyRecipe(RecipesCartDTO cartDTO);
 	int addCart(RecipesCartDTO cartDTO);
 	int deleteCart(RecipesCartDTO cartDTO);
@@ -25,6 +28,8 @@ public interface RecipeMapper {
 	 int minusRecommendedNumber(RecipesCartDTO params);
 	 int checkAuthority(RecipesCartDTO params);
 	 int uploadRecipe(RecipeDTO params);
+	 int modifyRecipe(RecipeDTO params);
 	 int getRecipeNo();	 
+	 int deleteYNRecipe(String Recipe_no);
 	 
 }

@@ -20,7 +20,7 @@
 		RANDOM_IMG_FILE
 		]]>
 	</sql>
-	
+
 	<sql id="recipeColumns2">
 		<![CDATA[
 		r.recipe_No,
@@ -40,6 +40,18 @@
 		]]>
 	</sql>
 
+	<sql id="deleteYN">
+		<![CDATA[
+		and delete_YN != 'Y'		
+		]]>
+	</sql>
+
+	<sql id="r_deleteYN">
+		<![CDATA[
+		and r.delete_YN != 'Y'		
+		]]>
+	</sql>
+
 	<!-- new -->
 	<select id="selectRecipeList" resultType="RecipeDTO">
 		<include refid="CommonMapper.pagingHeader" />
@@ -50,11 +62,12 @@
 		where
 		1=1
 		<include refid="CommonMapper.search_R" />
+		<include refid="deleteYN" />
 		order by title asc
 		<include refid="CommonMapper.pagingFooter" />
 	</select>
-		
-	<select id="selectWriterRecipeList" resultType="RecipeDTO">
+
+	<select id="selectWriterRecipeList" resultType="RecipeDTO"> <!-- 사용자 작성 -->
 		<include refid="CommonMapper.pagingHeader" />
 		SELECT
 		<include refid="recipeColumns" />
@@ -62,36 +75,86 @@
 		recipes
 		where
 		1=1
-		and writer != '[Manager]'		
-		<include refid="CommonMapper.search_R" />		
+		<include refid="deleteYN" />
+		and writer != '[Manager]'
+		<include refid="CommonMapper.search_R" />
 		order by title asc
 		<include refid="CommonMapper.pagingFooter" />
 	</select>
-		
-	<select id="getMyRecipeList" parameterType="RecipeDTO" resultType="RecipeDTO">
-        <include refid="CommonMapper.pagingHeader"/>
-        select
-        c.recipe_CART_NO,
-        <include refid="recipeColumns2"/>
-        from
-        Recipes r, Recipes_cart c
-        where r.recipe_NO = c.recipe_NO
-        and c.USER_ID = #{cartDTO.userId}
-        <include refid="CommonMapper.search_o"/>
-        order by title asc
-        <include refid="CommonMapper.pagingFooter"/>
-    </select>
-    
-    <select id="selectMyRecipeTotalCount" parameterType="RecipeDTO" resultType="int">
-        select
-        COUNT(<![CDATA[*]]>)
-        from Recipes_CART c, recipes r
-        where
-        c.recipe_NO = r.recipe_NO
-        and USER_ID = #{cartDTO.userId}
-        <include refid="CommonMapper.search_o"/>
-    </select>
-    
+
+	<select id="selectMyWriteRecipeList" resultType="RecipeDTO"> <!-- 본인이 작성한 -->
+		<include refid="CommonMapper.pagingHeader" />
+		SELECT
+		<include refid="recipeColumns" />
+		FROM
+		recipes
+		where
+		1=1
+		<include refid="deleteYN" />
+		and writer =#{writer}
+		<include refid="CommonMapper.search_R" />
+		order by title asc
+		<include refid="CommonMapper.pagingFooter" />
+	</select>
+
+	<select id="getMyRecipeList" parameterType="RecipeDTO"
+		resultType="RecipeDTO">
+		<include refid="CommonMapper.pagingHeader" />
+		select
+		c.recipe_CART_NO,
+		<include refid="recipeColumns2" />
+		from
+		Recipes r, Recipes_cart c
+		where r.recipe_NO = c.recipe_NO
+		and c.USER_ID = #{cartDTO.userId}
+		<include refid="r_deleteYN" />
+		<include refid="CommonMapper.search_o" />
+		order by title asc
+		<include refid="CommonMapper.pagingFooter" />
+	</select>
+	<!-- 찜 레시피 리스트 -->
+	<select id="selectMyRecipeTotalCount" parameterType="RecipeDTO"
+		resultType="int">
+		select
+		COUNT(<![CDATA[*]]>)
+		from Recipes_CART c, recipes r
+		where
+		c.recipe_NO = r.recipe_NO
+		and USER_ID = #{cartDTO.userId}
+		<include refid="deleteYN" />
+		<include refid="CommonMapper.search_o" />
+	</select>
+	<!-- 유저들이 작성한 리스트 -->
+	<select id="selectWriterRecipeTotalCount" parameterType="RecipeDTO"
+		resultType="int">
+        <![CDATA[ 
+        	SELECT
+	        COUNT(*)
+	        FROM
+	        recipes
+	        where
+	        1=1
+	    ]]>
+	    and writer != '[Manager]'
+		<include refid="deleteYN" />
+		<include refid="CommonMapper.search_R" />
+	</select>  
+	<!-- 내가 작성한 리스트 -->
+	<select id="selectMyWriterRecipeTotalCount" parameterType="RecipeDTO"
+		resultType="int">
+        <![CDATA[ 
+        	SELECT
+	        COUNT(*)
+	        FROM
+	        recipes
+	        where
+	        1=1
+	    ]]>
+	    and writer=#{writer}
+		<include refid="deleteYN" />
+		<include refid="CommonMapper.search_R" />
+	</select>
+	<!-- 기본 레시피 리스트 -->
 	<select id="selectRecipeTotalCount" parameterType="RecipeDTO"
 		resultType="int">
         <![CDATA[ 
@@ -102,6 +165,7 @@
 	        where
 	        1=1
 	    ]]>
+		<include refid="deleteYN" />
 		<include refid="CommonMapper.search_R" />
 	</select>
 
@@ -118,7 +182,7 @@
 		select
 		*
 		from
-		recipes_cart rc 
+		recipes_cart rc
 		where rc.recipe_no = #{recipeNo}
 		and rc.user_id = #{userId}
 	</select>
@@ -126,65 +190,89 @@
 	<update id="UpdateUphit" parameterType="String">
 		UPDATE recipes
 
-		SET hit = hit + 1
+		SET hit =
+		hit + 1
 
 		WHERE Recipe_no =
 		#{Recipe_no}
 	</update>
-	
-	
-	 <select id="myRecipeList" parameterType="String" resultType="RecipesCartDTO">
-        select
-            Recipe_CART_NO,
-            Recipe_NO,
-            USER_ID
-        from
-            Recipes_CART
-        where
-            USER_ID = #{userId}
-    </select>
-    
-	<insert id="addCart" parameterType="RecipesCartDTO">
-        <selectKey keyProperty="recipeCartNo" resultType="int" order="BEFORE">
-            select SEQ_RECIPES_CART_NO.NEXTVAL from dual
-        </selectKey>
-        insert into RECIPES_CART (RECIPE_CART_NO, RECIPE_NO, USER_ID)
-        values (#{recipeCartNo}, #{recipeNo}, #{userId})
-    </insert>
 
-    <delete id="deleteCart">
-        delete
-        from RECIPES_CART
-        where RECIPE_NO = #{recipeNo}
-    </delete>    
-    
-    <update id ="updateRecommendedNumber" parameterType="RecipesCartDTO">     	
-     	update recipes
-     	set RECOMMENDED_NUMBER = RECOMMENDED_NUMBER + 1
-     	where recipe_no = #{recipeNo}     	     	
-     </update>
-     
-     <update id ="minusRecommendedNumber" parameterType="RecipesCartDTO">     	
-     	update recipes
-     	set RECOMMENDED_NUMBER = RECOMMENDED_NUMBER - 1
-     	where recipe_no = #{recipeNo}     	     	
-     </update>
-     
-     <select id ="checkAuthority" parameterType ="RecipesCartDTO" resultType ="int">
-     	select count(*)
-     	from recipes_cart
-     	where recipe_no = #{recipeNo} 
-     	and user_id = #{userId}
-     </select>
-      
-	 <insert id ="uploadRecipe" parameterType="RecipeDTO">
-	 	insert into recipes(recipe_no, title, writer,food_ingredients,step,reg_Date,recommended_number,storage,tip,img_file,random_img_file) 
-	 	values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{recommendedNumber},#{storage},#{tip},#{imgFile}, #{randomImgFile})
-	 </insert>
-	
-	<select id = "getRecipeNo" resultType = "int">
-		select max(r.recipe_no)
-		from recipes r
+
+	<select id="myRecipeList" parameterType="String"
+		resultType="RecipesCartDTO">
+		select
+		Recipe_CART_NO,
+		Recipe_NO,
+		USER_ID
+		from
+		Recipes_CART
+		where
+		USER_ID = #{userId}
 	</select>
 
+	<insert id="addCart" parameterType="RecipesCartDTO">
+		<selectKey keyProperty="recipeCartNo" resultType="int"
+			order="BEFORE">
+			select SEQ_RECIPES_CART_NO.NEXTVAL from dual
+		</selectKey>
+		insert into RECIPES_CART (RECIPE_CART_NO, RECIPE_NO, USER_ID)
+		values (#{recipeCartNo}, #{recipeNo}, #{userId})
+	</insert>
+
+	<delete id="deleteCart">
+		delete
+		from RECIPES_CART
+		where RECIPE_NO = #{recipeNo}
+	</delete>
+
+	<update id="updateRecommendedNumber"
+		parameterType="RecipesCartDTO">
+		update recipes
+		set RECOMMENDED_NUMBER = RECOMMENDED_NUMBER + 1
+		where recipe_no = #{recipeNo}
+	</update>
+
+	<update id="minusRecommendedNumber"
+		parameterType="RecipesCartDTO">
+		update recipes
+		set RECOMMENDED_NUMBER = RECOMMENDED_NUMBER - 1
+		where recipe_no = #{recipeNo}
+	</update>
+
+	<select id="checkAuthority" parameterType="RecipesCartDTO"
+		resultType="int">
+		select count(*)
+		from recipes_cart
+		where recipe_no = #{recipeNo}
+		and user_id = #{userId}
+	</select>
+
+	<insert id="uploadRecipe" parameterType="RecipeDTO">
+		insert into recipes(recipe_no, title,
+		writer,food_ingredients,step,reg_Date,recommended_number,delete_yn,storage,tip,img_file,random_img_file)
+		values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{recommendedNumber},'N',#{storage},#{tip},#{imgFile},
+		#{randomImgFile})
+	</insert>
+
+	<update id="modifyRecipe" parameterType="RecipeDTO">
+		update recipes
+		set title = #{title}, writer = #{writer}, food_ingredients =
+		#{foodIngredients},
+		step = #{step},reg_Date = sysdate, recommended_number =
+		#{recommendedNumber},storage = #{storage},
+		tip = #{tip}, img_file = #{imgFile}, random_img_file = #{randomImgFile}
+		where recipe_no = #{recipeNo}
+	</update>
+
+	<select id="getRecipeNo" resultType="int">
+		select max(r.recipe_no)
+		from
+		recipes r
+	</select>
+
+	<update id="deleteYNRecipe" parameterType="String">
+		update recipes
+		set delete_yn = 'Y'
+		where recipe_no =#{recipeNo}
+	</update>
 </mapper>
