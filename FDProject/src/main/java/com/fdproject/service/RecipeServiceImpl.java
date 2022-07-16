@@ -3,16 +3,20 @@ package com.fdproject.service;
 import java.io.File;
 import java.security.Principal;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fdproject.domain.CommentDTO;
 import com.fdproject.domain.RecipeDTO;
+import com.fdproject.domain.RecipeRecommendedDTO;
 import com.fdproject.domain.RecipesCartDTO;
 import com.fdproject.mapper.RecipeMapper;
 import com.fdproject.paging.PaginationInfo;
@@ -98,8 +102,8 @@ public class RecipeServiceImpl implements RecipeService {
 	@Override
 	public boolean addMyRecipe(RecipesCartDTO cartDTO, Principal principal) {
 		int count = 0;
-		// recommended Number plus
-		recipeMapper.updateRecommendedNumber(cartDTO);
+		// Cart Count plus
+		recipeMapper.updateCartCount(cartDTO);
 		List<RecipesCartDTO> list = recipeMapper.myRecipeList(cartDTO.getUserId());
 		if (!list.isEmpty()) {
 			for (RecipesCartDTO cart : list) {
@@ -115,17 +119,23 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
+	@Transactional
 	public boolean deleteMyRecipe(RecipesCartDTO cartDTO, Principal principal) {
-		// recommended Number minus
+		// CartCount minus
 		// cartDTO 의 id와 recipe_no을 함께 조회했을 때 조회가 되면 아래 문구 시행.
 		int cnt = recipeMapper.checkAuthority(cartDTO);
 		int count = 0;
 		// 카트 dto에 존재할 경우
 		if (cnt != 0) {
-			recipeMapper.minusRecommendedNumber(cartDTO);
+			recipeMapper.minusCartCount(cartDTO);
 			count = recipeMapper.deleteCart(cartDTO);
-		} else
+		} else {
 			count = 0;
+		}
+		
+		/** 레시피 삭제시 레시피 관련 댓글 삭제*/
+		recipeMapper.deleteCommentByRecipe(cartDTO.getRecipeNo());
+		
 		return (count == 1) ? true : false;
 	}
 
@@ -210,4 +220,121 @@ public class RecipeServiceImpl implements RecipeService {
 		return recipeMapper.deleteYNRecipe(Recipe_No);
 	}
 
+	/** 레시피 댓글 리스트 가져오기*/
+	@Override
+	public List<CommentDTO> getCommentList(int recipeNo) {
+		List<CommentDTO> commentList = recipeMapper.getCommentList(recipeNo);
+		return commentList;
+	}
+
+	/** 레시피 댓글 등록*/
+	@Override
+	public int postComment(CommentDTO commentDTO) {
+		int isInserted = recipeMapper.postComment(commentDTO);
+		
+		return isInserted;
+	}
+
+	@Override
+    @Transactional
+	public int deleteComment(CommentDTO commentDTO) {
+		/** 레시피 댓글 삭제*/
+		int isDeleted = 0;
+		int nextPos = recipeMapper.getNextPos(commentDTO);
+		if(nextPos == 0) {
+			isDeleted = recipeMapper.deleteCommentBasic(commentDTO.getCommentNo());
+		} else {
+			isDeleted = recipeMapper.deleteCommentDetail(commentDTO.getRef(), commentDTO.getPos(), nextPos);
+		}
+		
+		/** 레시피 삭제 후 댓글 포지션 수정*/
+		Map<String, Object> map = new HashMap<>();
+		map.put("pos", commentDTO.getPos());
+		map.put("ref", commentDTO.getRef());
+		map.put("deletedCnt", isDeleted);
+		
+		int isUpdated = recipeMapper.updateMinusPos(map);
+
+		return isUpdated + isDeleted;
+	}
+
+	/** 레시피 댓글 가져오기*/
+	@Override
+	public CommentDTO getComment(int commentNo) {
+		CommentDTO commentDTO = recipeMapper.getComment(commentNo);
+		return commentDTO;
+	}
+
+	@Override
+    @Transactional
+	public int replyComment(CommentDTO commentDTO) {
+		/** 레시피 대댓글 후 댓글 포지션 수정*/
+		int isUpdated = recipeMapper.updatePlusPos(commentDTO);
+		
+		/** 레시피 답변 등록*/
+		int isInserted = recipeMapper.replyComment(commentDTO);
+		
+		return isUpdated + isInserted;
+	}
+
+	/** 레시피 댓글 간격 차이 계산*/
+	@Override
+	public String getPosGap(int parentrNo, int depth) {
+		String gap = recipeMapper.getPosGap(parentrNo, depth);
+		return gap;
+	}
+
+	/** 레시피 부모 댓글 개수, 첫 위치 구하기*/
+	public Map<String, Object> getPos(int parentrNo, int depth) {
+		Map<String, Object> map = recipeMapper.getPos(parentrNo, depth);
+		return map;
+	}
+
+	/** 레시피 댓글 수 구하기*/
+	@Override
+	public int getCommentCnt(int recipeNo) {
+		int commentCount = recipeMapper.getCommentCnt(recipeNo);
+		return commentCount;
+	}
+	
+	/** 레시피 댓글 수정*/
+	@Override
+	public int updateComment(CommentDTO commentDTO) {
+		int isUpdated = recipeMapper.updateComment(commentDTO);
+		return isUpdated;
+	}
+
+	/** 레시피 추천 수 구하기*/
+	@Override
+	public int getRecommendedCnt(int recipeNo) {
+		int getRecommendedCnt = recipeMapper.getRecommendedCnt(recipeNo);
+		return getRecommendedCnt;
+	}
+
+	/** 레시피 추천 여부 조회*/
+	@Override
+	public boolean getIsRecommended(RecipeRecommendedDTO recipeRecommendedDTO) {
+		boolean isRecommended = false;
+		if(recipeMapper.getIsRecommended(recipeRecommendedDTO) == null) {
+			isRecommended = false;
+		} else {
+			isRecommended = true;
+		}
+		return isRecommended;
+	}
+
+	/** 레시피 추천 추가*/
+	@Override
+	public int addRecommended(RecipeRecommendedDTO recipeRecommendedDTO) {
+		int isInserted = recipeMapper.addRecommended(recipeRecommendedDTO);
+		return isInserted;
+	}
+
+	/** 레시피 추천 삭제*/
+	@Override
+	public int removeRecommended(RecipeRecommendedDTO recipeRecommendedDTO) {
+		int isDeleted = recipeMapper.removeRecommended(recipeRecommendedDTO);
+		return isDeleted;
+	}
+	
 }

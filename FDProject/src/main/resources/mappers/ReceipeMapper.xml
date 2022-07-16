@@ -13,7 +13,7 @@
 		img_File,
 		reg_Date,
 		hit,
-		recommended_Number,
+		cart_Count,
 		delete_Yn,
 		storage,
 		tip,
@@ -32,7 +32,7 @@
 		r.img_File,
 		r.reg_Date,
 		r.hit,
-		r.recommended_Number,
+		r.cart_Count,
 		r.delete_Yn,
 		r.storage,
 		r.tip,
@@ -51,6 +51,50 @@
 		and r.delete_YN != 'Y'		
 		]]>
 	</sql>
+	
+	<sql id="commentColumns">
+		<![CDATA[
+			COMMENT_NO,
+			RECIPE_NO, 
+			WRITER, 
+			CONTENT, 
+			REF, 
+			PARENT_NO,
+			POS,
+			DEPTH, 
+			REG_DATE, 
+			DELETE_YN,
+			UPDATE_YN
+		]]>
+	</sql>
+	
+	<sql id="recipeRecommendedColumns">
+		<![CDATA[
+			RECIPE_RECOMMENDED_NO,
+			RECIPE_NO,
+			USER_ID
+		]]>
+	</sql>
+	
+	<resultMap id="comment" type="CommentDTO">
+        <id property="commentNo" column="comment_no"/>
+        <result property="recipeNo" column="recipe_no"/>
+        <result property="writer" column="writer"/>
+        <result property="content" column="content"/>
+        <result property="ref" column="ref"/>
+        <result property="parentNo" column="parent_no"/>
+        <result property="pos" column="pos"/>
+        <result property="depth" column="depth"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="deleteYn" column="delete_yn"/>
+        <result property="updateYn" column="update_yn"/>
+	</resultMap>
+	
+	<resultMap id="recipeRecommended" type="RecipeRecommendedDTO">
+        <id property="recipeRecommendedNo" column="recipe_recommended_no"/>
+        <result property="recipeNo" column="recipe_no"/>
+        <result property="userId" column="user_id"/>
+	</resultMap>
 
 	<!-- new -->
 	<select id="selectRecipeList" resultType="RecipeDTO">
@@ -225,17 +269,17 @@
 		where RECIPE_NO = #{recipeNo}
 	</delete>
 
-	<update id="updateRecommendedNumber"
+	<update id="updateCartCount"
 		parameterType="RecipesCartDTO">
 		update recipes
-		set RECOMMENDED_NUMBER = RECOMMENDED_NUMBER + 1
+		set Cart_Count = Cart_Count + 1
 		where recipe_no = #{recipeNo}
 	</update>
 
-	<update id="minusRecommendedNumber"
+	<update id="minusCartCount"
 		parameterType="RecipesCartDTO">
 		update recipes
-		set RECOMMENDED_NUMBER = RECOMMENDED_NUMBER - 1
+		set Cart_Count = Cart_Count - 1
 		where recipe_no = #{recipeNo}
 	</update>
 
@@ -249,8 +293,8 @@
 
 	<insert id="uploadRecipe" parameterType="RecipeDTO">
 		insert into recipes(recipe_no, title,
-		writer,food_ingredients,step,reg_Date,recommended_number,delete_yn,storage,tip,img_file,random_img_file)
-		values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{recommendedNumber},'N',#{storage},#{tip},#{imgFile},
+		writer,food_ingredients,step,reg_Date,cart_count,delete_yn,storage,tip,img_file,random_img_file)
+		values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{cartCount},'N',#{storage},#{tip},#{imgFile},
 		#{randomImgFile})
 	</insert>
 
@@ -258,8 +302,8 @@
 		update recipes
 		set title = #{title}, writer = #{writer}, food_ingredients =
 		#{foodIngredients},
-		step = #{step},reg_Date = sysdate, recommended_number =
-		#{recommendedNumber},storage = #{storage},
+		step = #{step},reg_Date = sysdate, cart_count =
+		#{cartCount},storage = #{storage},
 		tip = #{tip}, img_file = #{imgFile}, random_img_file = #{randomImgFile}
 		where recipe_no = #{recipeNo}
 	</update>
@@ -275,4 +319,148 @@
 		set delete_yn = 'Y'
 		where recipe_no =#{recipeNo}
 	</update>
+	
+	<select id="getCommentList" parameterType="int" resultMap="comment">
+		SELECT <include refid="commentColumns" />
+		FROM COMMENTS
+		WHERE RECIPE_NO = #{recipeNo}
+		AND DELETE_YN = 'N'
+		ORDER BY REF, POS, DEPTH
+	</select>
+	
+	<insert id="postComment" parameterType="commentDTO">
+        <selectKey keyProperty="commentNo" resultType="int" order="BEFORE">
+			SELECT SEQ_COMMENTS_NO.NEXTVAL FROM DUAL
+        </selectKey>
+		INSERT INTO COMMENTS (<include refid="commentColumns" />)
+		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{commentNo}, #{commentNo}, 1, 0, SYSDATE, 'N', 'N')
+	</insert>
+    
+    <select id="getNextPos" parameterType="commentDTO" resultType="int">
+    	<![CDATA[
+		    SELECT (CASE WHEN cnt > 1 THEN (	SELECT POS
+												FROM (
+														SELECT ROWNUM rn, c.*
+														FROM COMMENTS c
+														WHERE PARENT_NO = #{parentNo}
+														AND POS >= #{pos} AND DEPTH = #{depth} AND DELETE_YN = 'N'
+										   		) WHERE rn = 2
+										   )
+		            	 ELSE 0
+		       		END) AS nextPos
+			FROM (SELECT COUNT(*) cnt FROM COMMENTS
+				  WHERE PARENT_NO = #{parentNo} AND POS >= #{pos} AND DEPTH = #{depth} AND DELETE_YN = 'N')	 
+		]]>
+    </select> 
+	
+	<update id="deleteCommentBasic" parameterType="int">
+        UPDATE COMMENTS
+		SET DELETE_YN='Y'
+		WHERE COMMENT_NO = #{commentNo} OR REF = #{commentNo} OR PARENT_NO = #{commentNo}
+    </update>
+    
+    <update id="deleteCommentDetail" parameterType="map">
+       	<![CDATA[
+			UPDATE COMMENTS
+			SET DELETE_YN='Y'
+			WHERE POS >= #{minPos} AND POS < #{maxPos}
+			AND REF = #{ref}
+		]]>	
+    </update>
+	
+	<update id="updateMinusPos" parameterType="map">
+		UPDATE COMMENTS
+		SET POS = POS-#{deletedCnt}
+		WHERE POS > #{pos}
+		AND REF = #{ref}
+		AND DELETE_YN='N'
+    </update>
+    
+    <update id="deleteCommentByRecipe" parameterType="int">
+        UPDATE COMMENTS
+		SET DELETE_YN='Y'
+		WHERE RECIPE_NO = #{recipeNo}
+    </update>
+	
+	<select id="getComment" parameterType="int" resultMap="comment">
+		SELECT <include refid="commentColumns" />
+		FROM COMMENTS
+		WHERE COMMENT_NO = #{commentNo}
+		AND DELETE_YN = 'N'
+	</select>
+	
+	<insert id="replyComment" parameterType="commentDTO">
+        <selectKey keyProperty="commentNo" resultType="int" order="BEFORE">
+            SELECT SEQ_COMMENTS_NO.NEXTVAL FROM DUAL
+        </selectKey>
+		INSERT INTO COMMENTS (<include refid="commentColumns" />)
+		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{ref}, #{parentNo}, #{pos}+1, #{depth}, SYSDATE, 'N', 'N')
+	</insert>
+	
+	<select id="getPosGap" parameterType="int" resultType="String">
+		SELECT to_number(endPos) - to_number(startPos) gap
+		FROM (SELECT pos startPos 
+	   		  FROM ( SELECT * FROM COMMENTS WHERE PARENT_NO = #{parentNo} AND DEPTH = #{depth} ORDER BY POS)
+	   		  WHERE ROWNUM = 1) s,
+	  		 (SELECT pos endPos
+	   		  FROM ( SELECT * FROM COMMENTS WHERE PARENT_NO = #{parentNo} AND DEPTH = #{depth} ORDER BY POS DESC)
+	   		  WHERE ROWNUM = 1) e
+	</select>
+	
+	<update id="updatePlusPos" parameterType="commentDTO">
+		UPDATE COMMENTS
+		SET POS = POS+1
+		WHERE POS > #{pos}
+		AND REF = #{ref}
+		AND DELETE_YN='N'
+    </update>
+    
+    <select id="getPos" parameterType="int" resultType="map">
+    	SELECT count(*) countParentCount, NVL(MIN(POS),0) pos
+		FROM COMMENTS
+		WHERE PARENT_NO = #{parentNo}
+		AND DEPTH = #{depth}
+		AND DELETE_YN = 'N'
+    </select>
+    
+	<select id="getCommentCnt" parameterType="int" resultType="int">
+		SELECT NVL(count(*),0) commentCnt
+		FROM COMMENTS
+		WHERE RECIPE_NO = #{recipeNo}
+		AND DELETE_YN = 'N'
+	</select>
+	
+	<update id="updateComment" parameterType="commentDTO">
+		UPDATE COMMENTS
+		SET CONTENT = #{content}, UPDATE_YN='Y'
+		WHERE COMMENT_NO = #{commentNo}
+	</update>
+	
+	<select id="getIsRecommended" parameterType="recipeRecommendedDTO" resultMap="recipeRecommended">
+		SELECT *
+		FROM RECIPES_RECOMMENDED
+		WHERE RECIPE_NO = #{recipeNo}
+		AND USER_ID = #{userId}
+	</select>
+	
+	<select id="getRecommendedCnt" parameterType="int" resultType="int">
+		SELECT NVL(count(*),0) recommendedCount
+		FROM RECIPES_RECOMMENDED
+		WHERE RECIPE_NO = #{recipeNo}
+	</select>
+	
+	<insert id="addRecommended" parameterType="recipeRecommendedDTO">
+	 	<selectKey keyProperty="recipeRecommendedNo" resultType="int" order="BEFORE">
+            SELECT SEQ_RECIPES_RECOMMENDED_NO.NEXTVAL FROM DUAL
+        </selectKey>
+		INSERT INTO RECIPES_RECOMMENDED (<include refid="recipeRecommendedColumns" />)
+		VALUES(#{recipeRecommendedNo}, #{recipeNo}, #{userId})
+	</insert>
+	
+	<delete id="removeRecommended" parameterType="recipeRecommendedDTO">
+	 	DELETE FROM RECIPES_RECOMMENDED
+		WHERE RECIPE_NO = #{recipeNo}
+		AND USER_ID = #{userId}
+	</delete>
+	
 </mapper>
