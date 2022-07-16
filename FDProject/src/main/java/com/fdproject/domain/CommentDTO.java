@@ -17,8 +17,11 @@ public class CommentDTO {
 	/** 내용 */
 	private String content;
 	
-	/** 참조 댓글 */
+	/** 댓글 그룹 */
 	private int ref;
+	
+	/** 부모 댓글*/
+	private int parentNo;
 
 	/** 댓글 위치 */
 	private int pos;
@@ -31,4 +34,8 @@ public class CommentDTO {
 
 	/** 삭제여부 */
 	private String deleteYn;
+	
+	/** 수정여부*/
+	private String updateYn;
+	
 }

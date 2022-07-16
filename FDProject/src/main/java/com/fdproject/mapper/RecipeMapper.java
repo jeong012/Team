@@ -1,11 +1,14 @@
 package com.fdproject.mapper;
 
 import java.util.List;
-import org.apache.ibatis.annotations.Mapper;
+import java.util.Map;
 
-import com.fdproject.domain.DrugDTO;
-import com.fdproject.domain.DrugsCartDTO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import com.fdproject.domain.CommentDTO;
 import com.fdproject.domain.RecipeDTO;
+import com.fdproject.domain.RecipeRecommendedDTO;
 import com.fdproject.domain.RecipesCartDTO;
 
 @Mapper
@@ -21,15 +24,69 @@ public interface RecipeMapper {
 	RecipesCartDTO selectMyRecipe(RecipesCartDTO cartDTO);
 	int addCart(RecipesCartDTO cartDTO);
 	int deleteCart(RecipesCartDTO cartDTO);
-	 List<RecipesCartDTO> myRecipeList(String id);
-	 List<RecipeDTO> getMyRecipeList(RecipeDTO params);
-	 int selectMyRecipeTotalCount(RecipeDTO params);
-	 int updateRecommendedNumber(RecipesCartDTO params);
-	 int minusRecommendedNumber(RecipesCartDTO params);
-	 int checkAuthority(RecipesCartDTO params);
-	 int uploadRecipe(RecipeDTO params);
-	 int modifyRecipe(RecipeDTO params);
-	 int getRecipeNo();	 
-	 int deleteYNRecipe(String Recipe_no);
-	 
+	List<RecipesCartDTO> myRecipeList(String id);
+	List<RecipeDTO> getMyRecipeList(RecipeDTO params);
+	int selectMyRecipeTotalCount(RecipeDTO params);
+	int updateCartCount(RecipesCartDTO params);
+	int minusCartCount(RecipesCartDTO params);
+	int checkAuthority(RecipesCartDTO params);
+	int uploadRecipe(RecipeDTO params);
+	int modifyRecipe(RecipeDTO params);
+	int getRecipeNo();	 
+	int deleteYNRecipe(String Recipe_no);
+		
+	/** 레시피 댓글 리스트 가져오기*/
+	List<CommentDTO> getCommentList(int recipeNo);
+
+	/** 레시피 댓글 등록*/
+	int postComment(CommentDTO commentDTO);
+	
+	/** 같은 depth 기준 삭제 컬럼의 다음 pos 가져오기 */
+	int getNextPos(CommentDTO commentDTO);
+	
+	/** 레시피 댓글 기본 삭제*/
+	int deleteCommentBasic(int commentNo);
+	
+	/** 레시피 댓글 세부 삭제 -> 자식의 자식의 자식...*/
+	int deleteCommentDetail(@Param("ref") int ref, @Param("minPos") int minPos, @Param("maxPos") int maxPos);
+	
+	/** 레시피 삭제 후 댓글 포지션 수정*/
+	int updateMinusPos(Map<String, Object> map);
+	
+	/** 레시피 삭제 후 댓글 삭제*/
+	int deleteCommentByRecipe(int recipeNo);
+	
+	/** 레시피 댓글 가져오기*/
+	CommentDTO getComment(int commentNo);
+	
+	/** 레시피 답변 등록*/
+	int replyComment(CommentDTO commentDTO);
+	
+	/** 레시피 댓글 간격 차이 계산*/
+	String getPosGap(@Param("parentNo") int parentrNo, @Param("depth") int depth);
+
+	/** 레시피 부모 댓글 개수, 첫 위치 구하기*/
+	Map<String, Object> getPos(@Param("parentNo") int parentrNo, @Param("depth") int depth);
+	
+	/** 레시피 대댓글 후 댓글 포지션 수정*/
+	int updatePlusPos(CommentDTO commentDTO);
+
+	/** 레시피 댓글 수 구하기*/
+	int getCommentCnt(int recipeNo);
+	
+	/** 레시피 댓글 수정*/
+	int updateComment(CommentDTO commentDTO);
+	
+	/** 레시피 추천 수 구하기*/
+	int getRecommendedCnt(int recipeNo);
+	
+	/** 레시피 추천 여부 조회*/
+	RecipeRecommendedDTO getIsRecommended(RecipeRecommendedDTO recipeRecommendedDTO);
+
+	/** 레시피 추천 추가*/
+	int addRecommended(RecipeRecommendedDTO recipeRecommendedDTO);
+	
+	/** 레시피 추천 삭제*/
+	int removeRecommended(RecipeRecommendedDTO recipeRecommendedDTO);
+	
 }

@@ -2,6 +2,7 @@ package com.fdproject.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fdproject.domain.CommentDTO;
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.RecipeDTO;
+import com.fdproject.domain.RecipeRecommendedDTO;
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.RecipeService;
 
@@ -104,6 +107,22 @@ public class RecipeController {
 
 		// 조회수 관련 - 구현 완료
 		recipeService.uphit(Recipe_No);
+		
+		/** 댓글 수 가져오기*/
+		int commentCnt = recipeService.getCommentCnt(Integer.parseInt(Recipe_No));
+		model.addAttribute("commentCnt",commentCnt);
+
+		/** 레시피 추천 수 구하기*/
+		int recommendedCnt = recipeService.getRecommendedCnt(Integer.parseInt(Recipe_No));
+		model.addAttribute("recommendedCnt",recommendedCnt);
+
+		/** 레시피 추천 여부 조회*/
+		RecipeRecommendedDTO recipeRecommendedDTO = new RecipeRecommendedDTO();
+		recipeRecommendedDTO.setRecipeNo(Integer.parseInt(Recipe_No));
+		recipeRecommendedDTO.setUserId(principal.getName());
+		
+		boolean isRecommended = recipeService.getIsRecommended(recipeRecommendedDTO);
+		model.addAttribute("isRecommended", isRecommended);
 
 		return "recipe/view";
 	}
@@ -177,6 +196,162 @@ public class RecipeController {
 		recipeService.deleteRecipe(real_Recipe_No[0]); 
 		return "ok";
 	}
-	
 
+	/** 레시피 댓글 리스트 가져오기*/
+	@ResponseBody
+	@PostMapping(value="/comment/getList.do")
+	public HashMap<String, Object> getCommentList(@RequestParam("recipeNo") int recipeNo){
+		List<CommentDTO> commentList = recipeService.getCommentList(recipeNo);
+
+        HashMap<String, Object> commentMap = new HashMap<String, Object>();
+        commentMap.put("commentList", commentList);
+		return commentMap;
+	}
+
+	/** 레시피 댓글 등록*/
+	@ResponseBody
+	@PostMapping(value="/comment/post.do")
+	public HashMap<String, Object> postComment(@ModelAttribute("params") CommentDTO commentDTO) {
+		HashMap<String, Object> commentMap = new HashMap<String, Object>();		
+		int isInserted = recipeService.postComment(commentDTO);
+		if(isInserted == 1) {
+			List<CommentDTO> commentList = recipeService.getCommentList(commentDTO.getRecipeNo());	
+			commentMap.put("result", "success");
+			commentMap.put("commentList", commentList);
+		} else {
+			commentMap.put("result", "fail");
+		}
+
+		return commentMap;
+	}
+	
+	/** 레시피 댓글 삭제*/
+	@ResponseBody
+	@PostMapping(value="/comment/delete.do")
+	public HashMap<String, Object> deleteComment(@ModelAttribute("params") CommentDTO commentDTO) {
+		HashMap<String, Object> commentMap = new HashMap<String, Object>();
+		
+        int isDeleted = recipeService.deleteComment(commentDTO);
+        if(isDeleted >= 1) {
+			List<CommentDTO> commentList = recipeService.getCommentList(commentDTO.getRecipeNo());	
+			commentMap.put("result", "success");
+			commentMap.put("commentList", commentList);
+		} else {
+			commentMap.put("result", "fail");
+		}
+        
+		return commentMap;
+	}
+
+	/** 레시피 댓글 가져오기*/
+	@ResponseBody
+	@PostMapping(value="/comment/get.do")
+	public HashMap<String, Object> getComment(@RequestParam("commentNo") int commentNo){
+        HashMap<String, Object> commentMap = new HashMap<String, Object>();
+        CommentDTO commentDTO = recipeService.getComment(commentNo);
+        commentMap.put("commentDTO", commentDTO);
+        
+		return commentMap;
+	}
+
+	/** 레시피 답변 등록*/
+	@ResponseBody
+	@PostMapping(value="/comment/reply.do")
+	public HashMap<String, Object> replyComment(@ModelAttribute("params") CommentDTO commentDTO) {
+		HashMap<String, Object> commentMap = new HashMap<String, Object>();
+        
+		CommentDTO parentDTO = recipeService.getComment(commentDTO.getParentNo());
+        commentDTO.setRef(parentDTO.getRef());
+        commentDTO.setDepth(parentDTO.getDepth()+1);
+        
+        String gap = recipeService.getPosGap(commentDTO.getParentNo(), commentDTO.getDepth());
+        if(gap == null) {
+        	commentDTO.setPos(parentDTO.getPos());
+        } else if(gap.equals("0")) {
+        	commentDTO.setPos(parentDTO.getPos() + 1);
+        } else {
+        	Map<String, Object> map = recipeService.getPos(commentDTO.getParentNo(), commentDTO.getDepth());
+        	String pos = map.get("POS").toString();
+        	String countParentCount = map.get("COUNTPARENTCOUNT").toString();
+        	
+        	if(gap.equals("1")) {
+        		commentDTO.setPos(parentDTO.getPos() + Integer.parseInt(countParentCount));
+        	}else {
+        		commentDTO.setPos(Integer.parseInt(pos) + Integer.parseInt(gap));
+        	}
+        }
+        
+        int isInserted = recipeService.replyComment(commentDTO);
+		if(isInserted >= 1) {
+			List<CommentDTO> commentList = recipeService.getCommentList(commentDTO.getRecipeNo());	
+			commentMap.put("result", "success");
+			commentMap.put("commentList", commentList);
+		} else {
+			commentMap.put("result", "fail");
+		}
+
+		return commentMap;
+	}
+	
+	/** 레시피 댓글 수정*/
+	@ResponseBody
+	@PostMapping(value="/comment/update.do")
+	public HashMap<String, Object> updateComment(@ModelAttribute("params") CommentDTO commentDTO) {
+		HashMap<String, Object> commentMap = new HashMap<String, Object>();		
+		int isUpdated = recipeService.updateComment(commentDTO);
+		if(isUpdated == 1) {
+			List<CommentDTO> commentList = recipeService.getCommentList(commentDTO.getRecipeNo());	
+			commentMap.put("result", "success");
+			commentMap.put("commentList", commentList);
+		} else {
+			commentMap.put("result", "fail");
+		}
+
+		return commentMap;
+	}
+	
+	
+	/** 레시피 추천 추가*/
+	@ResponseBody
+	@PostMapping(value="/recommended/add.do")
+	public HashMap<String, Object> addRecommended(@ModelAttribute("params") RecipeRecommendedDTO recipeRecommendedDTO) {
+		HashMap<String, Object> recommendedMap = new HashMap<String, Object>();		
+		int isInserted = recipeService.addRecommended(recipeRecommendedDTO);
+		if(isInserted == 1) {
+			int recommendedCnt = recipeService.getRecommendedCnt(recipeRecommendedDTO.getRecipeNo());
+			recommendedMap.put("result", "success");
+			recommendedMap.put("recommendedCnt", recommendedCnt);
+		} else {
+			recommendedMap.put("result", "fail");
+		}
+
+		return recommendedMap;
+	}
+	
+	/** 레시피 추천 삭제*/
+	@ResponseBody
+	@PostMapping(value="/recommended/remove.do")
+	public HashMap<String, Object> removeRecommended(@ModelAttribute("params") RecipeRecommendedDTO recipeRecommendedDTO) {
+		HashMap<String, Object> recommendedMap = new HashMap<String, Object>();		
+		int isInserted = recipeService.removeRecommended(recipeRecommendedDTO);
+		if(isInserted == 1) {
+			int recommendedCnt = recipeService.getRecommendedCnt(recipeRecommendedDTO.getRecipeNo());
+			recommendedMap.put("result", "success");
+			recommendedMap.put("recommendedCnt", recommendedCnt);
+		} else {
+			recommendedMap.put("result", "fail");
+		}
+
+		return recommendedMap;
+	}
+
+	/** 레시피 추천 수 구하기*/
+	@ResponseBody
+	@PostMapping(value="/recommended/getCount.do")
+	public int getRecommendedCnt(@RequestParam("recipeNo") int recipeNo) {
+		int recommendedCnt = recipeService.getRecommendedCnt(recipeNo);
+
+		return recommendedCnt;
+	}
+	
 }

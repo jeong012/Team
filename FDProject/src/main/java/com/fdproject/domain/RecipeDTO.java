@@ -35,9 +35,9 @@ public class RecipeDTO extends CommonDTO {
 
 	/** 조회수 */
 	private int hit;	
-
-	/** 추천수 */
-	private int recommendedNumber ;	
+	
+	/** 레시피 카트수 */
+	private int cartCount;
 
 	/** 삭제여부 */
 	private String deleteYn;

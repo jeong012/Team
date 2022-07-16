@@ -52,7 +52,6 @@ public class UserController {
 	public String getJoinForm(){
 		return "user/joinForm";
 	}
-	
 
 	@ResponseBody
 	@PostMapping(value="/joinForm2.do")	
