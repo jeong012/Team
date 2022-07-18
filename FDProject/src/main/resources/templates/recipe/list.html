@@ -28,14 +28,14 @@
 								</button>
 								<div class="collapse" id="manager-collapse">
 									<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-										<li><a th:href="@{/recipe/list}"
+										<li><a th:href="@{/recipe/list.do}"
 												class="link-dark d-inline-flex text-decoration-none rounded">모든
 												레시피</a></li>
 										<th:block th:if="${Disease_List != null}">
 											<!-- 수정-->
 											<th:block th:each="disease:${Disease_List}">
 												<!--디지즈 리스트 담아서 뷰어에 뿌려주는 걸 토대로 쭉 리스트 나열 -->
-												<li><a th:href="@{/recipe/list(diseaseField = ${disease.diseaseField})}"
+												<li><a th:href="@{/recipe/list.do(diseaseField = ${disease.diseaseField})}"
 														class="link-dark d-inline-flex text-decoration-none rounded"
 														th:text="${disease.diseaseField}">디지즈필드</a></li>
 											</th:block>
@@ -51,11 +51,10 @@
 								</button>
 								<div class="collapse" id="h-collapse">
 									<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-										<li><a th:href="@{/recipe/list(writer='writer')}"
-												class="link-dark d-inline-flex text-decoration-none rounded">유저 작성
-												레시피</a></li>
+										<li><a th:href="@{/recipe/list.do(writer='writer')}"
+												class="link-dark d-inline-flex text-decoration-none rounded">모든 레시피</a></li>
 										<th:block sec:authorize="hasAnyRole('ROLE_MEMBER', 'ROLE_ADMIN')">
-											<li><a th:href="@{/recipe/list(writer=${#authentication.principal.userId})}"
+											<li><a th:href="@{/recipe/list.do(writer=${#authentication.principal.userId})}"
 													class="link-dark d-inline-flex text-decoration-none rounded">나의 작성
 													레시피</a></li>
 										</th:block>
@@ -74,7 +73,7 @@
 										<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 											<th:block th:if="${user_disease_list != null}">
 												<th:block th:each="disease:${user_disease_list}">
-													<li><a th:href="@{/recipe/list(diseaseField = ${disease.diseaseField})}"
+													<li><a th:href="@{/recipe/list.do(diseaseField = ${disease.diseaseField})}"
 															class="link-dark d-inline-flex text-decoration-none rounded"
 															th:text="${disease.diseaseName}">
 														</a>
@@ -107,7 +106,7 @@
 													</div>
 													<!-- 버튼 부분 -->
 													<div class="btn-wrap" style="background-color:#FFFFFF;">
-														<a th:href="@{/recipe/view(Recipe_No = ${Recipe.recipeNo})}"
+														<a th:href="@{/recipe/view.do(Recipe_No = ${Recipe.recipeNo})}"
 															class="btn-buy">자세히 보기</a>
 													</div>
 												</div>
@@ -116,7 +115,7 @@
 									</th:block>
 									<ul class="list-group shadow">						
 										<li class="list-group-item" th:if="${#lists.isEmpty(Recipe_List)}">
-											조회된 리스트 없음
+											조회된 리스트가 없습니다.
 										</li>						
 									</ul>
 								</div>

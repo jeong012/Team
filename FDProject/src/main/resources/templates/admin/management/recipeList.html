@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/layout/basic" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<div layout:fragment="content">
+		<section id="list-page">
+			<div class="container">
+				<div class="pagetitle m-2">레시피 관리</div>
+				<div class="sub-search-box" style="margin-left:500px;">
+				    <form id="searchForm" th:action="@{/admin/management/recipeList.do}" method="get" th:onsubmit="return searchRecipe(this)" class=""
+				          role="form">
+				        <input type="hidden" name="currentPageNo" value="1"/>
+				        <input type="hidden" name="recordsPerPage" th:value="${params.recordsPerPage}"/>
+				        <input type="hidden" name="pageSize" th:value="${params.pageSize}"/>
+						<input type="hidden" id="diseaseField" th:value="${diseaseField}" />
+				        <div>
+				            <select name="searchType" class="btn btn-primary btn-search2" style = "text-align : justify">
+				                <option value="" th:selected="${#strings.isEmpty( params.searchType )}">전체</option>
+				                <option value="title" th:selected="${#strings.equals( params.searchType, 'title' )}">요리 이름</option>
+				                <option value="diseaseField" th:selected="${#strings.equals( params.searchType, 'diseaseField' )}">아픈 부위</option>
+				            </select>
+				        </div>
+				        <div>
+				        	<input type="text" name="searchKeyword" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" />
+				        </div>
+				        <button type="submit" class="btn btn-primary" onclick="searchRecipe(null)">검색</button>
+				    </form>
+				</div>
+	
+				<div class="container py-3">
+					<div class="row">
+						<div class="flex-shrink-0 p-3 bg-white" style="width: 200px; margin-top:45px;">
+							<ul class="border-top"></ul>
+							<ul class="list-unstyled ps-0">
+								<li class="mb-1">
+									<!-- 관리자 작성 레시피 -->
+									<button class="dropdown-toggle" data-bs-toggle="collapse"
+											data-bs-target="#manager-collapse" aria-expanded="false">
+											추천 레시피
+									</button>
+									<div class="collapse" id="manager-collapse">
+										<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+											<li>
+												<a th:href="@{/admin/management/recipeList.do}"
+												   class="link-dark d-inline-flex text-decoration-none rounded">
+												   모든 레시피
+												</a>
+											</li>
+											<th:block th:if="${diseaseList != null}">
+												<th:block th:each="disease:${diseaseList}">
+													<li>
+														<a th:href="@{/admin/management/recipeList.do(diseaseField = ${disease.diseaseField})}"
+														   class="link-dark d-inline-flex text-decoration-none rounded"
+														   th:text="${disease.diseaseField}">
+														</a>
+													</li>
+												</th:block>
+											</th:block>
+										</ul>
+									</div>
+								</li>
+								<li class="mb-1">
+									<!-- 사용자 질병 관련 레시피 -->
+									<button class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#h-collapse"
+										aria-expanded="false">
+										공유 레시피
+									</button>
+									<div class="collapse" id="h-collapse">
+										<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+											<li>
+												<a th:href="@{/admin/management/recipeList.do(writer='writer')}"
+												   class="link-dark d-inline-flex text-decoration-none rounded">
+												   모든 레시피
+												</a>
+											</li>
+										</ul>
+									</div>
+								</li>
+							</ul>
+						</div>
+						
+						<div class="col-lg-10 mx-auto">
+							<section id="pricing" class="pricing" style="padding-bottom:0px;">
+								<div class="container" data-aos="fade-up">
+									<div class="row">
+										<th:block th:if="${!#lists.isEmpty(recipeList)}">
+											<th:block th:each="recipe : ${recipeList}">
+												<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100"
+													style="margin-bottom:30px;">
+													<div class="box" style="min-height:500px; max-height:500px;">
+														<!-- 메뉴 이름 -->
+														<h3 th:text="${recipe.title}"></h3>
+														<!-- 이미지 부분 -->
+														<div style="padding:0px;">
+															<img th:src="|@{/assets/img/recipeImages/}${recipe.randomImgFile}|"
+																style="width:230px; height:240px; margin: 19px;">
+														</div>
+														<!-- 버튼 부분 -->
+														<div class="btn-wrap" style="background-color:#FFFFFF;">
+															<a th:href="@{/admin/management/recipeView.do(recipeNo = ${recipe.recipeNo})}"
+															   class="btn-buy">자세히 보기
+															</a>
+														</div>
+													</div>
+												</div>
+											</th:block>
+										</th:block>
+										<ul class="list-group shadow">						
+											<li class="list-group-item" th:if="${#lists.isEmpty(recipeList)}">
+												조회된 리스트가 없습니다.
+											</li>						
+										</ul>
+									</div>
+								</div>
+							</section>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	
+		<th:block layout:fragment="paging">
+			<nav th:replace="fragments/common :: recipePagination"></nav>
+		</th:block>
+	</div>
+	
+	<th:block layout:fragment="script">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+				function movePage(uri, queryString, diseaseField, writer) {
+					var url = uri + queryString;
+	
+					if (writer != null)
+						url += "&writer=" + writer;
+	
+					if (diseaseField != null)
+						url += "&diseaseField=" + diseaseField;
+	
+					location.href = url;
+				}
+			/*]]>*/
+		</script>
+	</th:block>
+</html>

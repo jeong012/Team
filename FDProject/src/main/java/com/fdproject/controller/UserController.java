@@ -238,7 +238,7 @@ public class UserController {
     
     /*본인 인증 메세지*/
 	@ResponseBody 
-	@PostMapping("/PhoneCheck")
+	@PostMapping("/PhoneCheck.do")
 	public String PhoneCheck(@RequestParam(value="to") String to) throws CoolsmsException {
 			
 		return messageService.PhoneNumberCheck(to);

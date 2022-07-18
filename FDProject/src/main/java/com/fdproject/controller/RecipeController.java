@@ -37,7 +37,7 @@ public class RecipeController {
 	@Autowired
 	private DiseaseService diseaseService;
 
-	@GetMapping(value = "/list")
+	@GetMapping(value = "/list.do")
 	public String getRecipeList(@ModelAttribute("params") RecipeDTO params, Model model, Principal principal) {		
 		// 로그인 세션이 있으면
 		if (principal != null) {
@@ -58,7 +58,7 @@ public class RecipeController {
 		return "recipe/list";
 	}
 
-	@GetMapping(value = "/view")
+	@GetMapping(value = "/view.do")
 	public String getRecipe(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Principal principal,
 			Model model) {
 
@@ -127,7 +127,7 @@ public class RecipeController {
 		return "recipe/view";
 	}
 
-	@GetMapping(value = "/writeForm")
+	@GetMapping(value = "/writeForm.do")
 	public String getRecipeForm(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Model model,
 			Principal principal) {
 		if (Recipe_No != null) {
@@ -178,7 +178,7 @@ public class RecipeController {
 	}
 
 	@ResponseBody
-	@PostMapping(value = "/add")
+	@PostMapping(value = "/add.do")
 	public String addRecipe(@RequestPart(value = "File", required = false) MultipartFile file,
 			@RequestPart(value = "Data") Map<String, Object> data, Principal principal) throws Exception {
 
@@ -189,7 +189,7 @@ public class RecipeController {
 		return "ok";
 	}
 	@ResponseBody
-	@PostMapping(value="/delete")
+	@PostMapping(value="/delete.do")
 	public String deleteRecipe(@RequestBody String Recipe_No) {
 		String real_Recipe_No[] = Recipe_No.split("=");
 		System.out.println("Recipe_No:" +real_Recipe_No[0]);
@@ -231,7 +231,8 @@ public class RecipeController {
 	public HashMap<String, Object> deleteComment(@ModelAttribute("params") CommentDTO commentDTO) {
 		HashMap<String, Object> commentMap = new HashMap<String, Object>();
 		
-        int isDeleted = recipeService.deleteComment(commentDTO);
+		String content = "(작성자에 의해 삭제된 댓글입니다)";
+        int isDeleted = recipeService.deleteComment(commentDTO, content);
         if(isDeleted >= 1) {
 			List<CommentDTO> commentList = recipeService.getCommentList(commentDTO.getRecipeNo());	
 			commentMap.put("result", "success");
@@ -343,15 +344,6 @@ public class RecipeController {
 		}
 
 		return recommendedMap;
-	}
-
-	/** 레시피 추천 수 구하기*/
-	@ResponseBody
-	@PostMapping(value="/recommended/getCount.do")
-	public int getRecommendedCnt(@RequestParam("recipeNo") int recipeNo) {
-		int recommendedCnt = recipeService.getRecommendedCnt(recipeNo);
-
-		return recommendedCnt;
 	}
 	
 }

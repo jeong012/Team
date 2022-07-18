@@ -3,7 +3,6 @@ package com.fdproject.service;
 import java.io.File;
 import java.security.Principal;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -235,27 +234,13 @@ public class RecipeServiceImpl implements RecipeService {
 		return isInserted;
 	}
 
+	/** 레시피 댓글 삭제*/
 	@Override
     @Transactional
-	public int deleteComment(CommentDTO commentDTO) {
-		/** 레시피 댓글 삭제*/
-		int isDeleted = 0;
-		int nextPos = recipeMapper.getNextPos(commentDTO);
-		if(nextPos == 0) {
-			isDeleted = recipeMapper.deleteCommentBasic(commentDTO.getCommentNo());
-		} else {
-			isDeleted = recipeMapper.deleteCommentDetail(commentDTO.getRef(), commentDTO.getPos(), nextPos);
-		}
+	public int deleteComment(CommentDTO commentDTO, String content) {
+		int isDeleted = recipeMapper.deleteComment(commentDTO.getCommentNo(), content);
 		
-		/** 레시피 삭제 후 댓글 포지션 수정*/
-		Map<String, Object> map = new HashMap<>();
-		map.put("pos", commentDTO.getPos());
-		map.put("ref", commentDTO.getRef());
-		map.put("deletedCnt", isDeleted);
-		
-		int isUpdated = recipeMapper.updateMinusPos(map);
-
-		return isUpdated + isDeleted;
+		return isDeleted;
 	}
 
 	/** 레시피 댓글 가져오기*/
