@@ -324,7 +324,6 @@
 		SELECT <include refid="commentColumns" />
 		FROM COMMENTS
 		WHERE RECIPE_NO = #{recipeNo}
-		AND DELETE_YN = 'N'
 		ORDER BY REF, POS, DEPTH
 	</select>
 	
@@ -335,46 +334,12 @@
 		INSERT INTO COMMENTS (<include refid="commentColumns" />)
 		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{commentNo}, #{commentNo}, 1, 0, SYSDATE, 'N', 'N')
 	</insert>
-    
-    <select id="getNextPos" parameterType="commentDTO" resultType="int">
-    	<![CDATA[
-		    SELECT (CASE WHEN cnt > 1 THEN (	SELECT POS
-												FROM (
-														SELECT ROWNUM rn, c.*
-														FROM COMMENTS c
-														WHERE PARENT_NO = #{parentNo}
-														AND POS >= #{pos} AND DEPTH = #{depth} AND DELETE_YN = 'N'
-										   		) WHERE rn = 2
-										   )
-		            	 ELSE 0
-		       		END) AS nextPos
-			FROM (SELECT COUNT(*) cnt FROM COMMENTS
-				  WHERE PARENT_NO = #{parentNo} AND POS >= #{pos} AND DEPTH = #{depth} AND DELETE_YN = 'N')	 
-		]]>
-    </select> 
 	
-	<update id="deleteCommentBasic" parameterType="int">
-        UPDATE COMMENTS
-		SET DELETE_YN='Y'
-		WHERE COMMENT_NO = #{commentNo} OR REF = #{commentNo} OR PARENT_NO = #{commentNo}
-    </update>
-    
-    <update id="deleteCommentDetail" parameterType="map">
-       	<![CDATA[
-			UPDATE COMMENTS
-			SET DELETE_YN='Y'
-			WHERE POS >= #{minPos} AND POS < #{maxPos}
-			AND REF = #{ref}
-		]]>	
-    </update>
-	
-	<update id="updateMinusPos" parameterType="map">
+	<update id="deleteComment" parameterType="map">
 		UPDATE COMMENTS
-		SET POS = POS-#{deletedCnt}
-		WHERE POS > #{pos}
-		AND REF = #{ref}
-		AND DELETE_YN='N'
-    </update>
+		SET CONTENT = #{content}, REG_DATE = SYSDATE, DELETE_YN = 'Y'
+		WHERE COMMENT_NO = #{commentNo}
+	</update>
     
     <update id="deleteCommentByRecipe" parameterType="int">
         UPDATE COMMENTS
@@ -386,7 +351,6 @@
 		SELECT <include refid="commentColumns" />
 		FROM COMMENTS
 		WHERE COMMENT_NO = #{commentNo}
-		AND DELETE_YN = 'N'
 	</select>
 	
 	<insert id="replyComment" parameterType="commentDTO">
@@ -412,7 +376,6 @@
 		SET POS = POS+1
 		WHERE POS > #{pos}
 		AND REF = #{ref}
-		AND DELETE_YN='N'
     </update>
     
     <select id="getPos" parameterType="int" resultType="map">
@@ -420,19 +383,17 @@
 		FROM COMMENTS
 		WHERE PARENT_NO = #{parentNo}
 		AND DEPTH = #{depth}
-		AND DELETE_YN = 'N'
     </select>
     
 	<select id="getCommentCnt" parameterType="int" resultType="int">
 		SELECT NVL(count(*),0) commentCnt
 		FROM COMMENTS
 		WHERE RECIPE_NO = #{recipeNo}
-		AND DELETE_YN = 'N'
 	</select>
 	
 	<update id="updateComment" parameterType="commentDTO">
 		UPDATE COMMENTS
-		SET CONTENT = #{content}, UPDATE_YN='Y'
+		SET CONTENT = #{content}, REG_DATE = SYSDATE, UPDATE_YN='Y'
 		WHERE COMMENT_NO = #{commentNo}
 	</update>
 	

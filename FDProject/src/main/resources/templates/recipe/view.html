@@ -22,10 +22,9 @@
 						<li style="display: inline" th:text="${Recipe_info.cartCount}"></li>
 					</ol>
 					<ol>
-						<!-- 이전단계 링크로 넣어줘야함 -->
-						<li><a th:href="@{/}">Home</a></li> <!--  홈 링크 -->
-						<li><a th:href="@{/recipe/list}">Recipe</a></li> <!--  레시피 리스트링크 -->
-						<li>Recipe_detail</li>
+						<li><a th:href="@{/}">홈</a></li> <!--  홈 링크 -->
+						<li><a th:href="@{/recipe/list.do}">레시피</a></li> <!--  레시피 리스트링크 -->
+						<li>상세 페이지</li>
 					</ol>
 				</div>
 			</div>
@@ -47,12 +46,22 @@
 											data-aos="fade-up" data-aos-delay="100">
 											<ul>
 												<li>
+													<i class="bx bx-check" ></i>
+													<div>
+														<h5>질병 카테고리 </h5>
+														<p style="font-size:20px;" th:text="${Recipe_info.diseaseField}"></p>
+													</div>
+												</li>
+											
+											
+												<li>
 													<i class="bx bx-camera"></i>
 													<div>
 														<h5>음식 사진 </h5>
 														<img th:src="|@{/assets/img/recipeimages/}${Recipe_info.randomImgFile}|"
 															alt="" style="width: 400px; height: 400px;">
 														<br><br>
+													</div>
 												</li>
 												<th:block th:if="${Recipe_info.storage != null}">
 													<li>
@@ -102,7 +111,7 @@
 						<th:block sec:authorize="hasAnyRole('ROLE_MEMBER')">
 							<th:block th:if="${#authentication.principal.userId == Recipe_info.writer}">
 	
-								<a th:href="@{/recipe/writeForm(Recipe_No = ${Recipe_info.recipeNo})}" type="button"
+								<a th:href="@{/recipe/writeForm.do(Recipe_No = ${Recipe_info.recipeNo})}" type="button"
 									class="btn btn-primary" id="btn_First"
 									style="font-size : 15px; position: relative; top: 15px; left: 0px;">수정 하기</a>
 	
@@ -120,7 +129,7 @@
 								<img id="recommendedImg" src="/assets/img/emptyRecommend.png">
 							</th:block>
 						</button>
-						<span id="recommendedCnt"></span>
+						<span th:text="${recommendedCnt}" id="recommendedCnt"></span>
 						&emsp;
 						<button type="button" id="commentBtn" style="border:0px; outline:0px; background:white;"><img src="/assets/img/chat.png"></button>
 						<span th:text="${commentCnt}" id="commentCnt"></span>
@@ -169,19 +178,6 @@
 					$('#modal').modal({backdrop: 'static', keyboard: false});
 					$("#modal").modal("hide");
 					
-					$.ajax({
-						url: "/recipe/recommended/getCount.do",
-						type: "post",
-						data: {recipeNo: $("#recipeNo").val()},
-						dataType: "text",
-						success: function(recommendedCnt) {
-							$("#recommendedCnt").text(recommendedCnt);
-						},
-						error : function(error) {
-							console.error(error);
-					    }
-					});
-					
 				});
 			
 				var userId = $("#userId").val(); 
@@ -190,16 +186,15 @@
 					var Recipe_No = /*[[${Recipe_info.recipeNo}]]*/					
 					
 					$.ajax({
-						url: "/recipe/delete",
+						url: "/recipe/delete.do",
 						type: "post",
 						data: JSON.stringify(Recipe_No),
 						dataType: "text",
 						success: function (value) {
-							alert("레시피가 삭제되었습니다");
-							location.href ="/recipe/list";
+							showModal("레시피가 삭제되었습니다", "/recipe/list.do");
 						},
 						error: function (request, status, error) {
-							alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+							console.error("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 						}
 					});
 				};
@@ -207,16 +202,13 @@
 				var i = 0;
 				function addCart(myRecipe) {
 					if (myRecipe == null && i == 0) {
-	
 						// json 형식으로 데이터 set
-	
 						var params = {
-							recipeNo: $("#recipeNo").val(),
-	
+							recipeNo: $("#recipeNo").val()
 						}
 	
 						$.ajax({
-							url: "/cart/addRecipe",
+							url: "/cart/addRecipe.do",
 							type: "post",
 							data: params,
 							dataType: "json",
@@ -224,10 +216,10 @@
 							success: function (isExist) {
 								if (isExist == true) {
 									$('.cart').attr('src', '/assets/img/star-fill.svg');
-									alert("추가 성공")
+									showModal("추가 성공");
 									i++;
 								} else {
-									alert("추가 실패");
+									showModal("추가 실패");
 								}
 							},
 							error: function (XHR, status, error) {
@@ -236,11 +228,11 @@
 						});
 					} else if (myRecipe == null && i == 1) {
 						var params = {
-							recipeNo: $("#recipeNo").val(),
+							recipeNo: $("#recipeNo").val()
 						}
 	
 						$.ajax({
-							url: "/cart/deleteRecipe",
+							url: "/cart/deleteRecipe.do",
 							type: "post",
 							data: params,
 							dataType: "json",
@@ -248,10 +240,10 @@
 								console.log(isExist);
 								if (isExist == true) {
 									$('.cart').attr('src', '/assets/img/star.svg');
-									alert("삭제 성공")
+									showModal("삭제 성공")
 									i--;
 								} else {
-									alert("삭제 실패");
+									showModal("삭제 실패");
 								}
 							},
 							error: function (XHR, status, error) {
@@ -260,11 +252,11 @@
 						});
 					} else if (myRecipe != null && i == 0) {
 						var params = {
-							recipeNo: $("#recipeNo").val(),
+							recipeNo: $("#recipeNo").val()
 						}
 	
 						$.ajax({
-							url: "/cart/deleteRecipe",
+							url: "/cart/deleteRecipe.do",
 							type: "post",
 							data: params,
 							dataType: "json",
@@ -272,10 +264,10 @@
 								console.log(isExist);
 								if (isExist == true) {
 									$('.cart').attr('src', '/assets/img/star.svg');
-									alert("삭제 성공")
+									showModal("삭제 성공")
 									i++;
 								} else {
-									alert("삭제 실패");
+									showModal("삭제 실패");
 								}
 							},
 							error: function (XHR, status, error) {
@@ -284,12 +276,11 @@
 						});
 					} else {
 						var params = {
-							recipeNo: $("#recipeNo").val(),
-	
+							recipeNo: $("#recipeNo").val()
 						}
 	
 						$.ajax({
-							url: "/cart/addRecipe",
+							url: "/cart/addRecipe.do",
 							type: "post",
 							data: params,
 							dataType: "json",
@@ -297,10 +288,10 @@
 							success: function (isExist) {
 								if (isExist == true) {
 									$('.cart').attr('src', '/assets/img/star-fill.svg');
-									alert("추가 성공")
+									showModal("추가 성공")
 									i--;
 								} else {
-									alert("추가 실패");
+									showModal("추가 실패");
 								}
 							},
 							error: function (XHR, status, error) {
@@ -397,9 +388,9 @@
 					}
 				}
 				
-				function showDeleteModal(commentNo, pos, ref, depth, parentNo){
+				function showDeleteModal(commentNo){
 					$("#footer").empty();	
-					var footer = '<button class="btn btn-info" onclick="deleteComment(' + commentNo + ', ' + pos + ', ' + ref + ', ' + depth + ', ' + parentNo + ')">예</button>'
+					var footer = '<button class="btn btn-info" onclick="deleteComment(' + commentNo + ')">예</button>'
 							   + '<button class="btn btn-info" onclick="closeDeleteModal()">아니오</button>';
 					$("#footer").append(footer);
 					
@@ -412,14 +403,10 @@
 					$("#modal").modal("hide");
 				} 
 				
-				function deleteComment(commentNo, pos, ref, depth, parentNo){
+				function deleteComment(commentNo){
 					var params = {
 							commentNo: commentNo,
-							recipeNo: $("#recipeNo").val(),
-							pos: pos,
-							ref: ref,
-							depth: depth,
-							parentNo: parentNo
+							recipeNo: $("#recipeNo").val()
 					}
 					
 					$.ajax({
@@ -600,66 +587,85 @@
 					
 					$(".commentList").show();
 					$(".list-group").remove();
-					
-					var data = '<ol class="list-group">';
-					for (var i=0; i<commentList.length; i++){
-						if(commentList[i].depth == 0){
-							data += '<li class="list-group-item d-flex justify-content-between align-items-start">'
-								 +	'<div class="ms-2 me-auto">'
-								 + 	'<div class="fw-bold">' + commentList[i].writer;
+					if(commentList.length == 0){
+						var data = ''; 
+						data += '<ul class="list-group shadow">'
+							 +  '	<li class="list-group-item">'
+							 +  '		등록된 댓글이 없습니다.'				
+							 +  '	</li>'
+							 +  '</ul>';
+					}else{
+						var data = '<ol class="list-group">';
+						for (var i=0; i<commentList.length; i++){
+							if(commentList[i].depth == 0){
+								data += '<li class="list-group-item d-flex justify-content-between align-items-start">'
+									 +	'<div class="ms-2 me-auto">'
+									 + 	'<div class="fw-bold">' + commentList[i].writer;
+		
+								if(commentList[i].updateYn == 'Y'){
+									data += '&ensp;(수정됨)';
+								}
+								
+								data += '</div>';
 	
-							if(commentList[i].updateYn == 'Y'){
-								data += '&ensp;(수정됨)';
+								if(commentList[i].deleteYn == 'N'){
+									data +=	commentList[i].content;
+								} else{
+									data +=	'<span style="color:#808080;">' + commentList[i].content + '</span>';	
+								}
+								
+								data +=	'<p class="text-muted" style="margin-bottom:5px; font-size:13px;">' + commentList[i].regDate;
+								
+							} else{
+								data += '<div class="fw-bold">';
+								
+								for(var j=0; j<commentList[i].depth-1; j++){
+									data += '&emsp;'
+								}
+								
+								data += '↳&nbsp;' + commentList[i].writer;
+								if(commentList[i].updateYn == 'Y'){
+									data += '&ensp;(수정됨)';
+								}
+								data +=	'</div>';
+								
+								for(var k=0; k<commentList[i].depth; k++){
+									data += '&emsp;';
+								}
+								if(commentList[i].deleteYn == 'N'){
+									data += commentList[i].content; 	
+								} else{
+									data += '<span style="color:#808080;">' + commentList[i].content + '</span>';	
+								}
+								
+								data +=	'<p class="text-muted" style="margin-bottom:5px; font-size:13px;">';
+								for(var l=0; l<commentList[i].depth; l++){
+									data += '&emsp;&nbsp;';
+								}
+								data += commentList[i].regDate;
 							}
 							
-							data += '</div>'
-								 +	commentList[i].content
-								 +	'<p class="text-muted" style="margin-bottom:0px; font-size:13px;">' + commentList[i].regDate;
-						} else{
-							data += '<div class="fw-bold">';
-							
-							for(var j=0; j<commentList[i].depth-1; j++){
-								data += '&emsp;'
+							if(commentList[i].deleteYn == 'N'){
+								data +=	'&ensp;'
+									 + 	'<a href="javascript:showReply(' + commentList[i].commentNo + ')" style="color:blue;">답변</a>';	
+							}
+								 
+							if(commentList[i].writer == userId && commentList[i].deleteYn == 'N'){
+								data += '&ensp;'
+									 +	'<a href="javascript:showUpdate(' + commentList[i].commentNo + ')" style="color:green;">수정</a>'
+									 +	'&ensp;'
+						 			 +	'<a href="javascript:showDeleteModal(' + commentList[i].commentNo + ')" style="color:red;">삭제</a>';
 							}
 							
-							data += '↳&nbsp;' + commentList[i].writer;
-							if(commentList[i].updateYn == 'Y'){
-								data += '&ensp;(수정됨)';
-							}
-							data +=	'</div>';
-							
-							for(var k=0; k<commentList[i].depth; k++){
-								data += '&emsp;';
-							}
-							data +=	commentList[i].content;
-							
-							data +=	'<p class="text-muted" style="margin-bottom:0px; font-size:13px;">';
-							for(var l=0; l<commentList[i].depth; l++){
-								data += '&emsp;&nbsp;';
-							}
-							data += commentList[i].regDate;
+						 	data += '</p>';
+						 	
+						 	if(i == commentList.length || (i+1 != commentList.length && commentList[i+1].pos == 1)){
+							 	data += '</div>'
+						  		 	 + 	'</li>';	
+						 	}
 						}
-						
-						data +=	'&ensp;'
-							 + 	'<a href="javascript:showReply(' + commentList[i].commentNo + ')" style="color:blue;">답변</a>';
-							 
-						if(commentList[i].writer == userId){
-							data += '&ensp;'
-								 +	'<a href="javascript:showUpdate(' + commentList[i].commentNo + ')" style="color:green;">수정</a>'
-								 +	'&ensp;'
-					 			 +	'<a href="javascript:showDeleteModal(' + commentList[i].commentNo + ', ' + commentList[i].pos + ', ' 
-					 					 								   + commentList[i].ref + ', ' + commentList[i].depth + ', ' 
-					 					 								   + commentList[i].parentNo + ')" style="color:red;">삭제</a>';
-						}
-						
-					 	data += '</p>';
-					 	
-					 	if(i == commentList.length || (i+1 != commentList.length && commentList[i+1].pos == 1)){
-						 	data += '</div>'
-					  		 	 + 	'</li>';	
-					 	}
+						data +=	'</ol>';
 					}
-					data +=	'</ol>';
 					
 					$(".commentList").append(data);
 					$("#content").val("");
@@ -669,17 +675,20 @@
 					$("#replyModal").modal("hide");
 				}
 				
-				function showModal(message){
+				function showModal(message, href){
 					$("#footer").empty();	
-					var footer = '<button class="btn btn-info" id="isOk" onclick="closeModal()">확인</button>';
+					var footer = '<button class="btn btn-info" id="isOk" onclick="closeModal(\'' + href + '\')">확인</button>';
 					$("#footer").append(footer);
 					
 					$("#modalLabel").text(message);
 					$("#modal").modal("show");
 				}
 				
-				function closeModal(){
+				function closeModal(href){
 					$("#modal").modal("hide");
+					if(href != 'undefined'){
+						location.href = href;
+					}
 				}
 				
 				$("#recommendedBtn").click(function(){
