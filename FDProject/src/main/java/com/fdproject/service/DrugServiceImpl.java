@@ -90,8 +90,8 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    public boolean addMyDrug(DrugsCartDTO cartDTO) {
-        cartDTO.setUserId("test");
+    public boolean addMyDrug(String id, DrugsCartDTO cartDTO) {
+        cartDTO.setUserId(id);
         int count = 0;
         List<DrugsCartDTO> list = drugMapper.myDrugList(cartDTO.getUserId());
         if (!list.isEmpty()) {
@@ -153,11 +153,11 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    public List<DrugDTO> getMyDrugList(DrugDTO params) {
+    public List<DrugDTO> getMyDrugList(String id, DrugDTO params) {
         List<DrugDTO> drugList = Collections.emptyList();
 
         DrugsCartDTO cartDTO = new DrugsCartDTO();
-        cartDTO.setUserId("test");
+        cartDTO.setUserId(id);
         params.setCartDTO(cartDTO); //약객체.(재원이가 만든 관심약품DTO)(카트객체 - 유저ID 지정된.)
 
         int drugTotalCount = drugMapper.selectMyDrugTotalCount(params);

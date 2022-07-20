@@ -17,7 +17,7 @@
 				<ol id="list">
 					<!-- 이전단계 링크로 넣어줘야함 -->
 					<li><a th:href="@{/}">Home</a></li> <!--  홈 링크 -->
-					<li><a th:href="@{/recipe/list}">Recipe</a></li> <!--  레시피 리스트링크 -->
+					<li><a th:href="@{/recipe/list.do}">Recipe</a></li> <!--  레시피 리스트링크 -->
 					<li>Recipe_detail</li>
 				</ol>
 			</div>
@@ -273,7 +273,7 @@
 			}
 
 			$.ajax({
-				url: "/recipe/add",
+				url: "/recipe/add.do",
 				type: "post",
 				data: formData,
 				processData: false,
@@ -282,7 +282,7 @@
 				dataType: "text", // controller에서 return하는 데이터의 타입.
 				success: function (json) {
 					alert("레시피가 등록되었습니다");
-					location.href = "/recipe/list";
+					location.href = "/recipe/list.do";
 				},
 				error: function (request, status, error) {
 					alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);

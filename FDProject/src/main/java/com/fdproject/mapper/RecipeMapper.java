@@ -41,17 +41,8 @@ public interface RecipeMapper {
 	/** 레시피 댓글 등록*/
 	int postComment(CommentDTO commentDTO);
 	
-	/** 같은 depth 기준 삭제 컬럼의 다음 pos 가져오기 */
-	int getNextPos(CommentDTO commentDTO);
-	
-	/** 레시피 댓글 기본 삭제*/
-	int deleteCommentBasic(int commentNo);
-	
-	/** 레시피 댓글 세부 삭제 -> 자식의 자식의 자식...*/
-	int deleteCommentDetail(@Param("ref") int ref, @Param("minPos") int minPos, @Param("maxPos") int maxPos);
-	
-	/** 레시피 삭제 후 댓글 포지션 수정*/
-	int updateMinusPos(Map<String, Object> map);
+	/** 레시피 댓글 삭제*/
+	int deleteComment(@Param("commentNo") int commentNo, @Param("content") String content);
 	
 	/** 레시피 삭제 후 댓글 삭제*/
 	int deleteCommentByRecipe(int recipeNo);

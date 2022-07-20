@@ -22,7 +22,6 @@
 			        </a>
 			    </h1>
 			    
-			    
 	            <nav id="navbar" class="navbar">
 		            <th:block sec:authorize="hasAnyRole('ROLE_MEMBER')">
 			    		<h6 style="margin-top:12px;"><span style="font-weight: bold;" th:text="${#authentication.principal.name}"></span>님 안녕하세요.</h6>
@@ -45,7 +44,16 @@
 		                            <li><a th:href="@{/mypage/user.do}">회원 정보 수정</a></li>
 		                            <li><a th:href="@{/mypage/drug.do}">약 관리</a></li>
 		                            <li><a th:href="@{/mypage/disease.do}">질병 관리</a></li>
-		                            <li><a th:href="@{/mypage/mydrug.do}">찜 리스트</a></li>
+		                            <li><a th:href="@{/mypage/myDrug.do}">찜 리스트</a></li>
+		                        </ul>
+		                    </li>
+	                 	</th:block>
+	                    
+	                    <th:block sec:authorize="hasRole('ROLE_ADMIN')">            
+							<li class="dropdown"><a href="#"><span>관리페이지</span> <i class="bi bi-chevron-down"></i></a>
+		                        <ul>
+		                            <li><a th:href="@{/admin/management/userList.do}">회원</a></li>
+		                            <li><a th:href="@{/admin/management/recipeList.do}">레시피</a></li>
 		                        </ul>
 		                    </li>
 	                 	</th:block>
@@ -53,7 +61,7 @@
 	                	<li class="dropdown"><a href="#"><span>메뉴</span> <i class="bi bi-chevron-down"></i></a>
 	                        <ul>
 	                           <li><a th:href="@{/drug/list.do}">약</a></li>
-			                   <li><a th:href="@{/recipe/list}">레시피</a></li>
+			                   <li><a th:href="@{/recipe/list.do}">레시피</a></li>
 			                   <li><a th:href="@{/drug/store.do}">상비약 리스트</a></li>
 			                   <li><a th:href="@{/drug/pharmacy.do}">내 주변 약국</a></li>
 	                        </ul>
