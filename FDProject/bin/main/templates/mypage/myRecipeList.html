@@ -15,26 +15,19 @@
 
 			<div class="container py-3">
 				<div class="row">
-					<div class="flex-shrink-0 p-3 bg-white" style="width: 200px; margin-top:45px;">
-						<ul class="border-top"></ul>
-						<ul class="list-unstyled ps-0">
-							<li class="mb-1">
-								<!-- 관리자 작성 레시피 -->
-								<form method="get" th:action="@{/mypage/myRecipe.do}">
-									<button class="dropdown-none-toggle" style="color:blue;" type="submit">
-										관심 레시피
-									</button>
-								</form>
-							</li>													
-						</ul>
-					</div>
+					 <div class="flex-shrink-0 p-3 bg-white" style="width: 200px;" data-aos="fade-right">
+                        <ul class="border-top"></ul>
+                        <th:block layout:fragment="mypagebar">
+			                <div th:replace="fragments/common :: mypagebar"></div>
+			            </th:block>
+                    </div>
 					<div class="col-lg-10 mx-auto">
 						<section id="pricing" class="pricing" style="padding-bottom:0px;">
 							<div class="container" data-aos="fade-up">
 								<div class="row">
 									<!-- 레시피 뿌려주는 곳 -->
 									<!-- 컨트롤러에서 넘기는 객체이름:Recipe_List ← 버튼 눌렀을 때에 따라 넘기는 레시피가 다름-->
-									<th:block th:if="${Recipe_List != null}">
+									<th:block th:if="${!#lists.isEmpty(Recipe_List)}">
 										<th:block th:each="Recipe : ${Recipe_List}">
 											<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100"
 												style="margin-bottom:30px;">
@@ -43,7 +36,7 @@
 													<h3 th:text="${Recipe.title}"></h3>
 													<!-- 이미지 부분 -->
 													<div style="padding:0px;">
-														<img th:src="|@{/assets/img/recipeImages/}${Recipe.imgFile}|"
+														<img th:src="|@{/assets/img/recipeImages/}${Recipe.randomImgFile}|"
 															style="width:230px; height:240px; margin: 19px;">
 													</div>
 													<!-- 버튼 부분 -->
@@ -53,8 +46,13 @@
 													</div>
 												</div>
 											</div>
-										</th:block> <!-- div th each-->
-									</th:block>
+										</th:block> <!-- div th each-->									
+									</th:block>				
+									<ul class="list-group shadow">						
+										<li class="list-group-item" th:if="${#lists.isEmpty(Recipe_List)}">
+											조회된 리스트 없음
+										</li>						
+									</ul>				
 								</div>
 								<!--row -->
 							</div>
@@ -71,9 +69,17 @@
 		<script th:inline="javascript">
 			/*<![CDATA[*/
 
-			function movePage(uri, queryString) {
-				location.href = uri + queryString;
-			}
+			function movePage(uri, queryString, diseaseField, writer) {
+            var url = uri + queryString;
+            
+            if(writer != null)
+               url += "&writer=" + writer;
+               
+            if(diseaseField !=null)
+               url += "&diseaseField=" +diseaseField;
+               
+            location.href = url;               
+         }
 
 			/*]]>*/
 		</script>

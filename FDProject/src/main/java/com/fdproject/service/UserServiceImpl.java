@@ -2,12 +2,15 @@ package com.fdproject.service;
 
 import java.util.ArrayList;
 
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fdproject.domain.OAuth2UserDTO;
 import com.fdproject.domain.UserDTO;
@@ -22,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     
 	@Override
     @Transactional
@@ -29,10 +33,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     	int isInserted = 0;
     	
     	/** 회원가입 - 사용자 정보 추가*/
-    	userDto.setRole("USER");
-    	System.out.println("userDto: " + userDto);
+		String encodePw = passwordEncoder.encode(userDto.getPw());
+		userDto.setPw(encodePw);
     	isInserted = userMapper.saveUser(userDto);
-    	System.out.println("isInserted: " + isInserted);
     	
     	/** 회원가입 - 사용자 지병 데이터 추가*/
     	for (UserDiseaseDTO userDiseaseDTO : userDiseaseList) {
@@ -49,8 +52,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	/** OAuth2 기존 회원 여부 조회*/
 	@Override
-	public UserDTO findByUser(OAuth2UserDTO oAuth2UserDTO) {
-		UserDTO user = userMapper.findByUser(oAuth2UserDTO);
+	public UserDTO findByOAuth2User(OAuth2UserDTO oAuth2UserDTO) {
+		UserDTO user = userMapper.findByOAuth2User(oAuth2UserDTO);
 		return user;
 	}
 
@@ -62,25 +65,38 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	public UserDTO loadUserByUsername(String userId) throws UsernameNotFoundException {
+		ServletRequestAttributes servletRequestAttribute = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+	    HttpSession httpSession = servletRequestAttribute.getRequest().getSession(true);
+		OAuth2UserDTO oAuth2User = (OAuth2UserDTO) httpSession.getAttribute("oAuth2User");
+
+		UserDTO principal = new UserDTO();
+		if(oAuth2User == null) {
+			principal = userMapper.findByUser(userId);
+		} else {
+			principal = userMapper.loginByOAuth2(userId, oAuth2User.getRegistrationId());
+		}
+		
+		if(principal == null) {
+			throw new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다. : " + userId);
+		}
+		return principal;
 	}
 
-//	@Override
-//	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-//		UserDTO userDto = userMapper.findById(userId);
-//		
-//		if(userDto == null) {
-//			throw new UsernameNotFoundException("userId" + userId + "not found");
-//		}
-//		System.out.println("**************Found user***************");
-//		System.out.println("id : " + userDto.getUserId());
-//		
-//		return User.builder()
-//				.username(userDto.getUserId())
-//				.password(userDto.getPw())
-//				.roles(userDto.getRole().toString())
-//				.build();
-//	}
+	@Transactional
+	public int updateUser(UserDTO userDto) {
+		System.out.println("UserServiceImpl updateUser 호출!! >>>>>>>>>>>>>>>" + userDto);
+		
+		if(userDto.getUserId() == null) {
+			throw new IllegalArgumentException("회원 찾기 실패!!");
+		}
+		String rawPassword = userDto.getPw();
+        String encPassword = passwordEncoder.encode(rawPassword);
+        userDto.setPw(encPassword);
+		
+		int count = userMapper.updateUser(userDto);
+		
+        
+		return count;
+	}
 }

@@ -1,12 +1,6 @@
 package com.fdproject.domain;
 
-import com.fdproject.paging.Criteria;
-import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
 
 @Data
 public class DrugDTO extends CommonDTO {

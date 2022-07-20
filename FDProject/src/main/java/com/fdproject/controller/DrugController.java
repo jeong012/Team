@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fdproject.constant.Method;
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.DrugsCartDTO;
+import com.fdproject.domain.UserDTO;
 import com.fdproject.service.DrugService;
 import com.fdproject.util.GrammerUtils;
 import com.fdproject.util.UiUtils;
@@ -21,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +46,6 @@ public class DrugController extends UiUtils {
 
     private final DrugService drugService;
 
-    //약 리스트
     @GetMapping(value = "/list.do")
     public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "takeYn", required = false) String takeYn, Model model) {
   
@@ -77,12 +78,15 @@ public class DrugController extends UiUtils {
     
     //회원가입시 입력한 약 정보
     @GetMapping(value = "/myview.do")
-    public String getMyDrug(@ModelAttribute(value = "params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "no", required = false) int drugNo, Model model) {
+    public String getMyDrug(@ModelAttribute(value = "params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "no", required = false) int drugNo, Model model, Authentication authentication) {
     	
     	//상비약 리스트에서 비로그인시 로그인창으로 보내는 모달창
-    	if (GrammerUtils.isStringEmpty(id) == true) {
+    	if (authentication == null) {
             return showMessageWithRedirect("로그인이 필요한 서비스 입니다.", "/user/loginForm.do", Method.GET, null, model);
         }
+    	UserDTO userDTO = (UserDTO) authentication.getPrincipal();
+		id = userDTO.getUserId();	
+        
         DrugDTO mydrug = drugService.getDrug(drugNo);
         model.addAttribute("mydrug", mydrug);
         
