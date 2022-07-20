@@ -22,13 +22,13 @@ public interface DrugService {
 
     List<DrugDTO> getHouseDrugList(DrugDTO params);
 
-    boolean addMyDrug(DrugsCartDTO cartDTO);
+    boolean addMyDrug(String id, DrugsCartDTO cartDTO);
 
     boolean deleteMyDrug(DrugsCartDTO cartDTO);
 
     DrugsCartDTO getMyDrug(int drugNo);
 
-    List<DrugDTO> getMyDrugList(DrugDTO drugDTO);
+    List<DrugDTO> getMyDrugList(String id, DrugDTO drugDTO);
 
     JsonArray getSearchKeyword(String searchValue) throws IOException;
 
