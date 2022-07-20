@@ -95,9 +95,11 @@ public class MyPageController extends UiUtils {
 	
 	//찜한 약 리스트
 	@GetMapping(value = "/myDrug.do")
-	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model) {		
-		
-		List<DrugDTO> drugList = drugService.getMyDrugList(params);		
+	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model, Principal principal) {
+
+		String id = principal.getName();
+
+		List<DrugDTO> drugList = drugService.getMyDrugList(id, params);
 		model.addAttribute("drugList", drugList);
 		return "mypage/myDrugList";
 	}

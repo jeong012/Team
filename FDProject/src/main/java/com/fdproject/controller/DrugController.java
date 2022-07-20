@@ -1,5 +1,6 @@
 package com.fdproject.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -47,8 +48,10 @@ public class DrugController extends UiUtils {
     private final DrugService drugService;
 
     @GetMapping(value = "/list.do")
-    public String getDrugList(@ModelAttribute("params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "takeYn", required = false) String takeYn, Model model) {
-  
+    public String getDrugList(@ModelAttribute("params") DrugDTO params, Principal principal, @RequestParam(value = "takeYn", required = false) String takeYn, Model model) {
+
+        String id = principal.getName();
+
     	if (GrammerUtils.isStringEmpty(id) == true) {
             List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
             model.addAttribute("drugList", drugList);
@@ -63,8 +66,10 @@ public class DrugController extends UiUtils {
 
     //약 상세정보
     @GetMapping(value = "/view.do")
-    public String getDrug(@ModelAttribute(value = "params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "takeYn", required = false) String takeYn, @RequestParam(value = "no", required = false) int drugNo, Model model) {
-    	
+    public String getDrug(@ModelAttribute(value = "params") DrugDTO params, Principal principal, @RequestParam(value = "takeYn", required = false) String takeYn, @RequestParam(value = "no", required = false) int drugNo, Model model) {
+
+        String id = principal.getName();
+
     	if (GrammerUtils.isStringEmpty(id) == true) {
             return showMessageWithRedirect("접근 권한이 없습니다.", "/drug/list.do", Method.GET, null, model);
         }
@@ -79,7 +84,7 @@ public class DrugController extends UiUtils {
     //회원가입시 입력한 약 정보
     @GetMapping(value = "/myview.do")
     public String getMyDrug(@ModelAttribute(value = "params") DrugDTO params, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "no", required = false) int drugNo, Model model, Authentication authentication) {
-    	
+
     	//상비약 리스트에서 비로그인시 로그인창으로 보내는 모달창
     	if (authentication == null) {
             return showMessageWithRedirect("로그인이 필요한 서비스 입니다.", "/user/loginForm.do", Method.GET, null, model);
@@ -94,8 +99,8 @@ public class DrugController extends UiUtils {
     }
 
     @RequestMapping(value = "autoSearch",
-                    method = {RequestMethod.GET},
-                    produces = "application/json; charset=utf8")
+            method = {RequestMethod.GET},
+            produces = "application/json; charset=utf8")
     @ResponseBody
     public void search(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
         String searchValue = request.getParameter("searchValue");
