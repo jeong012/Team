@@ -52,7 +52,8 @@
 								<div class="collapse" id="h-collapse">
 									<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 										<li><a th:href="@{/recipe/list.do(writer='writer')}"
-												class="link-dark d-inline-flex text-decoration-none rounded">모든 레시피</a></li>
+												class="link-dark d-inline-flex text-decoration-none rounded">모든 레시피</a>
+										</li>
 										<th:block sec:authorize="hasAnyRole('ROLE_MEMBER', 'ROLE_ADMIN')">
 											<li><a th:href="@{/recipe/list.do(writer=${#authentication.principal.userId})}"
 													class="link-dark d-inline-flex text-decoration-none rounded">나의 작성
@@ -73,7 +74,7 @@
 										<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 											<th:block th:if="${user_disease_list != null}">
 												<th:block th:each="disease:${user_disease_list}">
-													<li><a th:href="@{/recipe/list.do(diseaseField = ${disease.diseaseField})}"
+													<li><a th:href="@{/recipe/list.do(diseaseField = ${disease.diseaseField}, diseaseName = ${disease.diseaseName})}"
 															class="link-dark d-inline-flex text-decoration-none rounded"
 															th:text="${disease.diseaseName}">
 														</a>
@@ -93,6 +94,24 @@
 									<!-- 레시피 뿌려주는 곳 -->
 									<!-- 컨트롤러에서 넘기는 객체이름:Recipe_List ← 버튼 눌렀을 때에 따라 넘기는 레시피가 다름-->
 									<th:block th:if="${!#lists.isEmpty(Recipe_List)}">
+										<th:block th:if="${not #strings.isEmpty(param.diseaseField)}">
+											<th:block
+												th:if="${#strings.isEmpty(param.diseaseName)}">
+												<div th:with="diseaseField=${param.diseaseField}">
+													<h4>이 리스트는 추천레시피: <span style="color: #87ceeb;"
+															th:text="${diseaseField}"></span>에 대한 리스트입니다.</h2>
+												</div>
+											</th:block>
+											<th:block
+												th:if="${not #strings.isEmpty(param.diseaseName)}">
+												<div th:with="diseaseName=${param.diseaseName}">
+													<h4>이 리스트는 맞춤레시피: <span style="color: #87ceeb;"
+															th:text="${diseaseName}"></span>에 대한 리스트입니다.</h2>
+												</div>
+											</th:block>
+											<ul class="border-top"></ul>
+										</th:block>
+										
 										<th:block th:each="Recipe : ${Recipe_List}">
 											<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100"
 												style="margin-bottom:30px;">
@@ -113,10 +132,10 @@
 											</div>
 										</th:block> <!-- div th each-->
 									</th:block>
-									<ul class="list-group shadow">						
+									<ul class="list-group shadow">
 										<li class="list-group-item" th:if="${#lists.isEmpty(Recipe_List)}">
 											조회된 리스트가 없습니다.
-										</li>						
+										</li>
 									</ul>
 								</div>
 								<!--row -->
@@ -134,7 +153,7 @@
 		<script th:inline="javascript">
 			/*<![CDATA[*/
 
-			function movePage(uri, queryString, diseaseField, writer) {
+			function movePage(uri, queryString, diseaseField, writer, diseaseName) {
 				var url = uri + queryString;
 
 				if (writer != null)
@@ -142,6 +161,9 @@
 
 				if (diseaseField != null)
 					url += "&diseaseField=" + diseaseField;
+				
+				if (diseaseName != null)
+					url += "&diseaseName=" + diseaseName;	
 
 				location.href = url;
 			}

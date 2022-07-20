@@ -152,7 +152,7 @@
 		where r.recipe_NO = c.recipe_NO
 		and c.USER_ID = #{cartDTO.userId}
 		<include refid="r_deleteYN" />
-		<include refid="CommonMapper.search_o" />
+		<include refid="CommonMapper.search_R" />
 		order by title asc
 		<include refid="CommonMapper.pagingFooter" />
 	</select>
@@ -166,7 +166,7 @@
 		c.recipe_NO = r.recipe_NO
 		and USER_ID = #{cartDTO.userId}
 		<include refid="deleteYN" />
-		<include refid="CommonMapper.search_o" />
+		<include refid="CommonMapper.search_R" />
 	</select>
 	<!-- 유저들이 작성한 리스트 -->
 	<select id="selectWriterRecipeTotalCount" parameterType="RecipeDTO"
