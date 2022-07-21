@@ -301,7 +301,7 @@
 		                        	<!--<img class="m-2" th:src="${item.imgFile}" id="drug-image"> -->
                                        <div class="mt-2">
                                        <img style="width:100px; height:auto;" class="m-2" th:src="|@{/assets/img/drugimages/}${item.imgFile}|" id="drug-image">                               
-                                       	<h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a th:href="@{/drug/myview.do(no=${item.drugNo},id=${not #strings.isEmpty(id) ? id : ''})}" th:onClick="window.open(this.href,'','width=900, height=800'); return false;" th:text="${item.drugName}"></a></h5>                             
+                                       	<h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a style="color:black;" th:href="@{/drug/myview.do(no=${item.drugNo},id=${not #strings.isEmpty(id) ? id : ''})}" th:onClick="window.open(this.href,'','width=900, height=800'); return false;" th:text="${item.drugName}"></a></h5>                             
                                            <p class="font-italic text-muted mb-0 small" style="display: inline-block"
                                               th:text="${item.manufacturer}"></p>
                                        </div>
