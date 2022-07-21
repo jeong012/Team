@@ -220,8 +220,8 @@ public class RecipeServiceImpl implements RecipeService {
 	/** 레시피 댓글 삭제*/
 	@Override
     @Transactional
-	public int deleteComment(CommentDTO commentDTO, String content) {
-		int isDeleted = recipeMapper.deleteComment(commentDTO.getCommentNo(), content);
+	public int deleteComment(CommentDTO commentDTO, String memo) {
+		int isDeleted = recipeMapper.deleteComment(commentDTO.getCommentNo(), memo);
 		
 		return isDeleted;
 	}
