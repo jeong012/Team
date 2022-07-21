@@ -39,6 +39,15 @@
 										<div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center"
 											data-aos="fade-up" data-aos-delay="100">
 											<ul>
+												<th:block th:if="${recipeInfo.diseaseField != null}">
+													<li>
+														<i class="bx bx-check" ></i>
+														<div>
+															<h5>질병 카테고리 </h5>
+															<p style="font-size:20px;" th:text="${recipeInfo.diseaseField}"></p>
+														</div>
+													</li>
+												</th:block>
 												<li>
 													<i class="bx bx-camera"></i>
 													<div>
@@ -147,7 +156,7 @@
 					$("#modal").modal("hide");
 				}); 
 			
-				function deleteRecipe(recipeNo) {				
+				function deleteRecipe(recipeNo) {
 					$.ajax({
 						url: "/admin/deleteRecipe.do",
 						type: "post",
@@ -155,7 +164,14 @@
 						dataType: "text",
 						success: function (result) {
 							if(result == "success"){
-								showModal("레시피가 삭제되었습니다.", "/admin/management/recipeList.do");
+								if("" == /*[[${prev}]]*/){
+									showModal("레시피가 삭제되었습니다.", "/admin/management/recipeList.do");	
+								} else if("writer" == /*[[${prev}]]*/){
+									showModal("레시피가 삭제되었습니다.", "/admin/management/recipeList.do?writer=writer");
+								}
+								else{
+									showModal("레시피가 삭제되었습니다.", "/admin/management/recipeList.do?diseaseField=" + /*[[${prev}]]*/);
+								}
 							} else{
 								showModal("레시피 삭제에 실패했습니다.");
 							}
@@ -204,18 +220,18 @@
 							if(commentList[i].depth == 0){
 								data += '<li class="list-group-item d-flex justify-content-between align-items-start">'
 									 +	'<div class="ms-2 me-auto">'
-									 + 	'<div class="fw-bold">' + commentList[i].writer;
+									 + 	'<div class="fw-bold">' + commentList[i].name;
 		
-								if(commentList[i].updateYn == 'Y'){
+								if(commentList[i].modDate != null){
 									data += '&ensp;(수정됨)';
 								}
 								
 								data += '</div>';
 	
-								if(commentList[i].deleteYn == 'N'){
+								if(commentList[i].delDate == null){
 									data +=	commentList[i].content;
 								} else{
-									data +=	'<span style="color:#808080;">' + commentList[i].content + '</span>';	
+									data +=	'<span style="color:#808080;">' + commentList[i].delMemo + '</span>';	
 								}
 								
 								data +=	'<p class="text-muted" style="margin-bottom:5px; font-size:13px;">' + commentList[i].regDate;
@@ -227,8 +243,8 @@
 									data += '&emsp;'
 								}
 								
-								data += '↳&nbsp;' + commentList[i].writer;
-								if(commentList[i].updateYn == 'Y'){
+								data += '↳&nbsp;' + commentList[i].name;
+								if(commentList[i].modDate != null){
 									data += '&ensp;(수정됨)';
 								}
 								data +=	'</div>';
@@ -236,10 +252,10 @@
 								for(var k=0; k<commentList[i].depth; k++){
 									data += '&emsp;';
 								}
-								if(commentList[i].deleteYn == 'N'){
+								if(commentList[i].delDate == null){
 									data += commentList[i].content; 	
 								} else{
-									data += '<span style="color:#808080;">' + commentList[i].content + '</span>';	
+									data += '<span style="color:#808080;">' + commentList[i].delMemo + '</span>';	
 								}
 								
 								data +=	'<p class="text-muted" style="margin-bottom:5px; font-size:13px;">';
@@ -249,7 +265,7 @@
 								data += commentList[i].regDate;
 							}
 								 
-							if(commentList[i].deleteYn == 'N'){
+							if(commentList[i].delDate == null){
 								data += '&ensp;'
 						 			 +	'<a href="javascript:showDeleteModal(' + commentList[i].commentNo + ',\'c\')" style="color:red;">삭제</a>';
 							}
@@ -318,7 +334,6 @@
 				}
 				
 				function showModal(message, href){
-					console.log(href);
 					$("#footer").empty();	
 					var footer = '<button class="btn btn-info" id="isOk" onclick="closeModal(\'' + href + '\')">확인</button>';
 					$("#footer").append(footer);

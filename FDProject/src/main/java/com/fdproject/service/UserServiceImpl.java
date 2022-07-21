@@ -1,6 +1,7 @@
 package com.fdproject.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,6 +18,7 @@ import com.fdproject.domain.UserDTO;
 import com.fdproject.domain.UserDiseaseDTO;
 import com.fdproject.domain.UserDrugDTO;
 import com.fdproject.mapper.UserMapper;
+import com.fdproject.paging.PaginationInfo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -84,19 +86,64 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Transactional
-	public int updateUser(UserDTO userDto) {
-		System.out.println("UserServiceImpl updateUser 호출!! >>>>>>>>>>>>>>>" + userDto);
-		
-		if(userDto.getUserId() == null) {
-			throw new IllegalArgumentException("회원 찾기 실패!!");
-		}
-		String rawPassword = userDto.getPw();
-        String encPassword = passwordEncoder.encode(rawPassword);
-        userDto.setPw(encPassword);
-		
-		int count = userMapper.updateUser(userDto);
-		
+	public int updateUser(UserDTO userDTO, ArrayList<UserDiseaseDTO> userDiseaseList, ArrayList<UserDrugDTO> userDrugList) {
+        int isUpdated = 0;
+        int isDeleted = 0;
+        int isInserted = 0;
         
+        /** 사용자 정보 업데이트 */
+		isUpdated = userMapper.updateUser(userDTO);
+		
+        /** 사용자의 기존 앓고있는 지병 데이터 삭제 */
+		isDeleted = userMapper.deleteUserDisease(userDTO.getUserId());
+
+        /** 새로운 앓고있는 지병 데이터 추가 */
+		for (UserDiseaseDTO userDiseaseDTO : userDiseaseList) {
+            isInserted = userMapper.insertUserDisease(userDiseaseDTO);
+    	}
+		
+        /** 사용자의 기존 앓고있는 약 데이터 삭제 */
+    	isDeleted = userMapper.deleteUserDrug(userDTO.getUserId());
+        
+    	/** 새로운 복용중인 약 데이터 추가 */
+    	for (UserDrugDTO userDrugDTO : userDrugList) {
+	        isInserted = userMapper.insertUserDrug(userDrugDTO);
+    	}
+		
+		return isUpdated + isDeleted + isInserted;
+	}
+
+	/** 회원 정보 수정 - 비밀번호 확인 */
+	@Override
+	public int checkPw(String id, String pw) {
+		int count = userMapper.checkPw(id, passwordEncoder.encode(pw));
 		return count;
+	}
+	
+	/** 회원 리스트 */
+	public List<UserDTO> getUserList(UserDTO params){
+		int userTotalCount = userMapper.getTotalCount();
+
+		PaginationInfo paginationInfo = new PaginationInfo(params);
+		paginationInfo.setTotalRecordCount(userTotalCount);
+		params.setPaginationInfo(paginationInfo);
+		
+		List<UserDTO> userList = userMapper.getUserList(params);
+		
+		return userList;
+	}
+	
+	/** 회원 정보 가져오기 */
+	@Override
+	public UserDTO getUserDetail(int userNo) {
+		UserDTO userDTO = userMapper.getUserDetail(userNo);
+		return userDTO;
+	}
+
+	/** 회원 삭제 */		
+	@Override
+	public int deleteUser(int userNo) {
+		int isDeleted = userMapper.deleteUser(userNo);
+		return isDeleted;
 	}
 }

@@ -43,29 +43,30 @@ public class RecipeController {
 		if (principal != null) {
 			List<DiseaseDTO> list = diseaseService.getUserDiseaseList(principal);
 			model.addAttribute("user_disease_list", list);
-			System.out.println("user_disease_list:" + list);
 		}
+		
 		// 레시피 리스트 뽑아오기
 		List<RecipeDTO> Recipe_List = recipeService.getRecipeList(params);
 		model.addAttribute("Recipe_List", Recipe_List);
-		// System.out.println("Recipe_List:" + Recipe_List);
-		// disease_list 상위 5개 가져오는 객체
+
+		// disease_list 가져오는 객체
 		List<DiseaseDTO> Disease_List = diseaseService.getDiseaseList();
 		model.addAttribute("Disease_List", Disease_List);
-		System.out.println("Disease_List:" + Disease_List);
-		// System.out.println("Disease_List_Five:" + Disease_List_Five);
 
 		return "recipe/list";
 	}
 
 	@GetMapping(value = "/view.do")
 	public String getRecipe(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Principal principal,
-			Model model) {
+							@RequestParam (value="prev") String prev, Model model) {
 
+		// 조회수 관련 - 구현 완료
+		recipeService.uphit(Recipe_No);
+		
 		// recipe_info
 		RecipeDTO Recipe_info = recipeService.getRecipeInfo(Recipe_No, principal);
 		model.addAttribute("Recipe_info", Recipe_info);
-		System.out.println("Recipe_info" + Recipe_info);
+
 		// foodIngredients split해서 배열에 차곡차곡 넣음
 		if (Recipe_info.getFoodIngredients() != null) {
 			String recipe_ingredients = Recipe_info.getFoodIngredients();
@@ -79,9 +80,9 @@ public class RecipeController {
 			// step '][' 기준으로 자르기
 			// recipe_step 가져오기
 			String recipe_step = Recipe_info.getStep();
+			
 			// model로 넘길 arrayList 생성
 			ArrayList<String> AL_rs_split = new ArrayList<>();
-			// System.out.println(recipe_step);
 			String temp = recipe_step;
 			boolean run = true;
 			while (run) {
@@ -98,15 +99,11 @@ public class RecipeController {
 					run = false;
 				}
 
-				System.out.println(data);
 				// data arraylist에 넣기
 				AL_rs_split.add(data);
 			}
 			model.addAttribute("AL_rs_split", AL_rs_split);
 		}
-
-		// 조회수 관련 - 구현 완료
-		recipeService.uphit(Recipe_No);
 
 		/** 댓글 수 가져오기 */
 		int commentCnt = recipeService.getCommentCnt(Integer.parseInt(Recipe_No));
@@ -123,18 +120,20 @@ public class RecipeController {
 
 		boolean isRecommended = recipeService.getIsRecommended(recipeRecommendedDTO);
 		model.addAttribute("isRecommended", isRecommended);
+		
+		/** 이전 페이지 */
+		model.addAttribute("prev", prev);
 
 		return "recipe/view";
 	}
 
 	@GetMapping(value = "/writeForm.do")
-	public String getRecipeForm(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Model model,
-			Principal principal) {
+	public String getRecipeForm(@RequestParam(value = "Recipe_No", required = false) String Recipe_No, Model model, Principal principal) {
 		if (Recipe_No != null) {
 			// recipe_info
 			RecipeDTO Recipe_info = recipeService.getRecipeInfo(Recipe_No, principal);
 			model.addAttribute("Recipe_info", Recipe_info);
-			System.out.println("Recipe_info" + Recipe_info);
+
 			// foodIngredients split해서 배열에 차곡차곡 넣음
 			if (Recipe_info.getFoodIngredients() != null) {
 				String recipe_ingredients = Recipe_info.getFoodIngredients();
@@ -148,9 +147,9 @@ public class RecipeController {
 				// step '][' 기준으로 자르기
 				// recipe_step 가져오기
 				String recipe_step = Recipe_info.getStep();
+				
 				// model로 넘길 arrayList 생성
 				ArrayList<String> AL_rs_split = new ArrayList<>();
-				// System.out.println(recipe_step);
 				String temp = recipe_step;
 				boolean run = true;
 				while (run) {
@@ -167,7 +166,6 @@ public class RecipeController {
 						run = false;
 					}
 
-					System.out.println(data);
 					// data arraylist에 넣기
 					AL_rs_split.add(data);
 				}
@@ -182,9 +180,6 @@ public class RecipeController {
 	public String addRecipe(@RequestPart(value = "File", required = false) MultipartFile file,
 			@RequestPart(value = "Data") Map<String, Object> data, Principal principal) throws Exception {
 
-		System.out.println("file:" + file);
-		System.out.println("data:" + data);
-
 		recipeService.uploadRecipe(file, data, principal);
 		return "ok";
 	}
@@ -193,7 +188,6 @@ public class RecipeController {
 	@PostMapping(value = "/delete.do")
 	public String deleteRecipe(@RequestBody String Recipe_No) {
 		String real_Recipe_No[] = Recipe_No.split("=");
-		System.out.println("Recipe_No:" + real_Recipe_No[0]);
 		recipeService.deleteRecipe(real_Recipe_No[0]);
 		return "ok";
 	}
@@ -232,8 +226,8 @@ public class RecipeController {
 	public HashMap<String, Object> deleteComment(@ModelAttribute("params") CommentDTO commentDTO) {
 		HashMap<String, Object> commentMap = new HashMap<String, Object>();
 
-		String content = "(작성자에 의해 삭제된 댓글입니다)";
-		int isDeleted = recipeService.deleteComment(commentDTO, content);
+		String memo = "(작성자에 의해 삭제된 댓글입니다)";
+		int isDeleted = recipeService.deleteComment(commentDTO, memo);
 		if (isDeleted >= 1) {
 			List<CommentDTO> commentList = recipeService.getCommentList(commentDTO.getRecipeNo());
 			commentMap.put("result", "success");

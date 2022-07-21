@@ -28,7 +28,8 @@
                                     <div class="media-body order-2 order-lg-1">
                                         <img src="https://i.imgur.com/KFojDGa.jpg" id="drug-image">
                                         <div>
-                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a th:href="@{/drug/myview.do(no=${item.drugNo},id=${not #strings.isEmpty(id) ? id : ''})}" th:text="${item.drugName}"></a></h5>
+                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline">
+                                            <a style="color:black;" th:href="@{/drug/myview.do(no=${item.drugNo},id=${not #strings.isEmpty(id) ? id : ''})}" th:text="${item.drugName}"></a></h5>
                                             <p class="font-italic text-muted mb-0 small" style="display: inline-block"
                                                th:text="${item.manufacturer}"></p>
                                         </div>

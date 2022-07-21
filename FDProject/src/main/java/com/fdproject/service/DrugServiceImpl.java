@@ -1,22 +1,24 @@
 package com.fdproject.service;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
-import com.fdproject.domain.DrugsCartDTO;
-import com.fdproject.domain.UserDiseaseDTO;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.DrugDTO;
+import com.fdproject.domain.DrugsCartDTO;
 import com.fdproject.domain.UserDrugDTO;
 import com.fdproject.mapper.DrugMapper;
 import com.fdproject.paging.PaginationInfo;
 import com.fdproject.util.GrammerUtils;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,13 +43,13 @@ public class DrugServiceImpl implements DrugService {
             UserDrugDTO userDrug = new UserDrugDTO();
             userDrug.setUserId(id);
             List<String> value = drugMapper.selectKeywords(userDrug);
-            System.out.println(value);
+
             String keywords = GrammerUtils.str(value);
             String[] strArr = keywords.split(",");
             HashSet<String> arr = new HashSet<String>(Arrays.asList(strArr));
             List<String> result = new ArrayList<String>(arr);
+            
             String str = GrammerUtils.str(result);
-            System.out.println(str);
             str = str.replaceAll(",", "|");
             params.setParams(str);
             if (GrammerUtils.isStringEmpty(takeYn) == false && takeYn.equals("Y")) {
@@ -194,10 +196,38 @@ public class DrugServiceImpl implements DrugService {
     /** 회원가입 - 약 리스트 조회 사용*/
     @Override
     public List<DrugDTO> getJoinDrugList() {
-
-        List<DrugDTO> drugList = new ArrayList<>();
-        drugList = drugMapper.joinDrugList();
-
+        List<DrugDTO> drugList = drugMapper.getJoinDrugList();
         return drugList;
     }
+    
+	/** 마이페이지 - 약 리스트 조회 (사용자가 복용중인 약 제외) */
+    @Override
+    public List<DrugDTO> getMyPageDrugList(String userId){
+    	List<DrugDTO> drugList = drugMapper.getMyPageDrugList(userId);
+        return drugList;
+    }
+
+    /** 마이페이지 - 사용자가 복용중인 약 조회 */
+    @Override
+	public List<DrugDTO> getUserDrugList(String userId){
+    	List<DrugDTO> drugList = drugMapper.getUserDrugList(userId);
+        return drugList;
+	}
+
+	/** 회원 관리 - 사용자 복용중인 약 조회 */
+	@Override
+	public String getUserDrugByAdmin(int userNo) {
+		String userDrugs = "";
+
+		List<Map<String,Object>> userDrugMap = drugMapper.getUserDrugByAdmin(userNo);
+		for(Map<String,Object> map: userDrugMap) {
+			userDrugs += map.get("NAME").toString() + "\n";
+		}
+		
+		if(userDrugs != "") {
+			userDrugs = userDrugs.substring(0, userDrugs.length()-1);
+		}
+		
+		return userDrugs;
+	}
 }
