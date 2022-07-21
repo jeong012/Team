@@ -42,7 +42,7 @@ public interface RecipeMapper {
 	int postComment(CommentDTO commentDTO);
 	
 	/** 레시피 댓글 삭제*/
-	int deleteComment(@Param("commentNo") int commentNo, @Param("content") String content);
+	int deleteComment(@Param("commentNo") int commentNo, @Param("memo") String memo);
 	
 	/** 레시피 삭제 후 댓글 삭제*/
 	int deleteCommentByRecipe(int recipeNo);
@@ -79,5 +79,11 @@ public interface RecipeMapper {
 	
 	/** 레시피 추천 삭제*/
 	int removeRecommended(RecipeRecommendedDTO recipeRecommendedDTO);
+	
+	/** 사용자 작성 레시피 조회 */
+	List<RecipeDTO> getUserRecipe(int userNo);
+	
+	/** 사용자 작성 댓글 조회 */
+	List<CommentDTO> getUserComment(int userNo);
 	
 }

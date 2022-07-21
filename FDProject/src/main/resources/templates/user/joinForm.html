@@ -121,14 +121,7 @@
 		            
 		            <fieldset class="form-group verify-box">
 		              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
-		              <th:block th:if="${oAuth2User.phoneNumber != null}">
 		              	<input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" th:value="${oAuth2User.phoneNumber}" readonly>
-		              </th:block>
-		              
-		              <th:block th:unless="${oAuth2User.phoneNumber != null}">
-		              	<input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요" maxlength="11">
-		              	<button type="submit" class="btn btn-primary btn-verify" style="margin-top:10px;" id="phoneNumCertify">인증</button>
-		              </th:block>
 		            </fieldset>
 		            
 		            <fieldset class="form-group">
@@ -274,13 +267,14 @@
 					$("#checkCode").hide();
 				}
 				
-				function showModal(){
+				function showModal(message){
 					$("#joinModal").modal("show");
 					$("#newUser").hide();
 					$("#existUser").hide();
 					$("#failUser").show();
 					$("#messageCheck").hide();
 					$("#messageCheckOk").hide();
+					$("#modalLabel").text(message);
 				}
 
 				function checkValidDate(value) {
@@ -313,92 +307,81 @@
 						sex = $("#sex").val();
 					}
 					var registrationId = $("#registrationId").val();
+					if(registrationId != null){
+						phoneNum = "000-0000-0000";
+					}
 					
 					/** 유효성 검사 */
 					if(userId == ""){
-						showModal();
-						$("#modalLabel").text("아이디를 입력해주세요.");
+						showModal("아이디를 입력해주세요.");
 						return false;
 					}
 					
 					if(!isChecked && !registrationId){
-						showModal();
-						$("#modalLabel").text("아이디 중복확인을 해주세요.");
+						showModal("아이디 중복확인을 해주세요.");
 						return false;
 					}
 					
 					var pw1 = $("#pw1").val();
 					if(pw1 == ""){
-						showModal();
-						$("#modalLabel").text("비밀번호를 입력해주세요.");
+						showModal("비밀번호를 입력해주세요.");
 						return false;
 					}
 					
 			        var pwCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
 			        if(!pwCheck.test(pw1) && !registrationId){
-						alert("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
+			        	showModal("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
 						return false;
 			        }
 			        
 					if($('#pw1').val() != $('#pw2').val() && !registrationId){
-						showModal();
-						$("#modalLabel").text("비밀번호가 일치하지 않습니다.");
+						showModal("비밀번호가 일치하지 않습니다.");
 						return false;
 					}
 					
 					if(name == ""){
-						showModal();
-						$("#modalLabel").text("이름을 입력해주세요.");
+						showModal("이름을 입력해주세요.");
 						return false;
 					}
 					
 					var reg =/[0-9]/;
 					if(yy == ""){
-						showModal();
-						$("#modalLabel").text("연도를 입력해주세요.");
+						showModal("연도를 입력해주세요.");
 						return false;
 					}
 					if(mm == "월"){
-						showModal();
-						$("#modalLabel").text("월을 선택해주세요.");
+						showModal("월을 선택해주세요.");
 						return false;
 					}
 					if(dd == ""){
-						showModal();
-						$("#modalLabel").text("일자를 입력해주세요.");
+						showModal("일자를 입력해주세요.");
 						return false;
 					}
 					if(!reg.test(yy) || !reg.test(mm) || !reg.test(dd)){
-						showModal();
-						$("#modalLabel").text("날짜는 숫자만 입력할 수 있습니다.");
+						showModal("날짜는 숫자만 입력할 수 있습니다.");
 						return false;
 					}
 					if(!checkValidDate(birthDate)){
-						showModal();
-						$("#modalLabel").text("유효하지 않은 날짜입니다.");
+						showModal("유효하지 않은 날짜입니다.");
 						return false;
 					}
 					
-					if(!isMessageChecked){
-						showModal();
-						$("#modalLabel").text("휴대폰 인증을 완료해주세요.");
+					if(!isMessageChecked && !registrationId){
+						showModal("휴대폰 인증을 완료해주세요.");
 						return false;
 					}
 					/*var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 					if(phoneNum == ""){
-						showModal();
-						$("#modalLabel").text("휴대폰 번호를 입력해주세요.");
+						showModal("휴대폰 번호를 입력해주세요.");
 						return false;
 					}
 					if(!regPhone.test(phoneNum)){
-						showModal();
-						$("#modalLabel").text("휴대폰 번호 형식이 아닙니다.");
+						showModal("휴대폰 번호 형식이 아닙니다.");
 						return false;
 					}*/
 					
 					if(sex == null){
-						showModal();
-						$("#modalLabel").text("성별을 선택해주세요.");
+						showModal("성별을 선택해주세요.");
 						return false;
 					}
 					
@@ -444,8 +427,7 @@
 			    $("#idCheck").click(function() {
 			        var userId =  $("#userId").val();
 			        if(userId == ""){
-						showModal();
-						$("#modalLabel").text("아이디를 입력하세요.");
+						showModal("아이디를 입력하세요.");
 						return false;
 			        }
 			        
@@ -487,7 +469,6 @@
 			            $('.pw_check').css('color', 'blue');
 			            return true;
 			        }
-				
 			    });
 				// 비밀번호 일치여부
 				$('#pw2').keyup(function(){
@@ -516,7 +497,6 @@
 						$("#modalLabel").text("휴대폰번호 형식이 아닙니다.");
 						return false;
 					}else{
-					
 						$("#joinModal").modal("show");
 						$("#existUser").hide();
 						$("#newUser").hide();
@@ -552,8 +532,8 @@
 								});
 					            
 							},
-							error : function() {
-								alert("에러")
+							error : function(error) {
+								console.error(error);
 							}
 						});
 					}

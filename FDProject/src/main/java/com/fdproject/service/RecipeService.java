@@ -70,4 +70,10 @@ public interface RecipeService {
 	/** 레시피 추천 삭제*/
 	int removeRecommended(RecipeRecommendedDTO recipeRecommendedDTO);
 	
+	/** 사용자 작성 레시피 조회 */
+	List<RecipeDTO> getUserRecipe(int userNo);
+	
+	/** 사용자 작성 댓글 조회 */
+	List<CommentDTO> getUserComment(int userNo);
+	
 }

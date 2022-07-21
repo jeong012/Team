@@ -47,17 +47,26 @@
                     </div>
 
                     <div class="col-lg-10 mx-auto" style="margin-top: 15px;">
+                    	<th:block th:if="${params.takeYn eq 'Y'}">
+							<h4>복용 가능 약에 대한 리스트입니다.</h4>
+						</th:block>
+						
+                   	 	<th:block th:if="${params.takeYn eq 'N'}">
+							<h4>복용 금지 약에 대한 리스트입니다.</h4>
+						</th:block>
+                    
                         <!-- List group-->
                         <ul class="list-group shadow">
                             <!-- list group item-->
                             <li class="list-group-item" th:if="${not #lists.isEmpty(drugList)}"
                                 th:each="item : ${drugList}">
                                 <!-- Custom content-->
-                                <div class="media align-items-lg-center flex-column flex-lg-row p-2" data-aos="zoom-in">
+                                <div class="media align-items-lg-center flex-column flex-lg-row p-2">
                                     <div class="media-body order-2 order-lg-1">
                                         <img src="https://i.imgur.com/KFojDGa.jpg" id="drug-image">
                                         <div>
-                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a
+                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline">
+                                            <a  style="color:black;"
                                                     th:href="|@{/drug/view.do}${params.makeQueryString(params.currentPageNo)}&id=${not #strings.isEmpty(id) ? id : ''}&takeYn=${params.takeYn}&no=${item.drugNo}|"
                                                     th:text="${item.drugName}"></a></h5>
                                             <p class="font-italic text-muted mb-0 small" style="display: inline-block"
@@ -96,6 +105,26 @@
         <nav th:replace="fragments/common :: drugPagination">
         </nav>
     </th:block>
+    
+    <!--  Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!--  Modal content -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">아프면찾아조</h4>
+				</div>
+
+				<div class="modal-body">
+					<label id="modalLabel">키워드를 입력해 주세요.</label>
+				</div>
+
+				<div class="modal-footer">
+					<button class="btn btn-info" onclick="closeModal()">확인</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
     <th:block layout:fragment="script">
         <script th:inline="javascript">
@@ -113,7 +142,7 @@
                 /*[- 드롭다운이 아닌 메인 검색 키워드로 검색했을 때 -]*/
                 var searchKeyword = document.getElementById("sub-drug-searchForm");
                 if (searchKeyword.value == "") {
-                    alert("키워드를 입력해 주세요.");
+                    $("#myModal").modal('show');
                     searchKeyword.focus();
                     return false;
                 }
@@ -121,7 +150,10 @@
                 form = document.getElementById("searchForm");
                 form.searchKeyword.value = searchKeyword.value;
                 form.submit();
-
+            }
+            
+            function closeModal(){
+                $("#myModal").modal('hide');
             }
 
 //             $(function () { //화면 다 뜨면 시작

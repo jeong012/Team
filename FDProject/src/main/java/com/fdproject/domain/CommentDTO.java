@@ -31,11 +31,17 @@ public class CommentDTO {
 
 	/** 작성일자 */
 	private String regDate;
-
-	/** 삭제여부 */
-	private String deleteYn;
 	
-	/** 수정여부*/
-	private String updateYn;
+	/** 수정 날짜 */
+	private String modDate;
+	
+	/** 삭제 날짜 */
+	private String delDate;
+	
+	/** 삭제 메모 */
+	private String delMemo;
+	
+	/** 작성자 이름 */
+	private String name;
 	
 }

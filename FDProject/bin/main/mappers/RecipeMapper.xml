@@ -17,7 +17,9 @@
 		delete_Yn,
 		storage,
 		tip,
-		RANDOM_IMG_FILE
+		RANDOM_IMG_FILE,
+		MOD_DATE,
+		DEL_DATE
 		]]>
 	</sql>
 
@@ -36,7 +38,9 @@
 		r.delete_Yn,
 		r.storage,
 		r.tip,
-		r.RANDOM_IMG_FILE
+		r.RANDOM_IMG_FILE,
+		r.MOD_DATE,
+		r.DEL_DATE
 		]]>
 	</sql>
 
@@ -63,8 +67,9 @@
 			POS,
 			DEPTH, 
 			REG_DATE, 
-			DELETE_YN,
-			UPDATE_YN
+			MOD_DATE,
+			DEL_DATE,
+			DEL_MEMO
 		]]>
 	</sql>
 	
@@ -75,6 +80,23 @@
 			USER_ID
 		]]>
 	</sql>
+    
+    <sql id="userRecipeColumns">
+        r.RECIPE_NO,
+        r.TITLE,
+        r.REG_DATE,
+        r.MOD_DATE,
+        r.DEL_DATE
+    </sql>
+    
+    <sql id="userCommentColumns">
+    	c.COMMENT_NO,
+    	c.RECIPE_NO,
+    	c.CONTENT,
+		c.REG_DATE,
+		c.MOD_DATE,
+		c.DEL_DATE 
+    </sql>
 	
 	<resultMap id="comment" type="CommentDTO">
         <id property="commentNo" column="comment_no"/>
@@ -86,8 +108,10 @@
         <result property="pos" column="pos"/>
         <result property="depth" column="depth"/>
         <result property="regDate" column="reg_date"/>
-        <result property="deleteYn" column="delete_yn"/>
-        <result property="updateYn" column="update_yn"/>
+        <result property="modDate" column="mod_date"/>
+        <result property="delDate" column="del_date"/>
+        <result property="delMemo" column="del_memo"/>
+        <result property="name" column="name"/>
 	</resultMap>
 	
 	<resultMap id="recipeRecommended" type="RecipeRecommendedDTO">
@@ -96,6 +120,23 @@
         <result property="userId" column="user_id"/>
 	</resultMap>
 
+     <resultMap id="userRecipe" type="RecipeDTO">
+        <id property="recipeNo" column="recipe_no"/>
+        <result property="title" column="title"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="modDate" column="mod_date"/>
+        <result property="delDate" column="del_date"/>
+    </resultMap>
+    
+     <resultMap id="userComment" type="CommentDTO">
+        <id property="commentNo" column="comment_no"/>
+        <result property="recipeNo" column="recipe_no"/>
+        <result property="content" column="content"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="modDate" column="mod_date"/>
+        <result property="delDate" column="del_date"/>
+    </resultMap>
+    
 	<!-- new -->
 	<select id="selectRecipeList" resultType="RecipeDTO">
 		<include refid="CommonMapper.pagingHeader" />
@@ -105,6 +146,7 @@
 		recipes
 		where
 		1=1
+		and disease_field is not null
 		<include refid="CommonMapper.search_R" />
 		<include refid="deleteYN" />
 		order by title asc
@@ -292,19 +334,17 @@
 	</select>
 
 	<insert id="uploadRecipe" parameterType="RecipeDTO">
-		insert into recipes(recipe_no, title,
-		writer,food_ingredients,step,reg_Date,cart_count,delete_yn,storage,tip,img_file,random_img_file)
-		values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{cartCount},'N',#{storage},#{tip},#{imgFile},
-		#{randomImgFile})
+		insert into recipes(recipe_no, title, writer, food_ingredients, step, reg_Date, hit, cart_count,
+							delete_yn, storage, tip, img_file, random_img_file, mod_date, del_date)
+		values(#{recipeNo}, #{title}, #{writer},#{foodIngredients}, #{step}, sysdate, #{hit}, #{cartCount},
+		'N', #{storage}, #{tip}, #{imgFile}, #{randomImgFile}, #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE})
 	</insert>
 
 	<update id="modifyRecipe" parameterType="RecipeDTO">
 		update recipes
-		set title = #{title}, writer = #{writer}, food_ingredients =
-		#{foodIngredients},
-		step = #{step},reg_Date = sysdate, cart_count =
-		#{cartCount},storage = #{storage},
-		tip = #{tip}, img_file = #{imgFile}, random_img_file = #{randomImgFile}
+		set title = #{title}, writer = #{writer}, food_ingredients = #{foodIngredients},
+		step = #{step}, reg_Date = sysdate, cart_count = #{cartCount}, storage = #{storage},
+		tip = #{tip}, img_file = #{imgFile}, random_img_file = #{randomImgFile}, mod_date = sysdate
 		where recipe_no = #{recipeNo}
 	</update>
 
@@ -316,14 +356,15 @@
 
 	<update id="deleteYNRecipe" parameterType="String">
 		update recipes
-		set delete_yn = 'Y'
+		set delete_yn = 'Y', del_date = sysdate
 		where recipe_no =#{recipeNo}
 	</update>
 	
 	<select id="getCommentList" parameterType="int" resultMap="comment">
-		SELECT <include refid="commentColumns" />
-		FROM COMMENTS
+		SELECT c.*, u.NAME 
+		FROM COMMENTS c, USERS u 
 		WHERE RECIPE_NO = #{recipeNo}
+		AND c.WRITER = u.USER_ID 
 		ORDER BY REF, POS, DEPTH
 	</select>
 	
@@ -332,25 +373,26 @@
 			SELECT SEQ_COMMENTS_NO.NEXTVAL FROM DUAL
         </selectKey>
 		INSERT INTO COMMENTS (<include refid="commentColumns" />)
-		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{commentNo}, #{commentNo}, 1, 0, SYSDATE, 'N', 'N')
+		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{commentNo}, #{commentNo}, 1, 0, SYSDATE, #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE}, #{delMemo, jdbcType=VARCHAR})
 	</insert>
 	
 	<update id="deleteComment" parameterType="map">
 		UPDATE COMMENTS
-		SET CONTENT = #{content}, REG_DATE = SYSDATE, DELETE_YN = 'Y'
+		SET DEL_MEMO = #{memo}, DEL_DATE = SYSDATE
 		WHERE COMMENT_NO = #{commentNo}
 	</update>
     
     <update id="deleteCommentByRecipe" parameterType="int">
         UPDATE COMMENTS
-		SET DELETE_YN='Y'
+		SET DEL_DATE = SYSDATE
 		WHERE RECIPE_NO = #{recipeNo}
     </update>
 	
 	<select id="getComment" parameterType="int" resultMap="comment">
-		SELECT <include refid="commentColumns" />
-		FROM COMMENTS
+		SELECT c.*, u.NAME 
+		FROM COMMENTS c, USERS u 
 		WHERE COMMENT_NO = #{commentNo}
+		AND c.WRITER = u.USER_ID 
 	</select>
 	
 	<insert id="replyComment" parameterType="commentDTO">
@@ -358,7 +400,7 @@
             SELECT SEQ_COMMENTS_NO.NEXTVAL FROM DUAL
         </selectKey>
 		INSERT INTO COMMENTS (<include refid="commentColumns" />)
-		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{ref}, #{parentNo}, #{pos}+1, #{depth}, SYSDATE, 'N', 'N')
+		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{ref}, #{parentNo}, #{pos}+1, #{depth}, SYSDATE,  #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE}, #{delMemo, jdbcType=VARCHAR})
 	</insert>
 	
 	<select id="getPosGap" parameterType="int" resultType="String">
@@ -393,7 +435,7 @@
 	
 	<update id="updateComment" parameterType="commentDTO">
 		UPDATE COMMENTS
-		SET CONTENT = #{content}, REG_DATE = SYSDATE, UPDATE_YN='Y'
+		SET CONTENT = #{content}, MOD_DATE = SYSDATE
 		WHERE COMMENT_NO = #{commentNo}
 	</update>
 	
@@ -423,5 +465,19 @@
 		WHERE RECIPE_NO = #{recipeNo}
 		AND USER_ID = #{userId}
 	</delete>
+    
+    <select id="getUserRecipe" parameterType="int" resultMap="userRecipe">
+    	SELECT <include refid="userRecipeColumns"/> 
+		FROM RECIPES r, USERS u
+		WHERE u.USER_NO = #{userNo}
+		AND r.WRITER = u.USER_ID
+    </select>
+	
+	<select id="getUserComment" parameterType="int" resultMap="userComment">
+		SELECT <include refid="userCommentColumns"/> 
+		FROM COMMENTS c , USERS u 
+		WHERE u.USER_NO = #{userNo}
+		AND c.WRITER = u.USER_ID
+	</select>
 	
 </mapper>
