@@ -107,7 +107,7 @@ public class MyPageController extends UiUtils {
 			
 	        Gson gson = new Gson();
 	        updateUserDTO = gson.fromJson(jsonObj.get("userDTO").toString(), UserDTO.class);
-	        if(!updateUserDTO.getPw().equals("")) {
+	        if(!updateUserDTO.getPw().equals("") && userDTO.getRegistrationId().equals("main")) {
 	        	String encPassword = passwordEncoder.encode(updateUserDTO.getPw());
 	            userDTO.setPw(encPassword);
 	        }

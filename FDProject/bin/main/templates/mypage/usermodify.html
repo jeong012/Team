@@ -87,7 +87,7 @@
 								<!-- 회원정보수정 폼 -->
 		
 								<!-- 선택 항목 수정 -->
-								<div class="join-form2 select-form" style="margin-top:50px;">
+								<div class="modify-form select-form" style="margin-top:50px;">
 									<div class="row select-detail-wrap">
 										<div class="mb-3 row">
 							                <label for="inputDisease" style="margin-bottom:5px;"><span>●</span> 앓고 있는 지병이 있으신가요?&emsp;(최대 3개)</label>
@@ -100,12 +100,13 @@
 										</div>
 							
 										<div id="selectedDisease" class="disease-kind">
+											<span class="ex" style="margin-left:15px;">(최대 3개)</span>
 							                <ul id="selectedDisease">
 							                </ul>
 										</div>
 							
 										<div class="mb-3 row" style="margin-top:10px;">
-							                <label for="inputDrug" style="margin-bottom:5px;"><span>●</span> 복용 중인 약이 있으신가요?&emsp;(최대 5개)</label>
+							                <label for="inputDrug" style="margin-bottom:5px;"><span>●</span> 복용 중인 약이 있으신가요?</label>
 							                <div class="col-2 input-box">
 							                  <input type="text" class="form-control" id="inputDrug" style="margin-left:15px;">
 							                  <button class="btn-add btn-primary" onclick="addDrug()">
@@ -114,6 +115,7 @@
 							                </div>
 							              </div>
 							              <div id="selectedDrug" class="disease-kind">
+							                <span class="ex" style="margin-left:15px;">(최대 5개)</span>
 							                <ul id="selectedDrug">
 							                </ul>
 										</div>
@@ -356,7 +358,7 @@
 				var pw2 = $('#pw2').val();
 				
 				var pwCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
-				if (!pwCheck.test(pw1) && pw1 != "") {
+				if (!pwCheck.test(pw1) && pw1 != "" && $("#registrationId").val == 'main') {
 					showModal("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
 					return false;
 				}
