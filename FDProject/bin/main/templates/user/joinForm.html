@@ -121,14 +121,7 @@
 		            
 		            <fieldset class="form-group verify-box">
 		              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
-		              <th:block th:if="${oAuth2User.phoneNumber != null}">
 		              	<input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" th:value="${oAuth2User.phoneNumber}" readonly>
-		              </th:block>
-		              
-		              <th:block th:unless="${oAuth2User.phoneNumber != null}">
-		              	<input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요" maxlength="11">
-		              	<button type="submit" class="btn btn-primary btn-verify" style="margin-top:10px;" id="phoneNumCertify">인증</button>
-		              </th:block>
 		            </fieldset>
 		            
 		            <fieldset class="form-group">
@@ -308,6 +301,9 @@
 					var dd = $("#dd").val();
 					var birthDate = yy + "-" + mm + "-" + dd;
 					var phoneNum = $("#phoneNum").val();
+					if(registrationId != 'main'){
+						phoneNum = "000-0000-0000";
+					}
 					var sex = $('input[type=radio][name=sex]:checked').val();
 					if(sex == null){
 						sex = $("#sex").val();
@@ -379,7 +375,7 @@
 						return false;
 					}
 					
-					if(!isMessageChecked){
+					if(!isMessageChecked && !registrationId){
 						showModal();
 						$("#modalLabel").text("휴대폰 인증을 완료해주세요.");
 						return false;
@@ -487,7 +483,6 @@
 			            $('.pw_check').css('color', 'blue');
 			            return true;
 			        }
-				
 			    });
 				// 비밀번호 일치여부
 				$('#pw2').keyup(function(){
@@ -526,7 +521,7 @@
 						var to = $('#phoneNum').val();						
 						
 						$.ajax({
-							url : "/user/PhoneCheck",
+							url : "/user/PhoneCheck.do",
 							type : "post",
 							data : "to=" + to,
 							dataType : "json",

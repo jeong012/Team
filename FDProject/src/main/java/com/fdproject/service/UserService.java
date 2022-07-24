@@ -20,4 +20,10 @@ public interface UserService {
 	
 	/** 회원 정보 수정*/
 	int updateUser(UserDTO userDTO);
+	
+	/** 회원 정보 수정 - 비밀번호 확인 */
+	int checkPw(String id, String pw);
+
+	UserDTO loadUserByUsername(String userId);
+	
 }

@@ -17,7 +17,9 @@
 		delete_Yn,
 		storage,
 		tip,
-		RANDOM_IMG_FILE
+		RANDOM_IMG_FILE,
+		MOD_DATE,
+		DEL_DATE
 		]]>
 	</sql>
 
@@ -36,7 +38,9 @@
 		r.delete_Yn,
 		r.storage,
 		r.tip,
-		r.RANDOM_IMG_FILE
+		r.RANDOM_IMG_FILE,
+		r.MOD_DATE,
+		r.DEL_DATE
 		]]>
 	</sql>
 
@@ -63,8 +67,9 @@
 			POS,
 			DEPTH, 
 			REG_DATE, 
-			DELETE_YN,
-			UPDATE_YN
+			MOD_DATE,
+			DEL_DATE,
+			DEL_MEMO
 		]]>
 	</sql>
 	
@@ -86,8 +91,10 @@
         <result property="pos" column="pos"/>
         <result property="depth" column="depth"/>
         <result property="regDate" column="reg_date"/>
-        <result property="deleteYn" column="delete_yn"/>
-        <result property="updateYn" column="update_yn"/>
+        <result property="modDate" column="mod_date"/>
+        <result property="delDate" column="del_date"/>
+        <result property="delMemo" column="del_memo"/>
+        <result property="name" column="name"/>
 	</resultMap>
 	
 	<resultMap id="recipeRecommended" type="RecipeRecommendedDTO">
@@ -152,7 +159,7 @@
 		where r.recipe_NO = c.recipe_NO
 		and c.USER_ID = #{cartDTO.userId}
 		<include refid="r_deleteYN" />
-		<include refid="CommonMapper.search_o" />
+		<include refid="CommonMapper.search_R" />
 		order by title asc
 		<include refid="CommonMapper.pagingFooter" />
 	</select>
@@ -166,7 +173,7 @@
 		c.recipe_NO = r.recipe_NO
 		and USER_ID = #{cartDTO.userId}
 		<include refid="deleteYN" />
-		<include refid="CommonMapper.search_o" />
+		<include refid="CommonMapper.search_R" />
 	</select>
 	<!-- 유저들이 작성한 리스트 -->
 	<select id="selectWriterRecipeTotalCount" parameterType="RecipeDTO"
@@ -292,19 +299,17 @@
 	</select>
 
 	<insert id="uploadRecipe" parameterType="RecipeDTO">
-		insert into recipes(recipe_no, title,
-		writer,food_ingredients,step,reg_Date,cart_count,delete_yn,storage,tip,img_file,random_img_file)
-		values(#{recipeNo},#{title},#{writer},#{foodIngredients},#{step},sysdate,#{cartCount},'N',#{storage},#{tip},#{imgFile},
-		#{randomImgFile})
+		insert into recipes(recipe_no, title, writer, food_ingredients, step, reg_Date, cart_count,
+							delete_yn, storage, tip, img_file, random_img_file, mod_date, del_date)
+		values(#{recipeNo}, #{title}, #{writer},#{foodIngredients}, #{step}, sysdate, #{cartCount},
+		'N', #{storage}, #{tip}, #{imgFile}, #{randomImgFile}, #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE})
 	</insert>
 
 	<update id="modifyRecipe" parameterType="RecipeDTO">
 		update recipes
-		set title = #{title}, writer = #{writer}, food_ingredients =
-		#{foodIngredients},
-		step = #{step},reg_Date = sysdate, cart_count =
-		#{cartCount},storage = #{storage},
-		tip = #{tip}, img_file = #{imgFile}, random_img_file = #{randomImgFile}
+		set title = #{title}, writer = #{writer}, food_ingredients = #{foodIngredients},
+		step = #{step}, reg_Date = sysdate, cart_count = #{cartCount}, storage = #{storage},
+		tip = #{tip}, img_file = #{imgFile}, random_img_file = #{randomImgFile}, mod_date = sysdate
 		where recipe_no = #{recipeNo}
 	</update>
 
@@ -316,15 +321,15 @@
 
 	<update id="deleteYNRecipe" parameterType="String">
 		update recipes
-		set delete_yn = 'Y'
+		set delete_yn = 'Y', del_date = sysdate
 		where recipe_no =#{recipeNo}
 	</update>
 	
 	<select id="getCommentList" parameterType="int" resultMap="comment">
-		SELECT <include refid="commentColumns" />
-		FROM COMMENTS
+		SELECT c.*, u.NAME 
+		FROM COMMENTS c, USERS u 
 		WHERE RECIPE_NO = #{recipeNo}
-		AND DELETE_YN = 'N'
+		AND c.WRITER = u.USER_ID 
 		ORDER BY REF, POS, DEPTH
 	</select>
 	
@@ -333,60 +338,26 @@
 			SELECT SEQ_COMMENTS_NO.NEXTVAL FROM DUAL
         </selectKey>
 		INSERT INTO COMMENTS (<include refid="commentColumns" />)
-		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{commentNo}, #{commentNo}, 1, 0, SYSDATE, 'N', 'N')
+		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{commentNo}, #{commentNo}, 1, 0, SYSDATE, #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE}, #{delMemo, jdbcType=VARCHAR})
 	</insert>
-    
-    <select id="getNextPos" parameterType="commentDTO" resultType="int">
-    	<![CDATA[
-		    SELECT (CASE WHEN cnt > 1 THEN (	SELECT POS
-												FROM (
-														SELECT ROWNUM rn, c.*
-														FROM COMMENTS c
-														WHERE PARENT_NO = #{parentNo}
-														AND POS >= #{pos} AND DEPTH = #{depth} AND DELETE_YN = 'N'
-										   		) WHERE rn = 2
-										   )
-		            	 ELSE 0
-		       		END) AS nextPos
-			FROM (SELECT COUNT(*) cnt FROM COMMENTS
-				  WHERE PARENT_NO = #{parentNo} AND POS >= #{pos} AND DEPTH = #{depth} AND DELETE_YN = 'N')	 
-		]]>
-    </select> 
 	
-	<update id="deleteCommentBasic" parameterType="int">
-        UPDATE COMMENTS
-		SET DELETE_YN='Y'
-		WHERE COMMENT_NO = #{commentNo} OR REF = #{commentNo} OR PARENT_NO = #{commentNo}
-    </update>
-    
-    <update id="deleteCommentDetail" parameterType="map">
-       	<![CDATA[
-			UPDATE COMMENTS
-			SET DELETE_YN='Y'
-			WHERE POS >= #{minPos} AND POS < #{maxPos}
-			AND REF = #{ref}
-		]]>	
-    </update>
-	
-	<update id="updateMinusPos" parameterType="map">
+	<update id="deleteComment" parameterType="map">
 		UPDATE COMMENTS
-		SET POS = POS-#{deletedCnt}
-		WHERE POS > #{pos}
-		AND REF = #{ref}
-		AND DELETE_YN='N'
-    </update>
+		SET DEL_MEMO = #{memo}, DEL_DATE = SYSDATE
+		WHERE COMMENT_NO = #{commentNo}
+	</update>
     
     <update id="deleteCommentByRecipe" parameterType="int">
         UPDATE COMMENTS
-		SET DELETE_YN='Y'
+		SET DEL_DATE = SYSDATE
 		WHERE RECIPE_NO = #{recipeNo}
     </update>
 	
 	<select id="getComment" parameterType="int" resultMap="comment">
-		SELECT <include refid="commentColumns" />
-		FROM COMMENTS
+		SELECT c.*, u.NAME 
+		FROM COMMENTS c, USERS u 
 		WHERE COMMENT_NO = #{commentNo}
-		AND DELETE_YN = 'N'
+		AND c.WRITER = u.USER_ID 
 	</select>
 	
 	<insert id="replyComment" parameterType="commentDTO">
@@ -394,7 +365,7 @@
             SELECT SEQ_COMMENTS_NO.NEXTVAL FROM DUAL
         </selectKey>
 		INSERT INTO COMMENTS (<include refid="commentColumns" />)
-		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{ref}, #{parentNo}, #{pos}+1, #{depth}, SYSDATE, 'N', 'N')
+		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{ref}, #{parentNo}, #{pos}+1, #{depth}, SYSDATE,  #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE}, #{delMemo, jdbcType=VARCHAR})
 	</insert>
 	
 	<select id="getPosGap" parameterType="int" resultType="String">
@@ -412,7 +383,6 @@
 		SET POS = POS+1
 		WHERE POS > #{pos}
 		AND REF = #{ref}
-		AND DELETE_YN='N'
     </update>
     
     <select id="getPos" parameterType="int" resultType="map">
@@ -420,19 +390,17 @@
 		FROM COMMENTS
 		WHERE PARENT_NO = #{parentNo}
 		AND DEPTH = #{depth}
-		AND DELETE_YN = 'N'
     </select>
     
 	<select id="getCommentCnt" parameterType="int" resultType="int">
 		SELECT NVL(count(*),0) commentCnt
 		FROM COMMENTS
 		WHERE RECIPE_NO = #{recipeNo}
-		AND DELETE_YN = 'N'
 	</select>
 	
 	<update id="updateComment" parameterType="commentDTO">
 		UPDATE COMMENTS
-		SET CONTENT = #{content}, UPDATE_YN='Y'
+		SET CONTENT = #{content}, MOD_DATE = SYSDATE
 		WHERE COMMENT_NO = #{commentNo}
 	</update>
 	

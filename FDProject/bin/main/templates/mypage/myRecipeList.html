@@ -7,7 +7,7 @@
 		<div class="container">
 
 			<th:block layout:fragment="search">
-				<div th:replace="fragments/common :: search_R">
+				<div th:replace="fragments/mypage-common :: search_R">
 				</div>
 				<div th:replace="fragments/common :: recipe_write">
 				</div>
@@ -41,7 +41,7 @@
 													</div>
 													<!-- 버튼 부분 -->
 													<div class="btn-wrap" style="background-color:#FFFFFF;">
-														<a th:href="@{/recipe/view(Recipe_No = ${Recipe.recipeNo})}"
+														<a th:href="@{/recipe/view.do(Recipe_No = ${Recipe.recipeNo})}"
 															class="btn-buy">자세히 보기</a>
 													</div>
 												</div>

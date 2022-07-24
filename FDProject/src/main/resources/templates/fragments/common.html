@@ -38,24 +38,24 @@
      class="text-center">
     <ul class="pagination justify-content-center">
             <li class="page-item disabled" th:if="*{hasPreviousPage == true}"
-                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(1)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]])">
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(1)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]], , [[ ${params.diseaseName}]])">
                 <a class="page-link" href="javascript:void(0)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
             </li>
             <li class="page-item disabled" th:if="*{hasPreviousPage == true}"
-                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.firstPage - 1)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]])">
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.firstPage - 1)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]] , [[ ${params.diseaseName}]])">
                 <a class="page-link" href="javascript:void(0)" aria-label="Previous"><span aria-hidden="true">&lsaquo;</span></a>
             </li>
             <li class="page-item" th:each="pageNo : *{#numbers.sequence( firstPage, lastPage )}"
                 th:class="${pageNo == params.currentPageNo} ? 'page-item active'">
                 <a class="page-link" href="javascript:void(0)" th:text="${pageNo}"
-                   th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(pageNo)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]])"></a>
+                   th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(pageNo)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]] , [[ ${params.diseaseName}]])"></a>
             </li>
             <li class="page-item" th:if="*{hasNextPage == true}"
-                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.lastPage + 1)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]])">
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.lastPage + 1)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]] , [[ ${params.diseaseName}]])">
                 <a class="page-link" href="javascript:void(0)" aria-label="Next"><span aria-hidden="true">&rsaquo;</span></a>
             </li>
             <li class="page-item" th:if="*{hasNextPage == true}"
-                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.totalPageCount)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]])">
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.totalPageCount)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]] , [[ ${params.diseaseName}]])">
                 <a class="page-link" href="javascript:void(0)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
             </li>
         </ul>

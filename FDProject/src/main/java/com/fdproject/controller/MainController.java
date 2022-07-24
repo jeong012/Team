@@ -18,15 +18,25 @@ public class MainController {
 		}
 		
 		if(authentication != null) {
-			UserDTO userDTO = (UserDTO)authentication.getPrincipal(); 
-			String authority = userDTO.getAuthority();
-			if(authority.equals("ROLE_ADMIN")) {
-				return "admin/main";
-			} else {
+			String authorities = authentication.getAuthorities().toString();
+			if(!authorities.contains("ROLE_USER")) {
+				UserDTO userDTO = (UserDTO)authentication.getPrincipal(); 
+				String authority = userDTO.getAuthority();
+				if(authority.equals("ROLE_ADMIN")) {
+					return "admin/main";
+				} else {
+					return "index";	
+				}
+			}else {
 				return "index";	
 			}
 		} else {
 			return "index";	
 		}
+	}
+	
+	@GetMapping(value = "/err/denied-page")
+	public String accessDenied(){
+	    return "error/deniedPage";
 	}
 }

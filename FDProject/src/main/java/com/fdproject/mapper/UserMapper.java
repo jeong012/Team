@@ -34,5 +34,8 @@ public interface UserMapper {
 	
 	/** 회원정보 수정*/
 	int updateUser(UserDTO userDto);
+	
+	/** 회원 정보 수정 - 비밀번호 확인 */
+	int checkPw(@Param("id") String id, @Param("pw") String pw);
 
 }

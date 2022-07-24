@@ -38,6 +38,15 @@ public class UserDTO implements UserDetails {
 
 	/** 권한 */
 	private String authority;
+	
+	/** 등록 날짜 */
+//	private String regDate;
+//	
+//	/** 수정 날짜 */
+//	private String modDate;
+//	
+//	/** 삭제 날짜 */
+//	private String delDate;
 
 	//사용자의 권한을 콜렉션 형태로 반환 (클래스 자료형은 GrantedAuthority를 구현해야함)
 	@Override

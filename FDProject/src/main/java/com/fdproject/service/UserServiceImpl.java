@@ -99,4 +99,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         
 		return count;
 	}
+
+	/** 회원 정보 수정 - 비밀번호 확인 */
+	@Override
+	public int checkPw(String id, String pw) {
+		System.out.println(">>>" + passwordEncoder.encode(pw));
+		int count = userMapper.checkPw(id, passwordEncoder.encode(pw));
+		return count;
+	}
 }

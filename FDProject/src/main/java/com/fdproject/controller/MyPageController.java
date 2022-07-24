@@ -4,10 +4,12 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +29,7 @@ import com.fdproject.util.UiUtils;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping(value="mypage")
+@RequestMapping(value="/mypage")
 @RequiredArgsConstructor
 public class MyPageController extends UiUtils {
 
@@ -36,6 +38,7 @@ public class MyPageController extends UiUtils {
 	private final DrugService drugService;
 	private final UserService userService;
 	private final RecipeService recipeService;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
 //  @Autowired
 //  private AuthenticationManager authenticationManager;
@@ -61,6 +64,21 @@ public class MyPageController extends UiUtils {
 	    return "success";
 	}
 	
+	/** 회원 정보 수정 - 비밀번호 확인 */
+	@ResponseBody
+	@PostMapping(value="/modify/checkPw.do")
+	public String checkPw(@RequestParam("pw") String pw, Authentication authentication) {
+		String result = "fail";
+		
+		UserDTO userDTO = (UserDTO)authentication.getPrincipal(); 
+		if(passwordEncoder.matches(pw, userDTO.getPassword())){
+			result = "success";
+		}else {
+			result = "fail";
+		}
+		
+		return result;
+	}
 	
 	//내질병관리
 	@GetMapping(value="/disease.do")
@@ -68,7 +86,6 @@ public class MyPageController extends UiUtils {
 		
 		UserDTO userDTO = (UserDTO) authentication.getPrincipal();
 		id = userDTO.getUserId();
-		
 
         List<DiseaseDTO> diseaseList = diseaseService.getDiseaseList(id, params);
         model.addAttribute("diseaseList", diseaseList);
@@ -95,9 +112,11 @@ public class MyPageController extends UiUtils {
 	
 	//찜한 약 리스트
 	@GetMapping(value = "/myDrug.do")
-	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model) {		
-		
-		List<DrugDTO> drugList = drugService.getMyDrugList(params);		
+	public String getMyDrugList(@ModelAttribute(value = "params") DrugDTO params, Model model, Principal principal) {
+
+		String id = principal.getName();
+
+		List<DrugDTO> drugList = drugService.getMyDrugList(id, params);
 		model.addAttribute("drugList", drugList);
 		return "mypage/myDrugList";
 	}

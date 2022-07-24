@@ -1,11 +1,13 @@
 package com.fdproject.configuration;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,7 +27,8 @@ public class SecurityConfig{
 
     private final CustomOAuth2UserService customOAuth2UserService;
 	private final UserDetailsService userService;
-    
+	//private final WebAccessDeniedHandler webAccessDeniedHandler;
+	
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     	http.csrf().disable();
@@ -33,11 +36,10 @@ public class SecurityConfig{
             .headers().frameOptions().disable()
             .and()
                 .authorizeRequests()
-                .antMatchers("/**/**", "/assets/**").permitAll()
-		        .mvcMatchers("/*/view").hasRole("MEMBER")
-		        .mvcMatchers("/admin/**").hasRole("ADMIN")
+		        .antMatchers("/mypage/**", "/drug/view.do", "/drug/myview.do", "/recipe/view.do").authenticated() // 로그인필요
+		        .antMatchers("/admin/**").hasRole("ADMIN") // ROLE_ADMIN 역할을 가지고 있어야함
 		        .antMatchers().rememberMe()
-		        .anyRequest().authenticated()
+		        .anyRequest().permitAll() // 나머지 요청에 대해서는 로그인을 요구하지 않음
             .and()
 	            .formLogin()
 		        .loginPage("/user/loginForm.do")
@@ -58,10 +60,18 @@ public class SecurityConfig{
             .and()
             	.defaultSuccessUrl("/user/findByOAuth2User.do")
             .and()
+            	//.exceptionHandling().accessDeniedHandler(webAccessDeniedHandler)
             	.exceptionHandling()
             	.authenticationEntryPoint(new CustomAuthenticationEntryPoint());	// 인증되지 않은 사용자가 리소스에 접근하였을 때 수행되는 핸들러
 		
 		return http.build();
+    }
+    
+    public void configure(WebSecurity web) throws Exception{
+    	//web.ignoring().mvcMatchers("/css/**", "/js/**" ,"/img/**");
+    	
+    	// 정적 자원에 대해서는 Security 설정을 적용하지 않음.
+    	web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 	
 	protected void configure(HttpSecurity http) throws Exception{
@@ -69,14 +79,15 @@ public class SecurityConfig{
 	}
 
 	@Bean
-	public PasswordEncoder passwordEncoder() { // 회원가입시 비번 암호화
+	public PasswordEncoder passwordEncoder() {
+		// 회원가입시 비번 암호화
 		return new BCryptPasswordEncoder();
 
 	}
 	
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception { // Spring Security 인증을 위한 AuthenticationManeger 생성
-		auth.userDetailsService(userService)
-			.passwordEncoder(passwordEncoder());
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		// Spring Security 인증을 위한 AuthenticationManeger 생성
+		auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
 	
 	}
 	

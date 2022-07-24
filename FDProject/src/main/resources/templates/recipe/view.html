@@ -19,7 +19,7 @@
 						<li style="display: inline; " th:text="조회수"></li>
 						<li style="display: inline; " th:text="${Recipe_info.hit}"></li>
 						<li style="display: inline" th:text="찜수"></li>
-						<li style="display: inline" th:text="${Recipe_info.cartCount}"></li>
+						<li id = "like" style="display: inline" th:text="${Recipe_info.cartCount}"></li>
 					</ol>
 					<ol>
 						<li><a th:href="@{/}">홈</a></li> <!--  홈 링크 -->
@@ -217,6 +217,9 @@
 								if (isExist == true) {
 									$('.cart').attr('src', '/assets/img/star-fill.svg');
 									showModal("추가 성공");
+									var like = $('#like').text();
+									like = Number(like) + 1;
+									$('#like').text(like);
 									i++;
 								} else {
 									showModal("추가 실패");
@@ -241,6 +244,9 @@
 								if (isExist == true) {
 									$('.cart').attr('src', '/assets/img/star.svg');
 									showModal("삭제 성공")
+									var like = $('#like').text();
+									like = Number(like) - 1;
+									$('#like').text(like);
 									i--;
 								} else {
 									showModal("삭제 실패");
@@ -265,6 +271,9 @@
 								if (isExist == true) {
 									$('.cart').attr('src', '/assets/img/star.svg');
 									showModal("삭제 성공")
+									var like = $('#like').text();
+									like = Number(like) - 1;
+									$('#like').text(like);
 									i++;
 								} else {
 									showModal("삭제 실패");
@@ -289,6 +298,9 @@
 								if (isExist == true) {
 									$('.cart').attr('src', '/assets/img/star-fill.svg');
 									showModal("추가 성공")
+									var like = $('#like').text();
+									like = Number(like) + 1;
+									$('#like').text(like);
 									i--;
 								} else {
 									showModal("추가 실패");
