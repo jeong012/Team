@@ -6,6 +6,7 @@ import com.fdproject.domain.UserDrugDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface DrugMapper {
@@ -37,10 +38,19 @@ public interface DrugMapper {
     List<String> getNameKeyword(String keyword);
 
     /** 회원가입 - 약 리스트 조회 사용*/
-    List<DrugDTO> joinDrugList();
+    List<DrugDTO> getJoinDrugList();
 
 	List<UserDrugDTO> getUserDrug(UserDrugDTO userDrug);
 	
 	List<DrugDTO> userdrugList(DrugDTO params);
+	
+	/** 마이페이지 - 약 리스트 조회 (사용자가 복용중인 약 제외) */
+	List<DrugDTO> getMyPageDrugList(String userId);
+
+    /** 마이페이지 - 사용자가 복용중인 약 조회 */
+	List<DrugDTO> getUserDrugList(String userId);
+	
+	/** 회원 관리 - 사용자 복용중인 약 조회 */
+	List<Map<String,Object>> getUserDrugByAdmin(int userNo);
     
 }

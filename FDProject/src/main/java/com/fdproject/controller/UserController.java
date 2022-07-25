@@ -48,7 +48,11 @@ public class UserController {
 	private final MessageService messageService;
 
 	@GetMapping(value="/joinForm.do")
-	public String getJoinForm(){
+	public String getJoinForm(HttpSession httpSession){
+		if(httpSession.getAttribute("oAuth2User") != null) {
+			httpSession.removeAttribute("oAuth2User");
+		}
+		
 		return "user/joinForm";
 	}
 

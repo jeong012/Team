@@ -1,6 +1,7 @@
 package com.fdproject.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.fdproject.domain.OAuth2UserDTO;
 import com.fdproject.domain.UserDTO;
@@ -19,11 +20,18 @@ public interface UserService {
 	int findById(String userId);
 	
 	/** 회원 정보 수정*/
-	int updateUser(UserDTO userDTO);
+	int updateUser(UserDTO userDTO, ArrayList<UserDiseaseDTO> userDiseaseList, ArrayList<UserDrugDTO> userDrugList);
 	
 	/** 회원 정보 수정 - 비밀번호 확인 */
 	int checkPw(String id, String pw);
-
-	UserDTO loadUserByUsername(String userId);
+	
+	/** 회원 리스트 */
+	List<UserDTO> getUserList(UserDTO params);
+	
+	/** 회원 정보 가져오기 */
+	UserDTO getUserDetail(int userNo);
+	
+	/** 회원 삭제 */
+	int deleteUser(int userNo);
 	
 }

@@ -87,39 +87,37 @@
 								<!-- 회원정보수정 폼 -->
 		
 								<!-- 선택 항목 수정 -->
-								<div class="join-form2 select-form" style="margin-top:50px;">
+								<div class="modify-form select-form" style="margin-top:50px;">
 									<div class="row select-detail-wrap">
-										<div class="mb-3 row select-detail">
-											<label for="inputDisease" class="col-4 col-form-label"><span>●</span>
-												앓고 있는 지병이 있으신가요?</label>
-											<div class="col-2 input-box">
-												<input type="text" class="form-control" id="inputDisease">
-												<button class="btn-add btn-primary" onclick="addDisease()">
-													<i class='bx bx-plus'></i>
-												</button>
-											</div>
-										</div>
-			
-										<div id="selectedDisease" class="disease-kind">
-											<span class="ex">(최대 3개)</span>
-											<ul id="selectedDisease">
-											</ul>
-										</div>
-			
 										<div class="mb-3 row">
-											<label for="inputDrug" class="col-4 col-form-label"><span>●</span>
-												복용 중인 약이 있으신가요?</label>
-											<div class="col-2 input-box">
-												<input type="text" class="form-control" id="inputDrug">
-												<button class="btn-add btn-primary" onclick="addDrug()">
-													<i class='bx bx-plus'></i>
-												</button>
-											</div>
+							                <label for="inputDisease" style="margin-bottom:5px;"><span>●</span> 앓고 있는 지병이 있으신가요?&emsp;(최대 3개)</label>
+							                <div class="col-2 input-box">
+							                  <input type="text" class="form-control" id="inputDisease" style="margin-left:15px;">
+							                  <button class="btn-add btn-primary" onclick="addDisease()">
+							                    <i class='bx bx-plus'></i>
+							                  </button>
+							                </div>
 										</div>
-										<div id="selectedDrug" class="disease-kind">
-											<span class="ex">(최대 5개)</span>
-											<ul id="selectedDrug">
-											</ul>
+							
+										<div id="selectedDisease" class="disease-kind">
+											<span class="ex" style="margin-left:15px;">(최대 3개)</span>
+							                <ul id="selectedDisease">
+							                </ul>
+										</div>
+							
+										<div class="mb-3 row" style="margin-top:10px;">
+							                <label for="inputDrug" style="margin-bottom:5px;"><span>●</span> 복용 중인 약이 있으신가요?</label>
+							                <div class="col-2 input-box">
+							                  <input type="text" class="form-control" id="inputDrug" style="margin-left:15px;">
+							                  <button class="btn-add btn-primary" onclick="addDrug()">
+							                    <i class='bx bx-plus'></i>
+							                  </button>
+							                </div>
+							              </div>
+							              <div id="selectedDrug" class="disease-kind">
+							                <span class="ex" style="margin-left:15px;">(최대 5개)</span>
+							                <ul id="selectedDrug">
+							                </ul>
 										</div>
 									</div>
 								</div>
@@ -147,11 +145,11 @@
 						</div>
 	
 						<div class="modal-body">
-							<label id="modalLabel"> 회원정보 수정에 성공하였습니다. </label>
+							<label id="modalLabel"></label>
 						</div>
 	
 						<div class="modal-footer">
-							<button id='btnModal' class="btn btn-info" onclick="clickModal()"></button>
+							
 						</div>
 					</div>
 				</div>
@@ -176,8 +174,6 @@
 				var drugName;
 				var drugMap = new Map();
 				
-				var isChecked = false;
-				
 				$(document).ready(function() {
 					if("main" == $("#registrationId").val()){
 						$("#modifyForm").hide();
@@ -187,7 +183,7 @@
 					}
 					
 					$.ajax({
-						url : "/mypage/modify/getDiseaseList.do",
+						url : "/mypage/getDiseaseList.do",
 						type : "get",
 						dataType : "json",
 						success : function(json) {
@@ -204,9 +200,9 @@
 							console.error(error);
 					    }
 					});
-	
+
 					$.ajax({
-						url : "/mypage/modify/getDrugList.do",
+						url : "/mypage/getDrugList.do",
 						type : "get",
 						dataType : "json",
 						success : function(json) {
@@ -223,7 +219,28 @@
 							console.error(error);
 					    }
 					});
-					
+
+					var diseaseData = "";
+					var userDiseaseList = /*[[${userDiseaseList}]]*/;
+					for(var i=0; i<userDiseaseList.length; i++){
+						diseaseMap.set(userDiseaseList[i].diseaseNo, userDiseaseList[i].diseaseName);	
+						diseaseData += "<li>"
+								    +  "	<span>" + userDiseaseList[i].diseaseName + "</span>"
+				                 	+  "	<a href='javascript:delDisease("+ userDiseaseList[i].diseaseNo + ");'>x</a>"
+				                 	+  "</li>";
+					}
+					$("ul[id=selectedDisease]").append(diseaseData);
+
+					var drugData = "";
+					var userDrugList = /*[[${userDrugList}]]*/;
+					for(var j=0; j<userDrugList.length; j++){
+						drugMap.set(userDrugList[j].drugNo, userDrugList[j].drugName);	
+						drugData += "<li>"
+							 	 +  "	<span>" + userDrugList[j].drugName + "</span>"
+			                 	 +  "	<a href='javascript:delDrug("+ userDrugList[j].drugNo + ");'>x</a>"
+			                 	 +  "</li>";
+					}
+					$("ul[id=selectedDrug]").append(drugData);
 				});
 				
 				$("#checkPw").click(function(){
@@ -248,14 +265,9 @@
 					});
 				});
 				
-				
-				
-				
 				$('#inputDisease').click(function() {
 					if(diseaseMap.size === 3){
-						$("#myModal").modal("show");
-					    $("#modalLabel").text("최대 3개만 입력 가능합니다.");
-					    $("#btnModal").text("확인");
+						showModal("최대 3개만 입력 가능합니다.");
 					}
 				});
 				
@@ -269,7 +281,7 @@
 				
 				function addDisease(){
 					if($("#inputDisease").val() === "" || diseaseNameList.indexOf(diseaseName) === -1){
-						alert("등록할 수 없습니다.");
+						showModal("등록할 수 없습니다.");
 					}else{
 						for(var i = 0; i < diseaseNameList.length; i++) {
 							if(diseaseNameList[i] === diseaseName)  {
@@ -278,23 +290,10 @@
 								i--;
 							}
 						}
-	
-						var data = "";
-						$("ul[id=selectedDisease]").empty();
-						diseaseMap.set(diseaseNo, diseaseName);
-						diseaseMap.forEach( (value, key, map) => {
-							diseaseName = `${value}`;
-							diseaseNo = `${key}`;
-							
-							data += "<li>"
-								 + "	<span>" + diseaseName + "</span>"
-				                 + "	<a href='javascript:delDisease("+ diseaseNo + ");'>x</a>"
-				                 + "</li>";
-						});
-						$("ul[id=selectedDisease]").append(data);
-						$("input[type=text][id=inputDisease]").val("");
-						diseaseName = "";
 					}
+					
+					diseaseMap.set(diseaseNo, diseaseName);
+					setDisease();
 				};
 				
 				function delDisease(diseaseNo){
@@ -303,28 +302,12 @@
 					diseaseNoList.push(diseaseNo);
 					
 					diseaseMap.delete(diseaseNo);
-	
-					var data = "";;
-					$("ul[id=selectedDisease]").empty();
-					diseaseMap.forEach( (value, key, map) => {
-						diseaseName = `${value}`;
-						diseaseNo = `${key}`;
-						
-						data += "<li>"
-							 + "	<span>" + diseaseName + "</span>"
-			                 + "	<a href='javascript:delDisease("+ diseaseNo + ");'>x</a>"
-			                 + "</li>";
-					});
-					$("ul[id=selectedDisease]").append(data);
-					$("input[type=text][id=inputDisease]").val("");
-					diseaseName = "";
+					setDisease();
 				};				
 				
 				$('#inputDrug').click(function() {
 					if(drugMap.size === 5){
-						$("#myModal").modal("show");
-					    $("#modalLabel").text("최대 5개만 입력 가능합니다.");
-					    $("#btnModal").text("확인");
+						showModal("최대 5개만 입력 가능합니다.");
 					}
 				});
 				
@@ -338,9 +321,7 @@
 	
 				function addDrug(){
 					if($("#inputDrug").val() === "" || drugNameList.indexOf(drugName) === -1){
-						$("#myModal").modal("show");
-					    $("#modalLabel").text("등록할 수 없습니다.");
-					    $("#btnModal").text("확인");
+						showModal("등록할 수 없습니다.");
 					}else{
 						for(var i = 0; i < drugNameList.length; i++) {
 							if(drugNameList[i] === drugName)  {
@@ -349,23 +330,9 @@
 								i--;
 							}
 						}
-	
-						var data = "";
-						$("ul[id=selectedDrug]").empty();
-						drugMap.set(drugNo, drugName);
-						drugMap.forEach( (value, key, map) => {
-							drugName = `${value}`;
-							drugNo = `${key}`;
-							
-							data += "<li>"
-								 + "	<span>" + drugName + "</span>"
-				                 + "	<a href='javascript:delDrug("+ drugNo + ");'>x</a>"
-				                 + "</li>";
-						});
-						$("ul[id=selectedDrug]").append(data);
-						$("input[type=text][id=inputDrug]").val("");
-						drugName = "";
 					}
+					drugMap.set(drugNo, drugName);
+					setDrug();
 				};
 				
 				function delDrug(drugNo){
@@ -374,21 +341,7 @@
 					drugNoList.push(drugNo);
 					
 					drugMap.delete(drugNo);
-	
-					var data = "";;
-					$("ul[id=selectedDrug]").empty();
-					drugMap.forEach( (value, key, map) => {
-						drugName = `${value}`;
-						drugNo = `${key}`;
-						
-						data += "<li>"
-							 + "	<span>" + drugName + "</span>"
-			                 + "	<a href='javascript:delDrug("+ drugNo + ");'>x</a>"
-			                 + "</li>";
-					});
-					$("ul[id=selectedDrug]").append(data);
-					$("input[type=text][id=inputDrug]").val("");
-					drugName = "";
+					setDrug();
 				};
 	
 			$(document).ready(function() {
@@ -405,33 +358,22 @@
 				var pw2 = $('#pw2').val();
 				
 				var pwCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
-				if (!pwCheck.test(pw1) && pw1 != "") {
-					$("#myModal").modal("show");
-					$("#modalLabel").text("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
-					$("#btnModal").text("확인");
+				if (!pwCheck.test(pw1) && pw1 != "" && $("#registrationId").val == 'main') {
+					showModal("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
 					return false;
 				}
 				
 				if (pw1 != pw2) {
-					$("#myModal").modal("show");
-					$("#modalLabel").text("비밀번호가 일치하지 않습니다.");
-					$("#btnModal").text("확인");
+					showModal("비밀번호가 일치하지 않습니다.");
 					return false;
 				}
 	
 				if (name == "") {
-					$("#myModal").modal("show");
-					$("#modalLabel").text("이름을 입력해주세요.");
-					$("#btnModal").text("확인");
+					showModal("이름을 입력해주세요.");
 					return false;
 				}
 	
-				/** Ajax 데이터 전송 */
-				var params = {
-					"userId" : userId,
-					"pw" : pw,
-					"name" : name
-				}
+				var params = '{ "userDTO" : {"pw": "' + $("#pw2").val() + '", "name": "' +  $("#name").val() + '"}';
 				
 				if(diseaseMap.size === 0){
 					params += ',"diseaseMap" : [],';
@@ -472,44 +414,40 @@
 					
 					params += ']}';
 				}
-	
+				
 				$.ajax({
-					type : 'PUT',
-					data : JSON.stringify(params),
-					//data : params,
 					url : "/mypage/modify.do",
+					data : params,
+					type : "post",
 					dataType : "text",
-					contentType : "application/json; charset=utf-8",
-					async : false
-				}).done(function() {
-					alert("회원수정이 완료되었습니다.");
-					location.href = "/";
-				}).fail(function(error) {
-					alert(JSON.stringify(error));
+					contentType: "application/json; charset=utf-8",
+					success : function(result) {
+						showModal('회원 정보가 수정되었습니다.', '/');
+					},
+					error : function(error) {
+						console.error(error);
+				    }
 				});
 			}
 	
 			// 비밀번호 유효형 검사 keyup
-			$('#pw1')
-					.keyup(
-							function() {
-								let pw = $(".pw").val();
-								var reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
-	
-								if (!reg.test(pw)) {
-									$('.pw_check')
-											.text(
-													"비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
-									$('.pw_check').css('color', 'red');
-									return false;
-	
-								} else {
-									$('.pw_check').text("비밀번호가 정상적으로 입력되었습니다.");
-									$('.pw_check').css('color', 'blue');
-									return true;
-								}
-	
-							});
+			$('#pw1').keyup(function() {
+				let pw1 = $("#pw1").val();
+				var reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+
+				if (!reg.test(pw1)) {
+					$('.pw_check').text("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
+					$('.pw_check').css('color', 'red');
+				} else {
+					$('.pw_check').text("비밀번호가 정상적으로 입력되었습니다.");
+					$('.pw_check').css('color', 'blue');
+				}
+				
+				if($("#pw1").val() == ""){
+					$('.pw_check').text("");
+				}
+
+			});
 			// 비밀번호 일치여부
 			$('#pw2').keyup(function() {
 				if ($('#pw1').val() != $('#pw2').val()) {
@@ -519,10 +457,57 @@
 					$('.pw_valid').text('비밀번호가 일치합니다.');
 					$('.pw_valid').css('color', 'blue');
 				}
+				
+				if($('#pw2').val() == ""){
+					$('.pw_valid').text("");
+				}
 			});
+			
+			function showModal(message, href){
+				$("#myModal").modal("show");
+			    $("#modalLabel").text(message);
+			    $(".modal-footer").append("<button id='btnModal' class=\"btn btn-info\" onclick=\"closeModal('" + href + "')\">확인</button>");
+			}
 	
-			function clickModal() {
+			function closeModal(href) {
 				$("#myModal").modal("hide");
+				if(href != 'undefined'){
+					location.href = href;
+				}
+			}
+			
+			function setDisease(){
+				var data = "";
+				$("ul[id=selectedDisease]").empty();
+				diseaseMap.forEach( (value, key, map) => {
+					diseaseName = `${value}`;
+					diseaseNo = `${key}`;
+					
+					data += "<li>"
+						 + "	<span>" + diseaseName + "</span>"
+		                 + "	<a href='javascript:delDisease("+ diseaseNo + ");'>x</a>"
+		                 + "</li>";
+				});
+				$("ul[id=selectedDisease]").append(data);
+				$("input[type=text][id=inputDisease]").val("");
+				diseaseName = "";
+			}
+			
+			function setDrug(){
+				var data = "";
+				$("ul[id=selectedDrug]").empty();
+				drugMap.forEach( (value, key, map) => {
+					drugName = `${value}`;
+					drugNo = `${key}`;
+					
+					data += "<li>"
+						 +  "	<span>" + drugName + "</span>"
+		                 +  "	<a href='javascript:delDrug("+ drugNo + ");'>x</a>"
+		                 +  "</li>";
+				});
+				$("ul[id=selectedDrug]").append(data);
+				$("input[type=text][id=inputDrug]").val("");
+				drugName = "";
 			}
 	
 			/*]]*/

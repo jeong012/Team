@@ -5,7 +5,7 @@
 <!-- for drug-->
 <div th:fragment="search" class="sub-search-box">
     <!--    <input type="text" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" placeholder=""/> -->
-    <form id="drug-searchForm" th:action="@{/mypage/drug.do}" method="get" th:onsubmit="return searchDrug(this)" class=""
+    <form id="drug-searchForm" th:action="@{/mypage/myDrug.do}" method="get" th:onsubmit="return searchDrug(this)" class=""
           role="form">
         <input type="hidden" name="currentPageNo" value="1"/>
         <input type="hidden" name="recordsPerPage" th:value="${params.recordsPerPage}"/>

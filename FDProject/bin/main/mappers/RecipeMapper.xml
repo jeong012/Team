@@ -80,6 +80,23 @@
 			USER_ID
 		]]>
 	</sql>
+    
+    <sql id="userRecipeColumns">
+        r.RECIPE_NO,
+        r.TITLE,
+        r.REG_DATE,
+        r.MOD_DATE,
+        r.DEL_DATE
+    </sql>
+    
+    <sql id="userCommentColumns">
+    	c.COMMENT_NO,
+    	c.RECIPE_NO,
+    	c.CONTENT,
+		c.REG_DATE,
+		c.MOD_DATE,
+		c.DEL_DATE 
+    </sql>
 	
 	<resultMap id="comment" type="CommentDTO">
         <id property="commentNo" column="comment_no"/>
@@ -103,6 +120,23 @@
         <result property="userId" column="user_id"/>
 	</resultMap>
 
+     <resultMap id="userRecipe" type="RecipeDTO">
+        <id property="recipeNo" column="recipe_no"/>
+        <result property="title" column="title"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="modDate" column="mod_date"/>
+        <result property="delDate" column="del_date"/>
+    </resultMap>
+    
+     <resultMap id="userComment" type="CommentDTO">
+        <id property="commentNo" column="comment_no"/>
+        <result property="recipeNo" column="recipe_no"/>
+        <result property="content" column="content"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="modDate" column="mod_date"/>
+        <result property="delDate" column="del_date"/>
+    </resultMap>
+    
 	<!-- new -->
 	<select id="selectRecipeList" resultType="RecipeDTO">
 		<include refid="CommonMapper.pagingHeader" />
@@ -112,6 +146,7 @@
 		recipes
 		where
 		1=1
+		and disease_field is not null
 		<include refid="CommonMapper.search_R" />
 		<include refid="deleteYN" />
 		order by title asc
@@ -299,9 +334,9 @@
 	</select>
 
 	<insert id="uploadRecipe" parameterType="RecipeDTO">
-		insert into recipes(recipe_no, title, writer, food_ingredients, step, reg_Date, cart_count,
+		insert into recipes(recipe_no, title, writer, food_ingredients, step, reg_Date, hit, cart_count,
 							delete_yn, storage, tip, img_file, random_img_file, mod_date, del_date)
-		values(#{recipeNo}, #{title}, #{writer},#{foodIngredients}, #{step}, sysdate, #{cartCount},
+		values(#{recipeNo}, #{title}, #{writer},#{foodIngredients}, #{step}, sysdate, #{hit}, #{cartCount},
 		'N', #{storage}, #{tip}, #{imgFile}, #{randomImgFile}, #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE})
 	</insert>
 
@@ -430,5 +465,19 @@
 		WHERE RECIPE_NO = #{recipeNo}
 		AND USER_ID = #{userId}
 	</delete>
+    
+    <select id="getUserRecipe" parameterType="int" resultMap="userRecipe">
+    	SELECT <include refid="userRecipeColumns"/> 
+		FROM RECIPES r, USERS u
+		WHERE u.USER_NO = #{userNo}
+		AND r.WRITER = u.USER_ID
+    </select>
+	
+	<select id="getUserComment" parameterType="int" resultMap="userComment">
+		SELECT <include refid="userCommentColumns"/> 
+		FROM COMMENTS c , USERS u 
+		WHERE u.USER_NO = #{userNo}
+		AND c.WRITER = u.USER_ID
+	</select>
 	
 </mapper>

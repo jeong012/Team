@@ -84,8 +84,26 @@
 								<div class="container" data-aos="fade-up">
 									<div class="row">
 										<th:block th:if="${!#lists.isEmpty(recipeList)}">
+											<th:block th:if="${not #strings.isEmpty(param.diseaseField)}">
+												<th:block
+													th:if="${#strings.isEmpty(param.diseaseName)}">
+													<div th:with="diseaseField=${param.diseaseField}">
+														<h4>이 리스트는 추천레시피: <span style="color: #87ceeb;"
+																th:text="${diseaseField}"></span>에 대한 리스트입니다.</h2>
+													</div>
+												</th:block>
+												<th:block
+													th:if="${not #strings.isEmpty(param.diseaseName)}">
+													<div th:with="diseaseName=${param.diseaseName}">
+														<h4>이 리스트는 맞춤레시피: <span style="color: #87ceeb;"
+																th:text="${diseaseName}"></span>에 대한 리스트입니다.</h2>
+													</div>
+												</th:block>
+												<ul class="border-top"></ul>
+											</th:block>
+										
 											<th:block th:each="recipe : ${recipeList}">
-												<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100"
+												<div class="col-lg-4 col-md-6" data-aos-delay="100"
 													style="margin-bottom:30px;">
 													<div class="box" style="min-height:500px; max-height:500px;">
 														<!-- 메뉴 이름 -->
@@ -97,9 +115,16 @@
 														</div>
 														<!-- 버튼 부분 -->
 														<div class="btn-wrap" style="background-color:#FFFFFF;">
-															<a th:href="@{/admin/management/recipeView.do(recipeNo = ${recipe.recipeNo})}"
-															   class="btn-buy">자세히 보기
-															</a>
+															<th:block th:if="${params.writer == null}">
+																<a th:href="@{/admin/management/recipeView.do(recipeNo = ${recipe.recipeNo}, prev = ${params.diseaseField})}"
+															   	   class="btn-buy">자세히 보기
+															   	</a>
+															</th:block>
+															<th:block th:if="${params.writer != null}">
+																<a th:href="@{/admin/management/recipeView.do(recipeNo = ${recipe.recipeNo}, prev = 'writer')}"
+															   	   class="btn-buy">자세히 보기
+															   	</a>
+															</th:block>
 														</div>
 													</div>
 												</div>

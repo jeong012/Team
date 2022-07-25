@@ -38,7 +38,10 @@
         SEX,
         BIRTH_DATE,
         REGISTRATION_ID,
-        AUTHORITY
+        AUTHORITY,
+        REG_DATE,
+        MOD_DATE,
+        DEL_DATE
     </sql>
     
     <sql id="userDiseaseColumns">
@@ -107,6 +110,7 @@
 	        WHERE 1=1
 	        AND USER_ID = #{userId}
 	        AND REGISTRATION_ID = 'main'
+	        AND DEL_DATE IS NULL
         ]]>
     </select>
  	
@@ -120,16 +124,15 @@
 	        WHERE 1=1
 	        AND USER_ID = #{userId}
 	        AND REGISTRATION_ID = #{registraionId}
+	        AND DEL_DATE IS NULL
         ]]>
     </select>
     
     <update id="updateUser" parameterType="UserDTO">
     	<![CDATA[
 	       	UPDATE USERS
-	       	SET	PW = #{pw},
-		        NAME = #{name}
-	       	WHERE USER_ID = #{userId}, MOD_DATE = SYSDATE
-	       	AND REGISTRATION_ID = 'main'
+			SET PW = #{pw}, NAME = #{name}, MOD_DATE = SYSDATE
+			WHERE USER_ID = #{userId}
 	    ]]>
     </update>
     
@@ -139,6 +142,42 @@
     	WHERE USER_ID = #{userId}
     	AND PW = #{pw}
 	    AND REGISTRATION_ID = 'main'
+    </select>
+    
+    <delete id="deleteUserDisease" parameterType="String">
+		DELETE FROM USER_DISEASES
+		WHERE USER_ID = #{userId}
+    </delete>
+    
+    <delete id="deleteUserDrug" parameterType="String">
+    	DELETE FROM USER_DRUGS
+		WHERE USER_ID = #{userId}
+    </delete>
+    
+    <select id="getUserList" resultMap="user">
+    	<include refid="CommonMapper.pagingHeader" />
+    	SELECT <include refid="userColumns"/>
+    	FROM USERS
+    	WHERE AUTHORITY = 'ROLE_MEMBER'
+    	ORDER BY USER_NO
+		<include refid="CommonMapper.pagingFooter" />
+    </select>
+    
+    <select id="getUserDetail" parameterType="int" resultMap="user">
+    	SELECT <include refid="userColumns"/>
+   		FROM USERS
+   		WHERE USER_NO = #{userNo}
+    </select>
+    
+    <update id="deleteUser" parameterType="int">
+    	UPDATE USERS
+		SET DEL_DATE = SYSDATE
+		WHERE USER_NO = #{userNo}
+    </update>
+    
+    <select id="getTotalCount" resultType="int">
+    	SELECT count(*)
+    	FROM USERS
     </select>
 	
 </mapper>
