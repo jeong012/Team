@@ -4,10 +4,35 @@
       layout:decorate="/layout/basic">
 
 	<div layout:fragment="content">
-	  <main id="main" data-aos="fade-up">
 	
-	    <section class="inner-page">
+	<th:block layout:fragment="css">
+		<style>
+			.error {
+				color: #ff0000;
+				}
+		</style>
+	</th:block>
+	
+	  <section class="inner-page">
 	      <div class="container">
+	      	<!--  Modal -->
+	       	<div id="loginModal" class="modal fade" role="dialog">
+	       		<div class="modal-dialog">
+	       			<!--  Modal content -->
+	       			<div class="modal-content">
+           				<div class="modal-header">
+           					<h4 class="modal-title">아프면찾아조</h4>
+           				</div>
+           				<div class="modal-body">
+           					<label id="modalLabel"> 가입된 회원이 아닙니다. </label>
+           				</div>
+           				<div class="modal-footer">
+           					<button class="btn btn-info" onclick="closeModal()">확인</button>
+           				</div>
+           			</div>
+	       		</div>
+	       	</div>
+	      
 	        <!-- 로그인 폼 -->
 	        <!-- MultiStep Form -->
 	        <div class="container-fluid" id="grad1">
@@ -15,28 +40,25 @@
 	              <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
 	                  <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
 	                    <h2><img src="/assets/img/main-logo.png" alt="로고이미지" width="70px"></h2>
-	                    <!--
-	                      <h2><strong>Sign Up Your User Account</strong></h2>
-	                      <p>Fill all form field to go to next step</p>
-	                      -->
-	                      <div class="row">
+	                    	<div class="row">
 	                          <div class="col-md-12 mx-0">
-	                              <form id="msform">
-	                                  <!-- fieldsets -->
+	                              <form id="msform" th:action="@{/login_proc}" method="post">
 	                                  <fieldset>
 	                                      <div class="form-card">
-	                                          <input type="text" name="uname" placeholder="아이디"/>
-	                                          <input type="password" name="pwd" placeholder="비밀번호"/>
-	                                          <div><button class="btn btn-primary" id="submitButton" type="submit">로그인</button></div>
+	                                      	<div>
+	                                          <input type="text" name="userId" placeholder="아이디"/>
+	                                          <input type="password" name="pw" placeholder="비밀번호"/>
+	                                        </div>
+	                                        <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
+	                                        <button class="btn btn-primary" id="submitButton">로그인</button>
+	                                        <button type="button" class="btn" onclick="location.href='/user/joinForm.do'">회원가입</button>
 	                                      </div>
 	                                  </fieldset>
-	
 	                                  <h5>간편 로그인</h5>
-	
 	                                  <div class="social-singup-wrap">
-	                                    <button class="socialBtn naver-login-btn"><img src="/assets/img/naver-logo.png" alt="네이버로그인"></button>
-	                                    <button class="socialBtn kakao-login-btn"><img src="/assets/img/kakao-logo.png" alt="카카오로그인"></button>
-	                                    <button class="socialBtn google-login-btn"><img src="/assets/img/google-logo.png" alt="구글로그인"></button>
+	                                    <button type="button" class="socialBtn naver-login-btn" onclick="oauth2Login('naver')"><img src="/assets/img/naver-logo.png" alt="네이버로그인"></button>
+	                                    <button type="button" class="socialBtn kakao-login-btn" onclick="oauth2Login('kakao')"><img src="/assets/img/kakao-logo.png" alt="카카오로그인"></button>
+	                                    <button type="button" class="socialBtn google-login-btn" onclick="oauth2Login('google')"><img src="/assets/img/google-logo.png" alt="구글로그인"></button>
 	                                  </div>
 	                              </form>
 	                          </div>
@@ -47,8 +69,48 @@
 	        </div>
 	      </div>
 	    </section>
-	
-	  </main><!-- End #main -->
-  </div>
+	</div>
+  
+	<th:block layout:fragment="script">
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+				$(document).ready(function() {
+					if(/*[[${OAuth2Login}]]*/ === 'true'){
+		            	var form = document.createElement('form');
+		            	form.setAttribute('method', 'post');
+		            	form.setAttribute('action', '/login_proc');
+		            	document.charset = "utf-8";
+						
+		            	var hiddenField1 = document.createElement('input');
+		            	hiddenField1.setAttribute('type','hidden');
+		            	hiddenField1.setAttribute('name','userId');
+		            	hiddenField1.setAttribute('value',/*[[${userId}]]*/);
+		            	form.appendChild(hiddenField1);
+		            	
+		            	hiddenField2 = document.createElement('input');
+		            	hiddenField2.setAttribute('name','pw');
+		            	hiddenField2.setAttribute('value', "1111");
+		            	form.appendChild(hiddenField2);
+		            	
+		            	document.body.appendChild(form);
+		            	form.submit();
+					}
+					
+					if(/*[[${result}]]*/ === 'fail'){
+						$("#loginModal").modal("show");
+					}
+				});
+			
+				function oauth2Login(registrationId){
+					location.replace("/user/login/" + registrationId + "/oAuth2.do");
+				}
+				
+				function closeModal(){
+					$("#loginModal").modal("hide");
+				}
+			/*]]*/
+		</script>
+	</th:block>
 
 </html>

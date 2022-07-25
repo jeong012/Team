@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<!-- for drug-->
+<div th:fragment="search" class="sub-search-box">
+    <!--    <input type="text" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" placeholder=""/> -->
+    <form id="drug-searchForm" th:action="@{/mypage/myDrug.do}" method="get" th:onsubmit="return searchDrug(this)" class=""
+          role="form">
+        <input type="hidden" name="currentPageNo" value="1"/>
+        <input type="hidden" name="recordsPerPage" th:value="${params.recordsPerPage}"/>
+        <input type="hidden" name="pageSize" th:value="${params.pageSize}"/>
+        <input type="hidden" name="takeYn" th:value="${params.takeYn}"/>
+        <input type="hidden" name="id" th:value="${not #strings.isEmpty(id) ? id : ''}"/>
+        <div>
+            <select name="searchType" class="btn btn-primary btn-search">
+                <option value="" th:selected="${#strings.isEmpty( params.searchType )}">전체</option>
+                <option value="drugName" th:selected="${#strings.equals( params.searchType, 'drugName' )}">약</option>
+                <option value="effect" th:selected="${#strings.equals( params.searchType, 'effect' )}">증상</option>
+            </select>
+        </div>
+        <div>
+            <input type="text" name="searchKeyword" class="search-form" id="sub-myDrug-searchForm" th:value="${params.searchKeyword}" />
+        </div>
+        <button type="submit" class="btn btn-primary" onclick="searchDrug(null)">검색</button>
+    </form>
+</div>
+
+<!-- for recipe-->
+<div th:fragment="search_R" class="sub-search-box">
+<!--    <input type="text" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" placeholder=""/>-->
+    <form id="searchForm" th:action="@{/mypage/myRecipe.do}" method="get" th:onsubmit="return searchRecipe(this)" class=""
+          role="form">
+        <input type="hidden" name="currentPageNo" value="1"/>
+        <input type="hidden" name="recordsPerPage" th:value="${params.recordsPerPage}"/>
+        <input type="hidden" name="pageSize" th:value="${params.pageSize}"/>
+        <div>
+            <select name="searchType" class="btn btn-primary btn-search2" style = "text-align : justify">
+                <option value="" th:selected="${#strings.isEmpty( params.searchType )}">전체</option>
+                <option value="title" th:selected="${#strings.equals( params.searchType, 'title' )}">요리 이름</option>
+                <option value="diseaseField" th:selected="${#strings.equals( params.searchType, 'diseaseField' )}">아픈 부위</option>
+            </select>
+        </div>
+        <div>
+        	<input type="text" name="searchKeyword" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" />
+        </div>
+        <button type="submit" class="btn btn-primary" onclick="searchRecipe(null)">검색</button>
+    </form>
+</div>

@@ -105,6 +105,16 @@
           and u.USER_ID = #{userId}
     </select>
 
+    <select id="housedrugList" parameterType="DrugDTO" resultMap="drug">
+        select
+        <include refid="drugColumns"/>
+        from
+        drugs d
+        where
+        d.HOUSE_YN = 'Y'
+    </select>
+    
+
     <select id="getDrugDetail" parameterType="DrugDTO" resultMap="drug">
         select
         <include refid="drugColumns"/>
@@ -114,15 +124,15 @@
         d.DRUG_NO = #{drugNo}
     </select>
 
-    <select id="getMyDrugList" parameterType="DrugsCartDTO" resultMap="drug">
+    <select id="getMyDrugList" parameterType="DrugDTO" resultMap="drug">
         <include refid="CommonMapper.pagingHeader"/>
         select
-        c.DRUG_CART_NO
+        c.DRUG_CART_NO,
         <include refid="drugColumns"/>
         from
         DRUGS d, DRUGS_CART c
         where d.DRUG_NO = c.DRUG_NO
-        and c.USER_ID = #{userId}
+        and c.USER_ID = #{cartDTO.userId}
         <include refid="CommonMapper.search_o"/>
         order by drug_name asc
         <include refid="CommonMapper.pagingFooter"/>
@@ -153,6 +163,34 @@
             USER_ID = #{userId}
     </select>
 
+    <select id="selectMyDrugTotalCount" parameterType="DrugDTO" resultType="int">
+        select
+        COUNT(<![CDATA[*]]>)
+        from DRUGS_CART c, DRUGS d
+        where
+        d.DRUG_NO = c.DRUG_NO
+        and USER_ID = #{cartDTO.userId}
+        <include refid="CommonMapper.search_o"/>
+    </select>
+
+    <select id="getSearchKeyword" parameterType="String" resultType="String">
+        <![CDATA[
+        select SEARCH_SYMPTOM keyword
+        from SEARCH
+        where SEARCH_SYMPTOM like '%' || #{searchKeyword} || '%'
+        order by SEARCH_SYMPTOM asc
+        ]]>
+    </select>
+
+    <select id="getNameKeyword" parameterType="String" resultType="String">
+        <![CDATA[
+        select drug_name
+        from DRUGS
+        where drug_name like '%' || #{searchKeyword} || '%'
+        order by drug_name asc
+        ]]>
+    </select>
+
     <insert id="addCart" parameterType="DrugsCartDTO">
         <selectKey keyProperty="drugCartNo" resultType="int" order="BEFORE">
             select SEQ_DRUGS_CART_NO.NEXTVAL from dual
@@ -160,11 +198,37 @@
         insert into DRUGS_CART (DRUG_CART_NO, DRUG_NO, USER_ID)
         values (#{drugCartNo}, #{drugNo}, #{userId})
     </insert>
+    
+    
+    <select id="getUserDrug" parameterType="UserDrugDTO" resultType="String">
+        select
+        drug_no as drugNo
+        from USER_DRUGS
+        where USER_ID = #{userId}
+    </select>
+    
 
+    <select id="userdrugList" parameterType="DrugDTO" resultMap="drug">
+        select
+        <include refid="drugColumns"/>
+      	FROM DRUGS d
+		WHERE d.drug_no = any(${cart})
+    </select>
+    
+    
     <delete id="deleteCart">
         delete
         from DRUGS_CART
         where DRUG_NO = #{drugNo}
     </delete>
+    
+    <select id="joinDrugList" resultMap="drug">
+        <![CDATA[
+	       	SELECT DRUG_NO, DRUG_NAME
+	        FROM DRUGS
+	        WHERE 1=1
+	        ORDER BY DRUG_NO
+        ]]>
+    </select>
 
 </mapper>

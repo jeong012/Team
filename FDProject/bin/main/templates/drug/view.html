@@ -9,7 +9,7 @@
 
             <div class="section-title">
                 <h2>About</h2>
-                <h3> <span></span></h3>
+                <h3><span></span></h3>
                 <p></p>
             </div>
 
@@ -19,91 +19,105 @@
                 </div>
                 <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up"
                      data-aos-delay="100">
-                    <div>
+                    <div id="cart">
                         <input type="hidden" id="drugNo" th:value="${drug.drugNo}"/>
-                        <input type="hidden" id="userId" th:value="${id}"/>
                         <h3 style="display: inline" th:text="${drug.drugName}"></h3>
-                        <button class="btn btn-primary ajax" onclick="return addCart()"><img
-                                style="position: relative; top: -2px;" src="/assets/img/star.svg"/></button>
+                        <button class="btn btn-primary ajax" th:onclick="addCart([[${ myDrug }]])">
+                            <img th:if="${myDrug == null}" src="/assets/img/star.svg" class="cart"/>
+                            <img th:unless="${myDrug == null}" src="/assets/img/star-fill.svg" class="cart"/>
+                        </button>
                     </div>
                     <ul>
                         <li>
                             <i class="bx bx-file"></i>
                             <div>
-                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
-                                            data-bs-target="#manufacturer-collapse" aria-expanded="false">
+                                <h5>제조사</h5>
+                                <p id="manufacturer-collapse" th:text="${drug.manufacturer}"></p>
+                                <h5>
                                     제조사
-                                </button></h5>
-                                <p class="collapse" id="manufacturer-collapse" th:text="${drug.manufacturer}"></p>
+                                </h5>
+                                <p  id="manufacturer-collapse" th:text="${drug.manufacturer}"></p>
                             </div>
                         </li>
                         <li>
                             <i class="bx bx-file"></i>
                             <div>
-                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
-                                            data-bs-target="#basis-collapse" aria-expanded="false">
+                                <h5>주성분</h5>
+                                <p id="basis-collapse" th:text="${drug.basis}"></p>
+                                <h5>
                                     주성분
-                                </button></h5>
-                                <p class="collapse" id="basis-collapse" th:text="${drug.basis}"></p>
+                                </h5>
+                                <p  id="basis-collapse" th:text="${drug.basis}"></p>
                             </div>
                         </li>
                         <li>
                             <i class="bx bx-file"></i>
                             <div>
-                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
-                                            data-bs-target="#effect-collapse" aria-expanded="false">
+                                <h5>효능</h5>
+                                <p id="effect-collapse" th:text="${drug.effect}"></p>
+                                <h5>
                                     효능
-                                </button></h5>
-                                <p class="collapse" id="effect-collapse" th:text="${drug.effect}"></p>
+                                </h5>
+                                <p  id="effect-collapse" th:text="${drug.effect}"></p>
                             </div>
                         </li>
                         <li>
                             <i class="bx bx-file"></i>
                             <div>
-                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
+                                <h5>
+                                    <button class="dropdown-toggle" data-bs-toggle="collapse"
                                             data-bs-target="#method-collapse" aria-expanded="false">
-                                    복용방법
-                                </button></h5>
+                                        	복용방법
+                                    </button>
+                                </h5>
                                 <p class="collapse" id="method-collapse" th:text="${drug.method}"></p>
                             </div>
                         </li>
-                        <li>
+                        <li th:unless="${#strings.isEmpty(drug.warning1)}">
                             <i class="bx bx-file"></i>
                             <div>
-                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
+                                <h5>
+                                    <button class="dropdown-toggle" data-bs-toggle="collapse"
                                             data-bs-target="#warning1-collapse" aria-expanded="false">
-                                    주의사항1
-                                </button></h5>
+                                        	주의사항1
+                                    </button>
+                                </h5>
                                 <p class="collapse" id="warning1-collapse" th:text="${drug.warning1}"></p>
                             </div>
                         </li>
-                        <li>
+                        <li th:unless="${#strings.isEmpty(drug.warning2)}">
                             <i class="bx bx-file"></i>
                             <div>
-                                <h5><button class="dropdown-toggle" data-bs-toggle="collapse"
+                                <h5>
+                                    <button class="dropdown-toggle" data-bs-toggle="collapse"
                                             data-bs-target="#warning2-collapse" aria-expanded="false">
-                                    주의사항2
-                                </button></h5>
+                                        	주의사항2
+                                    </button>
+                                </h5>
                                 <p class="collapse" id="warning2-collapse" th:text="${drug.warning2}"></p>
                             </div>
                         </li>
-                        <li>
+                        <li th:unless="${#strings.isEmpty(drug.sideEffect)}">
                             <i class="bx bx-file"></i>
                             <div>
-                                <h5><h5><button class="dropdown-toggle" data-bs-toggle="collapse"
-                                                data-bs-target="#sideEffect-collapse" aria-expanded="false">
-                                    부작용
-                                </button></h5></h5>
+                                <h5>
+                                    <button class="dropdown-toggle" data-bs-toggle="collapse"
+                                            data-bs-target="#sideEffect-collapse" aria-expanded="false">
+                                       		부작용
+                                    </button>
+                                </h5>
                                 <p class="collapse" id="sideEffect-collapse" th:text="${drug.sideEffect}"></p>
                             </div>
                         </li>
-                        <li>
+                        <li th:unless="${#strings.isEmpty(drug.storage)}">
                             <i class="bx bx-file"></i>
                             <div>
-                                <h5><h5><button class="dropdown-toggle" data-bs-toggle="collapse"
-                                                data-bs-target="#storage-collapse" aria-expanded="false">
-                                    보관방법
-                                </button></h5></h5>
+                                <h5>
+                                    <button class="dropdown-toggle" data-bs-toggle="collapse"
+                                            data-bs-target="#storage-collapse" aria-expanded="false">
+                                        	보관방법
+                                    </button>
+                                </h5>
                                 <p class="collapse" id="storage-collapse" th:text="${drug.storage}"></p>
                             </div>
                         </li>
@@ -115,49 +129,150 @@
 
         </div>
     </section>
+    
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!--  Modal content -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">아프면찾아조</h4>
+				</div>
+
+				<div class="modal-body">
+					<label id="modalLabel"></label>
+				</div>
+
+				<div class="modal-footer">
+					<button class="btn btn-info" onclick="closeModal()">확인</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
     <th:block layout:fragment="script">
         <script th:inline="javascript">
             /*<![CDATA[*/
 
+            // var i = 0;
+            // $('img').on('click', function () {
+            //     if (i == 0) {
+            //         $(this).attr('src', '/assets/img/star-fill.svg');
+            //
+            //         i++;
+            //     } else if (i == 1) {
+            //         $(this).attr('src', '/assets/img/star.svg');
+            //         i--;
+            //     }
+            //
+            // });
             var i = 0;
-            $('img').on('click', function () {
-                if (i == 0) {
-                    $(this).attr('src', '/assets/img/star-fill.svg');
-                    i++;
-                } else if (i == 1) {
-                    $(this).attr('src', '/assets/img/star.svg');
-                    i--;
-                }
-
-            });
-
-                function addCart() {
+            function addCart(myDrug) {
+                if (myDrug == null && i == 0) {
 
                     // json 형식으로 데이터 set
-
                     var params = {
-                        drugNo: $("#drugNo").val(),
+                        drugNo: $("#drugNo").val()
                     }
 
                     $.ajax({
-                        url: "/api/cart/insert",
+                        url: "/cart/addDrug.do",
                         type: "post",
                         data: params,
                         dataType: "json",
+                        cache: false,
                         success: function (isExist) {
-                            console.log(isExist);
-                            if (isExist == false) {
-                                alert("입력 실패")
-                            } else {
-                                alert("입력 성공")
+                            if (isExist == true) {
+                            	showModal("추가 성공");
+                                i++;
+                            }else {
+                            	showModal("추가 실패");
                             }
                         },
                         error: function (XHR, status, error) {
                             console.error(status + " : " + error);
                         }
                     });
-                };
+                } else if (myDrug == null && i == 1) {
+                    var params = {
+                        drugNo: $("#drugNo").val()
+                    }
+
+                    $.ajax({
+                        url: "/cart/deleteDrug.do",
+                        type: "post",
+                        data: params,
+                        dataType: "json",
+                        success: function (isExist) {
+                            if (isExist == true) {
+                                showModal("삭제 성공");
+                                $('.cart').attr('src', '/assets/img/star.svg');
+                                i--;
+                            } else {
+                            	showModal("삭제 실패");
+                            }
+                        },
+                        error: function (XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }
+                    });
+                } else if (myDrug != null && i == 0) {
+                    var params = {
+                        drugNo: $("#drugNo").val()
+                    }
+
+                    $.ajax({
+                        url: "/cart/deleteDrug.do",
+                        type: "post",
+                        data: params,
+                        dataType: "json",
+                        success: function (isExist) {
+                            if (isExist == true) {
+                                showModal("삭제 성공");
+                                $('.cart').attr('src', '/assets/img/star.svg');
+                                i++;
+                            } else {
+                            	showModal("삭제 실패");
+                            }
+                        },
+                        error: function (XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }
+                    });
+                } else {
+                    var params = {
+                        drugNo: $("#drugNo").val()
+                    }
+
+                    $.ajax({
+                        url: "/cart/addDrug.do",
+                        type: "post",
+                        data: params,
+                        dataType: "json",
+                        cache: false,
+                        success: function (isExist) {
+                            if (isExist == true) {
+                                showModal("추가 성공");
+                                $('.cart').attr('src', '/assets/img/star-fill.svg');
+                                i--;
+                            }else {
+                            	showModal("추가 실패");
+                            }
+                        },
+                        error: function (XHR, status, error) {
+                            console.error(status + " : " + error);
+                        }
+                    });
+                }
+            }
+            
+            function showModal(message){
+                $("#myModal").modal('show');
+                $("#modalLabel").text(message);
+            }
+            
+            function closeModal(){
+                $("#myModal").modal('hide');
+            }
 
             /*]]>*/
         </script>

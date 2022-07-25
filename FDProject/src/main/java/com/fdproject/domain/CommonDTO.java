@@ -1,7 +1,5 @@
 package com.fdproject.domain;
 
-import java.time.LocalDateTime;
-
 import com.fdproject.paging.Criteria;
 import com.fdproject.paging.PaginationInfo;
 
@@ -16,13 +14,13 @@ public class CommonDTO extends Criteria{
     /** 삭제 여부 */
     private String deleteYn;
     
-    /** 등록일 */
-    private LocalDateTime insertTime;
-    
-    /** 수정일 */
-    private LocalDateTime updateTime;
-    
-    /** 삭제일 */
-    private LocalDateTime deleteTime;
+//  /** 등록일 */
+//  private LocalDateTime insertTime;
+//  
+//  /** 수정일 */
+//  private LocalDateTime updateTime;
+//  
+//  /** 삭제일 */
+//  private LocalDateTime deleteTime;
 
 }

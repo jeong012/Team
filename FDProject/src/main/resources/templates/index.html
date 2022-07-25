@@ -7,27 +7,18 @@
 	    <!-- ======= Hero Section ======= -->
 		<section id="hero" class="d-flex align-items-center">
 		    <div class="container" data-aos="zoom-out" data-aos-delay="100">
-		      <h1>Welcome to <span>FDProject</span></h1>
-		      <h2>We are team of talented designers making websites with Bootstrap</h2>
-		
+		      <h1>빠른 <span>약</span> 찾기</h1>
+		      <h2 class="fw-bolder">이름, 증상, 부위, 질병명으로 약을 빠르게 검색하기.</h2>
 		      <!-- main-searchForm input-->
-		      <form class="form-subscribe" id="contactFormFooter" data-sb-form-api-token="API_TOKEN">
+		      <form id="drug-searchForm" th:action="@{/drug/list.do}" method="get" th:onsubmit="return searchDrug(this)" class=""
+          role="form">
 		        <div class="row">
 		            <div class="col">
-		                <input class="form-control form-control-lg" id="main-searchForm" type="text" placeholder="증상 / 약" />
+		                <input type="text" name="searchKeyword" class="form-control form-control-lg" id="searchInput" th:value="${searchKeyword}" placeholder="증상 / 약" />
 		            </div>
-		            <div class="col-auto"><button class="btn btn-primary" id="submitButton" type="submit">검색</button></div>
+		            <div class="col-auto"><button type="submit" class="btn btn-primary" onclick="searchDrug(null)">검색</button></div>
 		        </div>
-		
-		        <div class="d-none" id="submitSuccessMessage">
-		            <div class="text-center mb-3">
-		                <div class="fw-bolder">Form submission successful!</div>
-		                <p>To activate this form, sign up at</p>
-		                <a class="text-white" href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
-		            </div>
-		        </div>
-		        
-		        <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
+
 		    </form>
 		    </div>
 		</section><!-- End Hero -->
@@ -48,7 +39,7 @@
 		          </div>
 		
 		          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-			      	<a th:href="@{/recipe/list}">
+			      	<a th:href="@{/recipe/list.do}">
 			          <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
 			              <div class="icon"><i class='bx bxs-food-menu' ></i></div>
 			              <h4 class="title" style="color: black;">레시피</h4>

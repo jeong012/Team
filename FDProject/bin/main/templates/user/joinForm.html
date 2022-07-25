@@ -1,107 +1,544 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layout/basic">
+      layout:decorate="/layout/basic"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 	<div layout:fragment="content">
-	  <main id="main" data-aos="fade-up">
-	
 	    <section class="bg-light">
 	      <div class="container">
+			<!--  Modal -->
+	       	<div id="joinModal" class="modal fade" role="dialog">
+	       		<div class="modal-dialog">
+	       			<!--  Modal content -->
+	       			<div class="modal-content">
+	       				<div class="modal-header">
+	       					<h4 class="modal-title">아프면찾아조</h4>
+	       				</div>
+	       				
+	       				<div class="modal-body" id="failUser">
+           					<label id="modalLabel" style="display: block; text-align: center; "></label>
+           					<button class="btn btn-info" th:onclick="closeModal()" style="float: right;">확인</button>
+	       				</div>
+	       				
+	       				<div class="modal-body" id="existUser">
+           					<label id="modalLabel" style="display: block; text-align: center; "> 이미 가입된 회원입니다. </label>
+           					<button class="btn btn-info" th:onclick="location.href='/user/loginForm.do';" style="float: right;">확인</button>
+	       				</div>
+	       				
+	       				<div class="modal-body" style="margin-bottom:50px;" id="newUser">
+           					<label id="modalLabel" style="display: block; text-align: center;">가입 방식을 선택하세요.</label>
+	       					<form id="joinMethod">
+	       						<div class="social-singup-wrap">
+	                               <button type="button" class="socialBtn main-login-btn" th:onclick="joinMethod('main')"><img src="/assets/img/main-logo.png" alt="메인로그인"></button>
+	                               <button type="button" class="socialBtn naver-login-btn" th:onclick="joinMethod('naver')"><img src="/assets/img/naver-logo.png" alt="네이버로그인"></button>
+	                               <button type="button" class="socialBtn kakao-login-btn" th:onclick="joinMethod('kakao')"><img src="/assets/img/kakao-logo.png" alt="카카오로그인"></button>
+	                               <button type="button" class="socialBtn google-login-btn" th:onclick="joinMethod('google')"><img src="/assets/img/google-logo.png" alt="구글로그인"></button>
+                             	</div>
+                            </form>
+	       				</div>
+						<div class="modal-body" id="messageCheck">
+	       					<label id="modalLabel" style="display: block; text-align: center; margin:7px;">입력한 번호로 본인 확인 문자가 전송되었습니다. </label>
+           					<label id="modalLabel" style="display: block; text-align: center; margin-bottom:15px;">인증번호를 입력하세요. </label>
+           					<div>
+								<input type="text" class="form-control" id="memberPhoneCertify" >
+								<h6 id="checkCode" style="display: none; color:red; text-align: center; margin:10px;">인증 실패하였습니다. 다시 입력해주세요.</h6>
+								<button class="btn btn-info" style="float: right;" onclick="closeModal()">취소</button>		
+								<button class="btn btn-info" style="float: right;" id = "messageFormCheck">인증하기</button>		
+							</div>
+	       				</div>
+	       				
+	       				<div class="modal-body" id="messageCheckOk">
+           					<label id="modalLabel" style="display: block; text-align: center; ">휴대폰 인증이 완료되었습니다.</label>
+           					<button class="btn btn-info" th:onclick="closeModal()" style="float: right;">확인</button>
+	       				</div>
+
+	       			</div>
+	       		</div>
+	       	</div>
 	
 	        <div class="join-form-wrap">
 	          <!-- 회원가입 폼 -->
-	          <form class="join-form" method="post" action="/user/joinForm2">
 	            <h4>- 필수 항목 입력</h4>
-	            <input type="hidden" id="" name="" value="">
-	            <div class="form-group id-check-box">
-	              <label for="inputId" class="form-label mt-4">아이디</label>
-	              <input type="text" class="form-control" id="inputId" aria-describedby="emailHelp">
-	              <button type="submit" class="btn btn-primary btn-verify">중복확인</button>
-	              <span class="error_next_box" id="idMsg" style aria-live="assertive">필수 정보입니다.</span>
-	            </div>
-	            <div class="form-group has-success">
-	              <label for="inputValid" class="form-label mt-4">비밀번호</label>
-	              <input type="password" class="form-control is-valid" id="inputValid">
-	              <div class="valid-feedback"></div>
-	              <span class="error_next_box" id="pwd1Msg" style aria-live="assertive">필수 정보입니다.</span>
-	            </div>
-	            <div class="form-group has-danger">
-	              <label for="inputValid" class="form-label mt-4">비밀번호 재확인</label>
-	              <input type="password" class="form-control is-valid" id="inputValid">
-	              <span class="error_next_box" id="pwd2Msg" style aria-live="assertive">필수 정보입니다.</span>
-	              <div class="invalid-feedback">비밀번호가 일치하지 않습니다</div>
-	            </div>
-	
-	            <div class="form-group">
-	              <label for="exampleInputEmail1" class="form-label mt-4">이름</label>
-	              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-	              <span class="error_next_box" id="nameMsg" style aria-live="assertive">필수 정보입니다.</span>
-	            </div>
-	
-	            <div class="form-group bir_wrap">
-	              <label class="form-label mt-4">생년월일</label>
-	              <div class="bir_yy">
-	                <span class="ps_box">
-	                  <input type="text" class="form-control" id="yy" placeholder="년(4자)" maxlength="4">
-	                </span>
-	              </div>
-	              <div class="bir_mm">
-	                <span class="ps_box focus">
-	                  <select class="form-select form-control" id="mm" aria-label="Default select example">
-	                    <option selected>월</option>
-	                    <option value="1">1</option>
-	                    <option value="2">2</option>
-	                    <option value="3">3</option>
-	                    <option value="4">4</option>
-	                    <option value="5">5</option>
-	                    <option value="6">6</option>
-	                    <option value="7">7</option>
-	                    <option value="8">8</option>
-	                    <option value="9">9</option>
-	                    <option value="10">10</option>
-	                    <option value="11">11</option>
-	                    <option value="12">12</option>
-	                  </select>
-	                </span>
-	              </div>
-	              <div class="bir_dd">
-	                <span class="ps_box">
-	                  <input type="text" class="form-control" id="dd" placeholder="일" maxlength="2">
-	                </span>
-	              </div>
-	              <span class="error_next_box" id="birthdayMsg" style aria-live="assertive">태어난 년도 4자리를 정확하게 입력하세요.</span>
-	            </div>
-	
-	            <div class="form-group verify-box">
-	              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
-	              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요">
-	              <button type="submit" class="btn btn-primary btn-verify">인증</button>
-	              <span class="error_next_box" id="nameMsg" style aria-live="assertive">필수 정보입니다.</span>
-	            </div>
 	            
-	            <div class="form-group">
-	              <label for="exampleSelect1" class="form-label mt-4">성별</label>
-	              <div class="check-box">
-	                <div class="form-check form-check-inline">
-	                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-	                  <label class="form-check-label" for="inlineRadio1">남자</label>
-	                </div>
-	                <div class="form-check form-check-inline">
-	                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-	                  <label class="form-check-label" for="inlineRadio2">여자</label>
-	                </div>
-	              </div>
-	              <div class="d-grid gap-2">
-	                <button type="submit" class="btn btn-primary next-btn">다음</button>
-	              </div>
-	            </div>
-	          </form>
+	            <input type="hidden" id="inputPw" value="${oAuth2User.pw}">
+	            
+	            <th:block th:if="${oAuth2User != null}">
+	            	<input type="hidden" id="registrationId" th:value="${oAuth2User.registrationId}">
+		            <fieldset class="form-group id-check-box">
+		              <label for="inputId" class="form-label mt-4">아이디</label>
+		              <input type="text" class="form-control" id="userId" aria-describedby="emailHelp" th:value="${oAuth2User.userId}" readonly>
+		            </fieldset>
+		
+		            <fieldset class="form-group has-success">
+		              <label for="inputPwd" class="form-label mt-4">비밀번호</label>
+		              <input type="password" class="form-control pw" id="pw2" th:value="${oAuth2User.pw}" readonly>
+		            </fieldset>
+		            
+		            <fieldset class="form-group">
+		              <label for="inputName" class="form-label mt-4">이름</label>
+		              <input type="text" class="form-control" id="name" aria-describedby="emailHelp" th:value="${oAuth2User.name}" readonly>
+		            </fieldset>
+		            
+		            <fieldset class="form-group bir_wrap">
+		              <label class="form-label mt-4">생년월일</label>
+		              <div class="bir_yy">
+		                <span class="ps_box">
+		                  <th:block th:if="${oAuth2User.birthYear != null}">
+		                  	<input type="text" class="form-control" id="yy" th:value="${oAuth2User.birthYear}" readonly>
+		                  </th:block>
+		                  <th:block th:unless="${oAuth2User.birthYear != null}">
+		                  	<input type="text" class="form-control" id="yy" placeholder="년(4자)" maxlength="4">
+		                  </th:block>
+		                </span>
+		              </div>
+		              <div class="bir_mm">
+		                <span class="ps_box focus">
+		                  <th:block th:if="${oAuth2User.birthMonth != null}">
+		                  	<input type="text" class="form-control" id="mm" th:value="${oAuth2User.birthMonth}" readonly>
+		                  </th:block>
+		                  <th:block th:unless="${oAuth2User.birthMonth != null}">
+			                  <select class="form-select form-control" id="mm" aria-label="Default select example">
+			                    <option selected>월</option>
+						        <th:block th:each="m : ${#numbers.sequence(1,12)}">
+			                    	<option th:value="${m}" th:text="${m}"></option>
+						        </th:block>
+			                  </select>
+		                  </th:block>
+		                </span>
+		              </div>
+		              <div class="bir_dd">
+		                <span class="ps_box">
+		                  <th:block th:if="${oAuth2User.birthDay != null}">
+		                  	<input type="text" class="form-control" id="dd" th:value="${oAuth2User.birthDay}" readonly>
+		                  </th:block>
+		                  <th:block th:unless="${oAuth2User.birthDay != null}">
+		                  	<input type="text" class="form-control" id="dd" placeholder="일" maxlength="2">
+		                  </th:block>
+		                </span>
+		              </div>
+		            </fieldset>
+		            
+		            <fieldset class="form-group verify-box">
+		              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
+		              	<input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" th:value="${oAuth2User.phoneNumber}" readonly>
+		            </fieldset>
+		            
+		            <fieldset class="form-group">
+		              <label for="exampleSelect1" class="form-label mt-4">성별</label>
+		              <th:block th:if="${oAuth2User.sex != null}">
+		              	<input type="text" class="form-control" id="sex" aria-describedby="emailHelp" th:value="${oAuth2User.sex}" readonly>
+		              </th:block>
+		              <th:block th:unless="${oAuth2User.sex != null}">
+			              <div class="check-box">
+			                <div class="form-check form-check-inline">
+			                  <input class="form-check-input" type="radio" name="sex" id="inlineRadio1" value="남자">
+			                  <label class="form-check-label" for="inlineRadio1">남자</label>
+			                </div>
+			                <div class="form-check form-check-inline">
+			                  <input class="form-check-input" type="radio" name="sex" id="inlineRadio2" value="여자">
+			                  <label class="form-check-label" for="inlineRadio2">여자</label>
+			                </div>
+			              </div>
+		              </th:block>
+	            	</fieldset>
+		        </th:block>
+	          
+	            <th:block th:unless="${oAuth2User != null}">
+		            <fieldset class="form-group id-check-box">
+		              <label for="inputId" class="form-label mt-4">아이디</label>
+		              <input type="text" class="form-control" id="userId" name="userId" autofocus>
+		              <input type="button" id="idCheck" class="btn btn-primary btn-verify" value="중복확인" style="margin-top:10px;">
+		            </fieldset>
+		            <div class="id_check textMsg"></div>
+	            
+		            <fieldset class="form-group has-success">
+		              <label for="inputPwd" class="form-label mt-4">비밀번호</label>
+		              <input type="password" class="form-control pw" name="pw" id="pw1">
+		              <div class="pw_check textMsg"></div>
+		            </fieldset>
+		            <fieldset class="form-group has-danger">
+		              <label for="inputPwd2" class="form-label mt-4">비밀번호 재확인</label>
+		              <input type="password" class="form-control pw" name="pw" id="pw2">
+		              <div class="pw_valid textMsg"></div>
+		            </fieldset>
+		
+		            <fieldset class="form-group">
+		              <label for="inputName" class="form-label mt-4">이름</label>
+		              <input type="text" class="form-control" id="name" aria-describedby="emailHelp">
+		              <div class="name_check textMsg"></div>
+		            </fieldset>
+		
+		            <fieldset class="form-group bir_wrap">
+		              <label class="form-label mt-4">생년월일</label>
+		              <div class="bir_yy">
+		                <span class="ps_box">
+		                  <input type="text" class="form-control" id="yy" placeholder="년(4자)" maxlength="4">
+		                </span>
+		              </div>
+		              <div class="bir_mm">
+		                <span class="ps_box focus">
+		                  <select class="form-select form-control" id="mm" aria-label="Default select example">
+		                    <option selected>월</option>
+		                    <option th:each="mm : ${#numbers.sequence(1,12)}" th:text="${mm}"></option>
+		                  </select>
+		                </span>
+		              </div>
+		              <div class="bir_dd">
+		                <span class="ps_box">
+		                  <input type="text" class="form-control" id="dd" placeholder="일" maxlength="2">
+		                </span>
+		              </div>
+		              <div class="bd_check textMsg"></div>
+		            </fieldset>
+		
+		            <fieldset class="form-group verify-box">
+		              <label for="exampleInputEmail1" class="form-label mt-4">휴대폰번호</label>
+		              <input type="text" class="form-control" id="phoneNum" aria-describedby="emailHelp" placeholder="'-' 를 제외한 숫자만 입력해 주세요" maxlength="11">
+		              <button class="btn btn-primary btn-verify" id="memberPhoneCheck" style="margin-top:10px;">인증</button>
+		            </fieldset>
+		            <h6 id="finishCertify" style="display: none; color:red; text-align: center; margin:10px;">본인 인증이 완료되었습니다.</h6>
+		              <div class="ph_check textMsg"></div>
+		            
+		            <fieldset class="form-group">
+		              <label for="exampleSelect1" class="form-label mt-4">성별</label>
+		              <div class="check-box">
+		                <div class="form-check form-check-inline">
+		                  <input class="form-check-input" type="radio" name="sex" id="male" value="남자">
+		                  <label class="form-check-label" for="inlineRadio1">남자</label>
+		                </div>
+		                <div class="form-check form-check-inline">
+		                  <input class="form-check-input" type="radio" name="sex" id="female" value="여자">
+		                  <label class="form-check-label" for="inlineRadio2">여자</label>
+		                </div>
+		              </div>
+		              <div class="sex_check textMsg"></div>
+		            </fieldset>
+	            </th:block>
+	             
+	          	<fieldset class="form-group">
+	          		<div class="d-grid gap-2">
+		                <input type="button" class="btn btn-primary next-btn" value="다음" onclick="saveUserInfo(); cheked();"></input>
+					</div>
+	          	</fieldset>
 	        </div>
 	      </div>
 	    </section>
-	
-	  </main><!-- End #main -->
 	</div>
+	
+	<th:block layout:fragment="script">
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+				var isChecked = false;
+				var isMessageChecked = false;
+			
+				$(document).ready(function() {
+					$('#joinModal').modal({backdrop: 'static', keyboard: false});
+					
+					if(/*[[${existUser}]]*/ != null){			/** 기존 유저 **/
+						$("#joinModal").modal("show");
+						$("#existUser").show();
+						$("#newUser").hide();
+						$("#failUser").hide();
+						$("#messageCheck").hide();
+						$("#messageCheckOk").hide();
+					} else if(/*[[${oAuth2User}]]*/ != null){	/** 새로운 유저 **/
+						$("#joinModal").modal("hide");
+					} else{										/** 조인폼 첫 접근 **/
+						$("#joinModal").modal("show");
+						$("#existUser").hide();
+						$("#failUser").hide();
+						$("#messageCheck").hide();
+						$("#messageCheckOk").hide();
+					}
+				});
+			
+				function joinMethod(registrationId){
+					if(registrationId == "main"){
+						$("#joinModal").modal("hide");
+					} else{
+						location.replace("/user/join/" + registrationId + "/oAuth2.do");
+					}
+				}
+				
+				function closeModal(){
+					$("#joinModal").modal("hide");
+					$("#checkCode").hide();
+				}
+				
+				function showModal(message){
+					$("#joinModal").modal("show");
+					$("#newUser").hide();
+					$("#existUser").hide();
+					$("#failUser").show();
+					$("#messageCheck").hide();
+					$("#messageCheckOk").hide();
+					$("#modalLabel").text(message);
+				}
 
+				function checkValidDate(value) {
+					var result = true;
+					try {
+					    var date = value.split("-");
+					    var y = parseInt(date[0], 10),
+					        m = parseInt(date[1], 10),
+					        d = parseInt(date[2], 10);
+					    
+					    var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+					    result = dateRegex.test(d+'-'+m+'-'+y);
+					} catch (err) {
+						result = false;
+					}    
+				    return result;
+				}
+			
+				function saveUserInfo(){
+					var userId = $("#userId").val();
+					var pw = $("#pw2").val();
+					var name = $("#name").val();
+					var yy = $("#yy").val();
+					var mm = $("#mm").val();
+					var dd = $("#dd").val();
+					var birthDate = yy + "-" + mm + "-" + dd;
+					var phoneNum = $("#phoneNum").val();
+					var sex = $('input[type=radio][name=sex]:checked').val();
+					if(sex == null){
+						sex = $("#sex").val();
+					}
+					var registrationId = $("#registrationId").val();
+					if(registrationId != null){
+						phoneNum = "000-0000-0000";
+					}
+					
+					/** 유효성 검사 */
+					if(userId == ""){
+						showModal("아이디를 입력해주세요.");
+						return false;
+					}
+					
+					if(!isChecked && !registrationId){
+						showModal("아이디 중복확인을 해주세요.");
+						return false;
+					}
+					
+					var pw1 = $("#pw1").val();
+					if(pw1 == ""){
+						showModal("비밀번호를 입력해주세요.");
+						return false;
+					}
+					
+			        var pwCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+			        if(!pwCheck.test(pw1) && !registrationId){
+			        	showModal("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
+						return false;
+			        }
+			        
+					if($('#pw1').val() != $('#pw2').val() && !registrationId){
+						showModal("비밀번호가 일치하지 않습니다.");
+						return false;
+					}
+					
+					if(name == ""){
+						showModal("이름을 입력해주세요.");
+						return false;
+					}
+					
+					var reg =/[0-9]/;
+					if(yy == ""){
+						showModal("연도를 입력해주세요.");
+						return false;
+					}
+					if(mm == "월"){
+						showModal("월을 선택해주세요.");
+						return false;
+					}
+					if(dd == ""){
+						showModal("일자를 입력해주세요.");
+						return false;
+					}
+					if(!reg.test(yy) || !reg.test(mm) || !reg.test(dd)){
+						showModal("날짜는 숫자만 입력할 수 있습니다.");
+						return false;
+					}
+					if(!checkValidDate(birthDate)){
+						showModal("유효하지 않은 날짜입니다.");
+						return false;
+					}
+					
+					if(!isMessageChecked && !registrationId){
+						showModal("휴대폰 인증을 완료해주세요.");
+						return false;
+					}
+					/*var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+					if(phoneNum == ""){
+						showModal("휴대폰 번호를 입력해주세요.");
+						return false;
+					}
+					if(!regPhone.test(phoneNum)){
+						showModal("휴대폰 번호 형식이 아닙니다.");
+						return false;
+					}*/
+					
+					if(sex == null){
+						showModal("성별을 선택해주세요.");
+						return false;
+					}
+					
+					var data = {
+						"userId": userId,
+						"pw": pw,
+						"name": name,
+						"birthDate": birthDate,
+						"phoneNumber": phoneNum,
+						"sex": sex,
+						"registrationId": registrationId
+					}
+					
+					$.ajax({
+						type : 'POST',
+			            data : JSON.stringify(data),
+			            url : "/user/saveUserInfo.do",
+			            dataType : "json",
+			            contentType: "application/json; charset=utf-8",
+			            success : function(data){
+			            	var form = document.createElement('form');
+			            	form.setAttribute('method', 'post');
+			            	form.setAttribute('action', '/user/joinForm2.do');
+			            	document.charset = "utf-8";
+							
+			            	var hiddenField = document.createElement('input');
+			            	hiddenField.setAttribute('type','hidden');
+			            	hiddenField.setAttribute('name','userDTO');
+			            	hiddenField.setAttribute('value',JSON.stringify(data.userDTO));
+			            	
+			            	form.appendChild(hiddenField);
+			            	
+			            	document.body.appendChild(form);
+			            	form.submit();
+			            },
+						error : function(error) {
+							console.error(error);
+					    }
+					});   
+				}
+				
+				//idcheck 아이디 중복체크
+			    $("#idCheck").click(function() {
+			        var userId =  $("#userId").val();
+			        if(userId == ""){
+						showModal("아이디를 입력하세요.");
+						return false;
+			        }
+			        
+			        $.ajax({
+			            type : 'GET',
+			            data : {"userId" : userId},
+			            url : "/user/findById.do",
+			            dataType : "text",
+			            success : function(data) {
+			            	if (data == 1) {
+			                	$('.id_check').text("사용중인 아이디입니다.");
+			                	$('.id_check').css("color","red");
+			                	$(".id_check").focus();
+			                } else {
+			            		isChecked = true;
+			                	$('.id_check').text("사용 가능한 아이디입니다.");
+			                	$('.id_check').css("color","blue");
+			                    $(".id_check").focus();
+			                }
+			            },
+						error : function(error) {
+							console.error(error);
+					    }
+			        });
+			    });
+				
+				// 비밀번호 유효형 검사 keyup
+			    $('#pw1').keyup(function(){
+			    	let pw = $(".pw").val();
+			        var reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+				        
+			        if (!reg.test(pw)) {
+			            $('.pw_check').text("비밀번호는 8~20자리 이내로 영문자+숫자+특수문자 조합으로 입력해주세요.");
+			            $('.pw_check').css('color', 'red');
+			            return false;
+			
+			        }  else {
+			            $('.pw_check').text("비밀번호가 정상적으로 입력되었습니다.");
+			            $('.pw_check').css('color', 'blue');
+			            return true;
+			        }
+			    });
+				// 비밀번호 일치여부
+				$('#pw2').keyup(function(){
+					if( $('#pw1').val() != $('#pw2').val() ){
+						$('.pw_valid').text('비밀번호가 일치하지 않습니다.');
+						$('.pw_valid').css('color', 'red');
+					} else{
+						$('.pw_valid').text('비밀번호가 일치합니다.');
+						$('.pw_valid').css('color', 'blue');
+					}
+				});
+				
+				//휴대폰 본인인증
+				$('#memberPhoneCheck').click(function(){
+					
+					var phoneNum = $("#phoneNum").val();
+					
+					var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+					if(phoneNum == ""){
+						showModal();
+						$("#modalLabel").text("휴대폰번호를 입력해주세요.");
+						return false;
+					}
+					else if(!regPhone.test(phoneNum)){
+						showModal();
+						$("#modalLabel").text("휴대폰번호 형식이 아닙니다.");
+						return false;
+					}else{
+						$("#joinModal").modal("show");
+						$("#existUser").hide();
+						$("#newUser").hide();
+						$("#failUser").hide();
+						$("#messageCheck").show();
+						
+						var to = $('#phoneNum').val();						
+						
+						$.ajax({
+							url : "/user/PhoneCheck.do",
+							type : "post",
+							data : "to=" + to,
+							dataType : "json",
+							success : function(data) {
+								data = "";
+								const checkNum = data;
+					            //인증하기 버튼 클릭 이벤트
+								$('#messageFormCheck').click(function(){
+									var userNum = $('#memberPhoneCertify').val();	//입력한 값
+									
+									if(checkNum == userNum){
+										$("#messageCheck").hide();
+										$("#messageCheckOk").show();
+										$("#memberPhoneCheck").attr("disabled", true);
+										$("#phoneNum").attr("disabled", true);
+										$("#finishCertify").show();
+										isMessageChecked = true;
+									}else {	
+										$("#checkCode").show();
+										$('#memberPhoneCertify').val('');	
+									}
+										
+								});
+					            
+							},
+							error : function(error) {
+								console.error(error);
+							}
+						});
+					}
+				});
+			/*]]*/
+		</script>
+ 	</th:block>
 </html>

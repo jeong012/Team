@@ -12,7 +12,7 @@
 	
 	        <div class="section-title">
 	          <h3><span>상비약 리스트</span></h3>
-	          <!-- <h5><span>지도를 이동하면 더 많은 편의점을 확인할 수 있습니다.</span></h5> -->
+	          <h5><span>주변 24시 편의점에서 상비약을 구입하실 수 있습니다.</span></h5>
 	        </div>
 	
 	        <div class="find-content-wrap row">
@@ -50,11 +50,11 @@
 				
 				// 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
 				var mapTypeControl = new kakao.maps.MapTypeControl();
-
+	
 				// 지도에 컨트롤을 추가해야 지도위에 표시됩니다
 				// kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
 				map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-
+	
 				// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
 				var zoomControl = new kakao.maps.ZoomControl();
 				map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
@@ -69,7 +69,7 @@
 				            lon = position.coords.longitude; // 경도
 				        
 				        var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-				            message = '<div style="padding:5px;">현 위치</div>'; // 인포윈도우에 표시될 내용입니다
+				            message = '<div style="width:150px;text-align:center;padding:5px;">현 위치</div>'; // 인포윈도우에 표시될 내용입니다
 				        
 				        // 마커와 인포윈도우를 표시합니다
 				        displayMarker(locPosition, message);
@@ -83,10 +83,10 @@
 				        
 				    displayMarker(locPosition, message);
 				}
-
+	
 				// 지도에 마커와 인포윈도우를 표시하는 함수입니다
 				function displayMarker(locPosition, message) {
-
+	
 				    // 마커를 생성합니다
 				    var marker = new kakao.maps.Marker({  
 				        map: map, 
@@ -94,8 +94,8 @@
 				    }); 
 				    
 				    var iwContent = message, // 인포윈도우에 표시할 내용
-				        iwRemoveable = true;
-
+				        iwRemoveable = false;
+	
 				    // 인포윈도우를 생성합니다
 				    var infowindow = new kakao.maps.InfoWindow({
 				        content : iwContent,
@@ -289,30 +289,30 @@
 				</th:block>
 				
 	          </div> <!-- map -->
-	          		<div class="cslist col-lg-7 mx-auto" style="height: 610px; overflow: auto">
-			            <!-- List group-->
-			            <ul class="list-group">
-			                <!-- list group item-->
-			                <li class="list-group-item" th:if="${not #lists.isEmpty(housedrugList)}"
-			                	th:each="item : ${housedrugList}">
-			                    <!-- Custom content-->
-			                    <div class="media align-items-lg-center flex-column flex-lg-row p-1">
-			                        <div class="media-body order-2 order-lg-1">
-			                        	<!--<img class="m-2" th:src="${item.imgFile}" id="drug-image"> -->
-                                        <div class="mt-2">
-                                        <img style="width:100px; height:100px;"class="m-2" th:src="${item.imgFile}" id="drug-image">
-                                            <h5 class="font-weight-bold mb-2" th:text="${item.drugName}" style="display: inline"></h5>
-                                            <p class="font-italic text-muted mb-0 small" style="display: inline-block"
-                                               th:text="${item.manufacturer}"></p>
-                                        </div>
-                                        <div class="d-flex align-items-center justify-content-between mt-1">
-                                        	<p class="fa fa-star text-success list-inline small" th:text="${item.effect}"></p>       
-                                        </div>
-			                        </div>
-			                    </div> <!-- End -->
-			                </li> <!-- End -->	
-			            </ul> <!-- End -->
-			        </div>
+          	  <div class="cslist col-lg-7 mx-auto" style="height: 610px; overflow: auto">
+		            <!-- List group-->
+		            <ul class="list-group">
+		                <!-- list group item-->
+		                <li class="list-group-item" th:if="${not #lists.isEmpty(housedrugList)}"
+		                	th:each="item : ${housedrugList}">	
+		                    <!-- Custom content-->
+		                    <div class="media align-items-lg-center flex-column flex-lg-row p-1">
+		                        <div class="media-body order-2 order-lg-1">
+		                        	<!--<img class="m-2" th:src="${item.imgFile}" id="drug-image"> -->
+                                       <div class="mt-2">
+                                       <img style="width:100px; height:auto;" class="m-2" th:src="|@{/assets/img/drugimages/}${item.imgFile}|" id="drug-image">                               
+                                       	<h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a style="color:black;" th:href="@{/drug/myview.do(no=${item.drugNo},id=${not #strings.isEmpty(id) ? id : ''})}" th:onClick="window.open(this.href,'','width=900, height=800'); return false;" th:text="${item.drugName}"></a></h5>                             
+                                           <p class="font-italic text-muted mb-0 small" style="display: inline-block"
+                                              th:text="${item.manufacturer}"></p>
+                                       </div>
+                                       <div class="d-flex align-items-center justify-content-between mt-1">
+                                       	<p class="fa fa-star text-dark list-inline small" th:text="${item.effect}" style="color:black"></p>       
+                                       </div>
+		                        </div>
+		                    </div> <!-- End -->
+		                </li> <!-- End -->	
+		            </ul> <!-- End -->
+		        </div>
 	        </div> 
 	       </div>
 	    </section><!-- End find-pharmacy Section -->	
