@@ -33,5 +33,7 @@ public interface UserService {
 	
 	/** 회원 삭제 */
 	int deleteUser(int userNo);
+
+	UserDTO loadUserByUsername(String userId);
 	
 }

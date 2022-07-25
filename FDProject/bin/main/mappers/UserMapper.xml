@@ -91,6 +91,7 @@
         </selectKey>
 		INSERT INTO users ( <include refid="userColumns" /> )
 		VALUES (#{userNo}, #{userId}, #{pw}, #{name}, #{phoneNumber}, #{sex}, #{birthDate}, #{registrationId}, #{authority}, SYSDATE, #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE})
+		<!-- VALUES (#{userNo}, #{userId}, #{pw}, #{name}, #{phoneNumber}, #{sex}, #{birthDate}, #{registrationId}, #{authority}) -->
 	</insert>
 	
 	<select id="findById" parameterType="String" resultType="int">
