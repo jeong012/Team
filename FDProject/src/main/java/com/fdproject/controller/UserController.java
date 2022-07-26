@@ -10,7 +10,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +48,11 @@ public class UserController {
 	private final MessageService messageService;
 
 	@GetMapping(value="/joinForm.do")
-	public String getJoinForm(){
+	public String getJoinForm(HttpSession httpSession){
+		if(httpSession.getAttribute("oAuth2User") != null) {
+			httpSession.removeAttribute("oAuth2User");
+		}
+		
 		return "user/joinForm";
 	}
 
@@ -128,7 +131,7 @@ public class UserController {
 	
 	/** OAuth2 기존 회원 여부 조회*/
 	@GetMapping(value="/findByOAuth2User.do")
-	public String findByOAuth2User(@SessionAttribute(value="oAuth2User", required = false) OAuth2UserDTO oAuth2UserDTO, Model model, HttpSession httpSession, Authentication authentication){
+	public String findByOAuth2User(@SessionAttribute(value="oAuth2User", required = false) OAuth2UserDTO oAuth2UserDTO, Model model, HttpSession httpSession){
 		UserDTO user = userService.findByOAuth2User(oAuth2UserDTO);
 		if(user != null) {
 			if(oAuth2UserDTO.getPathFlag().equals("login")) {

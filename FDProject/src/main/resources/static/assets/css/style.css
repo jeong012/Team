@@ -2597,4 +2597,64 @@ select.list-dt:focus {
 	margin-top: 20px;
 }
 
+/*회원수정 폼*/
+.select-detail-wrap{
+  margin-bottom: 30px;
+}
+.modify-form .input-box{
+  position: relative;
+}
+.modify-form .btn-add{
+  border-radius: 100%;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: -180px;
+  text-align: center;
+  border: none;
+}
+.modify-form .ex{
+  float: left;
+  margin-right: 10px;
+  color: #666;
+}
+.modify-form ul{
+  float: left;
+}
+.modify-form ul li{
+  padding: 0 10px;
+}
+.modify-form ul li span{
+  font-weight: 600;
+  border-bottom: 1px solid #666;
+}
 
+.modify-form .btn-add{
+  border-radius: 100%;
+  width: 35px;
+  height: 35px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: -300px;
+  text-align: center;
+  border: none;
+}
+
+.modify-form #inputDisease{
+	width: 300px;
+}
+.modify-form #inputDrug{
+	width: 300px;
+}
+
+/*--------------------------------------------------------------
+# 헤더 폰트
+--------------------------------------------------------------*/
+@font-face {
+     font-family: 'headerFont';
+     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');
+     font-weight: normal;
+     font-style: normal;
+}

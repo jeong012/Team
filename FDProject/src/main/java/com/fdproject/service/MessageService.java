@@ -33,8 +33,6 @@ public class MessageService {
 	    params.put("text", "FDProject 인증번호는 [" + numStr + "] 입니다.");
 	 
 	    coolsms.send(params); // 메시지 전송
-	  
-	    System.out.println("문자인증 >>> " + numStr);
 	    
 		return numStr;
 		 

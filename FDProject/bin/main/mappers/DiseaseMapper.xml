@@ -51,7 +51,7 @@
 		WHERE d.disease_no = any(${cart})
     </select>
 
-    <select id="joinDiseaseList" resultMap="disease">
+    <select id="getJoinDiseaseList" resultMap="disease">
    	 	<![CDATA[
 	        SELECT DISEASE_NO, DISEASE_NAME
 	        FROM DISEASES
@@ -67,6 +67,30 @@
         	  d.disease_no = ud.disease_no     	
     </select>
     
+    <select id="getMyPageDiseaseList" parameterType="String" resultMap="disease">
+        <![CDATA[
+	       	SELECT DISEASE_NO, DISEASE_NAME 
+			FROM DISEASES
+			WHERE DISEASE_NO NOT IN (SELECT DISEASE_NO FROM USER_DISEASES WHERE USER_ID = #{userId})
+			ORDER BY DISEASE_NO
+        ]]>
+    </select>
     
+    <select id="getUserDiseaseList" parameterType="String" resultMap="disease">
+    	<![CDATA[
+    		SELECT d.DISEASE_NO , d.DISEASE_NAME 
+			FROM USER_DISEASES ud, DISEASES d
+			WHERE ud.USER_ID = #{userId}
+			AND ud.DISEASE_NO = d.DISEASE_NO
+        ]]>
+    </select>
+    
+    <select id="getUserDiseaseByAdmin" parameterType="int" resultType="map">
+    	SELECT d.DISEASE_NAME name
+		FROM USER_DISEASES ud, USERS u , DISEASES  d 
+		WHERE u.USER_NO = #{userNo}
+		AND ud.USER_ID = u.USER_ID 
+		AND ud.DISEASE_NO = d.DISEASE_NO
+    </select>
     
 </mapper>

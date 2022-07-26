@@ -38,7 +38,7 @@ public interface RecipeService {
 	public int postComment(CommentDTO commentDTO);
 	
 	/** 레시피 댓글 삭제*/
-	public int deleteComment(CommentDTO commentDTO, String content);
+	public int deleteComment(CommentDTO commentDTO, String memo);
 	
 	/** 레시피 댓글 가져오기*/
 	public CommentDTO getComment(int commentNo);
@@ -69,5 +69,11 @@ public interface RecipeService {
 	
 	/** 레시피 추천 삭제*/
 	int removeRecommended(RecipeRecommendedDTO recipeRecommendedDTO);
+	
+	/** 사용자 작성 레시피 조회 */
+	List<RecipeDTO> getUserRecipe(int userNo);
+	
+	/** 사용자 작성 댓글 조회 */
+	List<CommentDTO> getUserComment(int userNo);
 	
 }

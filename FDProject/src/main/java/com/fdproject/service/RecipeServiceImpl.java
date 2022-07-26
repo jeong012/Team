@@ -52,7 +52,6 @@ public class RecipeServiceImpl implements RecipeService {
 				recipeList = recipeMapper.selectMyWriteRecipeList(params);				
 			}
 		}
-		System.out.println("recipeList:" + recipeList);
 		return recipeList;
 	}
 
@@ -141,25 +140,15 @@ public class RecipeServiceImpl implements RecipeService {
 	@Override
 	public boolean uploadRecipe(MultipartFile file, Map<String, Object> data, Principal principal) throws Exception {
 		// 파일 처리
-		System.out.println("file:" + file);
 		String uploadFolder = "C:\\Users\\i\\Documents\\workspace-spring-tool-suite-4-4.14.1.RELEASE\\Team\\Team\\FDProject\\src\\main\\resources\\static\\assets\\img\\recipeImages\\";
-		System.out.println("uploadFolder:" + uploadFolder);
-		System.out.println("Upload File Name:" + file.getOriginalFilename());
-		System.out.println("Upload File Size:" + file.getSize());
-
 		String uploadFileName = file.getOriginalFilename();
-		System.out.println("only file name:" + uploadFileName);
-
 		String savedName = randomFileName(uploadFileName, file.getBytes());
-		System.out.println("random file name:" + savedName);
 
 		File saveFile = new File(uploadFolder, savedName);
-		System.out.println("full path filename:" + uploadFolder + savedName);
 		try {
 			file.transferTo(saveFile);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			System.out.println("에러 발생");
 		}
 		// data 처리
 		RecipeDTO params = new RecipeDTO();
@@ -184,20 +173,14 @@ public class RecipeServiceImpl implements RecipeService {
 		// upload 동작 수행.
 		int count = 0;
 		// 추가
-		System.out.println("나 여기0");
-		System.out.println("(String) data.get(\"foodIngredients\")" + data.get("foodIngredients"));
-		System.out.println("(String) data.get(\"type\")" + (String) data.get("type"));
 		if (data.get("type").equals("add")) {
-			System.out.println("나 여기1");
 			count = recipeMapper.uploadRecipe(params);
 		}
 		// 변경
 		else if (data.get("type").equals("modify")) {
-			System.out.println("나 여기2");
 			count = recipeMapper.modifyRecipe(params);
 		}
 
-		System.out.println("params:" + params);
 		return (count == 1) ? true : false;
 	}
 
@@ -237,8 +220,8 @@ public class RecipeServiceImpl implements RecipeService {
 	/** 레시피 댓글 삭제*/
 	@Override
     @Transactional
-	public int deleteComment(CommentDTO commentDTO, String content) {
-		int isDeleted = recipeMapper.deleteComment(commentDTO.getCommentNo(), content);
+	public int deleteComment(CommentDTO commentDTO, String memo) {
+		int isDeleted = recipeMapper.deleteComment(commentDTO.getCommentNo(), memo);
 		
 		return isDeleted;
 	}
@@ -320,6 +303,20 @@ public class RecipeServiceImpl implements RecipeService {
 	public int removeRecommended(RecipeRecommendedDTO recipeRecommendedDTO) {
 		int isDeleted = recipeMapper.removeRecommended(recipeRecommendedDTO);
 		return isDeleted;
+	}
+
+	/** 사용자 작성 레시피 조회 */
+	@Override
+	public List<RecipeDTO> getUserRecipe(int userNo) {
+		List<RecipeDTO> userRecipeList = recipeMapper.getUserRecipe(userNo);
+		return userRecipeList;
+	}
+	
+	/** 사용자 작성 댓글 조회 */
+	@Override
+	public List<CommentDTO> getUserComment(int userNo) {
+		List<CommentDTO> userCommentList = recipeMapper.getUserComment(userNo);
+		return userCommentList;
 	}
 	
 }

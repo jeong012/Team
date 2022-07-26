@@ -3,9 +3,6 @@ package com.fdproject.controller;
 
 import java.security.Principal;
 
-import com.fdproject.constant.Method;
-import com.fdproject.util.GrammerUtils;
-import com.fdproject.util.UiUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,6 +14,8 @@ import com.fdproject.domain.DrugsCartDTO;
 import com.fdproject.domain.RecipesCartDTO;
 import com.fdproject.service.DrugService;
 import com.fdproject.service.RecipeService;
+import com.fdproject.util.GrammerUtils;
+import com.fdproject.util.UiUtils;
 
 import lombok.RequiredArgsConstructor;
 

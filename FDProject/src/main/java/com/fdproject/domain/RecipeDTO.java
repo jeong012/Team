@@ -52,5 +52,11 @@ public class RecipeDTO extends CommonDTO {
 	private String randomImgFile;
 	
 	private MultipartFile file;
+	
+	/** 수정 날짜 */
+	private String modDate;
+	
+	/** 삭제 날짜 */
+	private String delDate;
 		
 }
