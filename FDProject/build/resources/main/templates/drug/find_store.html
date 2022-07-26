@@ -11,8 +11,8 @@
 	      <div class="container" data-aos="fade-up">
 	
 	        <div class="section-title">
-	          <h3><a class="text-dark" th:href="@{/drug/store.do}">상비약 리스트</a></h3>
-	          <!-- <h5><span>지도를 이동하면 더 많은 편의점을 확인할 수 있습니다.</span></h5> -->
+	          <h3><span>상비약 리스트</span></h3>
+	          <h5><span>주변 24시 편의점에서 상비약을 구입하실 수 있습니다.</span></h5>
 	        </div>
 	
 	        <div class="find-content-wrap row">
@@ -300,8 +300,8 @@
 		                        <div class="media-body order-2 order-lg-1">
 		                        	<!--<img class="m-2" th:src="${item.imgFile}" id="drug-image"> -->
                                        <div class="mt-2">
-                                       <img style="width:100px; height:100px;" class="m-2" th:src="|@{/assets/img/drugimages/}${item.imgFile}|" id="drug-image">                               
-                                       	<h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a th:href="@{/drug/myview.do(no=${item.drugNo},id=${not #strings.isEmpty(id) ? id : ''})}" th:onClick="window.open(this.href,'','width=900, height=800'); return false;" th:text="${item.drugName}"></a></h5>                             
+                                       <img style="width:100px; height:auto;" class="m-2" th:src="|@{/assets/img/drugimages/}${item.imgFile}|" id="drug-image">                               
+                                       	<h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a style="color:black;" th:href="@{/drug/myview.do(no=${item.drugNo},id=${not #strings.isEmpty(id) ? id : ''})}" th:onClick="window.open(this.href,'','width=900, height=800'); return false;" th:text="${item.drugName}"></a></h5>                             
                                            <p class="font-italic text-muted mb-0 small" style="display: inline-block"
                                               th:text="${item.manufacturer}"></p>
                                        </div>
