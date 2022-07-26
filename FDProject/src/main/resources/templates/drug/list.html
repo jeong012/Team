@@ -67,7 +67,7 @@
                                         <div>
                                             <h5 class="mt-0 font-weight-bold mb-2" style="display: inline">
                                             <a  style="color:black;"
-                                                    th:href="|@{/drug/view.do}${params.makeQueryString(params.currentPageNo)}&id=${not #strings.isEmpty(id) ? id : ''}&takeYn=${params.takeYn}&no=${item.drugNo}|"
+                                                    th:href="|@{/drug/view.do}${params.makeQueryString(params.currentPageNo)}&takeYn=${params.takeYn}&no=${item.drugNo}|"
                                                     th:text="${item.drugName}"></a></h5>
                                             <p class="font-italic text-muted mb-0 small" style="display: inline-block"
                                                th:text="${item.manufacturer}"></p>
