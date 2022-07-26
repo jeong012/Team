@@ -81,7 +81,7 @@ public class RecipeServiceImpl implements RecipeService {
 	public RecipeDTO getRecipeInfo(String Recipe_no, Principal principal) {
 		RecipeDTO recipeDTO = recipeMapper.selectRecipeInfo(Recipe_no);
 		// 로그인 세션이 존재하면
-		if (principal != null) {
+		if (principal != null && recipeDTO != null) {
 			RecipesCartDTO cartDTO = new RecipesCartDTO();
 
 			cartDTO.setRecipeNo(Integer.parseInt(Recipe_no));
