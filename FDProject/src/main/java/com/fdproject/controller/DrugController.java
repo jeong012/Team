@@ -71,11 +71,12 @@ public class DrugController extends UiUtils {
 
     	if (principal == null) {
             return showMessageWithRedirect("접근 권한이 없습니다.", "/drug/list.do", Method.GET, null, model);
+        } else {
+            DrugDTO drug = drugService.getDrug(drugNo);
+            model.addAttribute("drug", drug);
+            DrugsCartDTO drugsCartDTO = drugService.getMyDrug(drugNo);
+            model.addAttribute("myDrug", drugsCartDTO);
         }
-        DrugDTO drug = drugService.getDrug(drugNo);
-        model.addAttribute("drug", drug);
-        DrugsCartDTO drugsCartDTO = drugService.getMyDrug(drugNo);
-        model.addAttribute("myDrug", drugsCartDTO);
 
         return "drug/view";
     }
