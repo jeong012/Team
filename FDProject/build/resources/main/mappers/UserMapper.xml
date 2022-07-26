@@ -2,6 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fdproject.mapper.UserMapper">
 
+	<resultMap id="user" type="UserDTO">
+        <id property="userNo" column="user_no"/>
+        <result property="userId" column="user_id"/>
+        <result property="pw" column="pw"/>
+        <result property="name" column="name"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="sex" column="sex"/>
+        <result property="birthDate" column="birth_date"/>
+        <result property="registrationId" column="registration_id"/>
+        <result property="authority" column="authority"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="modDate" column="mod_date"/>
+        <result property="delDate" column="del_date"/>
+	</resultMap>
+
     <resultMap id="userDisease" type="UserDiseaseDTO">
         <id property="userDiseaseNo" column="user_disease_no"/>
         <result property="diseaseNo" column="disease_no"/>
@@ -13,6 +28,21 @@
         <result property="drugNo" column="drug_no"/>
         <result property="userId" column="user_id"/>
     </resultMap>
+    
+    <sql id="userColumns">
+        USER_NO,
+        USER_ID,
+        PW,
+        NAME,
+        PHONE_NUMBER,
+        SEX,
+        BIRTH_DATE,
+        REGISTRATION_ID,
+        AUTHORITY,
+        REG_DATE,
+        MOD_DATE,
+        DEL_DATE
+    </sql>
     
     <sql id="userDiseaseColumns">
         USER_DISEASE_NO,
@@ -30,7 +60,7 @@
         <selectKey keyProperty="userDiseaseNo" resultType="int" order="BEFORE">
             SELECT SEQ_USER_DISEASES_NO.NEXTVAL FROM DUAL
         </selectKey>
-        INSERT INTO USER_DISEASES (USER_DISEASE_NO, DISEASE_NO, USER_ID)
+        INSERT INTO USER_DISEASES ( <include refid="userDiseaseColumns" /> )
 		VALUES(#{userDiseaseNo}, #{diseaseNo}, #{userId})
     </insert>
 
@@ -38,8 +68,116 @@
         <selectKey keyProperty="userDrugNo" resultType="int" order="BEFORE">
             SELECT SEQ_USER_DRUGS_NO.NEXTVAL FROM DUAL
         </selectKey>
-		INSERT INTO USER_DRUGS (USER_DRUG_NO, DRUG_NO, USER_ID)
+		INSERT INTO USER_DRUGS ( <include refid="userDrugColumns" /> )
 		VALUES(#{userDrugNo}, #{drugNo}, #{userId})
     </insert>
     
+    <select id="findByOAuth2User" parameterType="OAuth2UserDTO" resultMap="user">
+    	<![CDATA[
+	       	SELECT  
+	    ]]>
+	    	<include refid="userColumns"/>
+    	<![CDATA[
+	        FROM USERS
+	        WHERE 1=1
+	        AND USER_ID = #{userId}
+	        AND REGISTRATION_ID = #{registrationId}
+        ]]>
+    </select>
+    
+    <insert id="saveUser" parameterType="UserDTO">
+        <selectKey keyProperty="userNo" resultType="int" order="BEFORE">
+            SELECT SEQ_USERS_NO.NEXTVAL FROM DUAL
+        </selectKey>
+		INSERT INTO users ( <include refid="userColumns" /> )
+		VALUES (#{userNo}, #{userId}, #{pw}, #{name}, #{phoneNumber}, #{sex}, #{birthDate}, #{registrationId}, #{authority}, SYSDATE, #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE})
+	</insert>
+	
+	<select id="findById" parameterType="String" resultType="int">
+ 		SELECT count(user_id)
+ 		FROM USERS
+ 		WHERE USER_ID = #{userId}
+ 		AND REGISTRATION_ID = 'main'
+ 	</select>
+ 	
+ 	<select id="findByUser" parameterType="String" resultMap="user">
+    	<![CDATA[
+	       	SELECT  
+	    ]]>
+	    	<include refid="userColumns"/>
+    	<![CDATA[
+	        FROM USERS
+	        WHERE 1=1
+	        AND USER_ID = #{userId}
+	        AND REGISTRATION_ID = 'main'
+	        AND DEL_DATE IS NULL
+        ]]>
+    </select>
+ 	
+ 	<select id="loginByOAuth2" parameterType="String" resultMap="user">
+    	<![CDATA[
+	       	SELECT  
+	    ]]>
+	    	<include refid="userColumns"/>
+    	<![CDATA[
+	        FROM USERS
+	        WHERE 1=1
+	        AND USER_ID = #{userId}
+	        AND REGISTRATION_ID = #{registraionId}
+	        AND DEL_DATE IS NULL
+        ]]>
+    </select>
+    
+    <update id="updateUser" parameterType="UserDTO">
+    	<![CDATA[
+	       	UPDATE USERS
+			SET PW = #{pw}, NAME = #{name}, MOD_DATE = SYSDATE
+			WHERE USER_ID = #{userId}
+	    ]]>
+    </update>
+    
+    <select id="checkPw" parameterType="map" resultType="int">
+    	SELECT COUNT(*)
+    	FROM USERS
+    	WHERE USER_ID = #{userId}
+    	AND PW = #{pw}
+	    AND REGISTRATION_ID = 'main'
+    </select>
+    
+    <delete id="deleteUserDisease" parameterType="String">
+		DELETE FROM USER_DISEASES
+		WHERE USER_ID = #{userId}
+    </delete>
+    
+    <delete id="deleteUserDrug" parameterType="String">
+    	DELETE FROM USER_DRUGS
+		WHERE USER_ID = #{userId}
+    </delete>
+    
+    <select id="getUserList" resultMap="user">
+    	<include refid="CommonMapper.pagingHeader" />
+    	SELECT <include refid="userColumns"/>
+    	FROM USERS
+    	WHERE AUTHORITY = 'ROLE_MEMBER'
+    	ORDER BY USER_NO
+		<include refid="CommonMapper.pagingFooter" />
+    </select>
+    
+    <select id="getUserDetail" parameterType="int" resultMap="user">
+    	SELECT <include refid="userColumns"/>
+   		FROM USERS
+   		WHERE USER_NO = #{userNo}
+    </select>
+    
+    <update id="deleteUser" parameterType="int">
+    	UPDATE USERS
+		SET DEL_DATE = SYSDATE
+		WHERE USER_NO = #{userNo}
+    </update>
+    
+    <select id="getTotalCount" resultType="int">
+    	SELECT count(*)
+    	FROM USERS
+    </select>
+	
 </mapper>

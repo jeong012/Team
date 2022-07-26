@@ -407,7 +407,8 @@ body {
 #hero {
   width: 100%;
   height: 75vh;
-  background: url("../img/hero-bg.jpg") top left;
+  /*background: url("../img/hero-bg.jpg") top left;*/
+  background: url("../img/testimg6.jpg") top left;
   background-size: cover;
   position: relative;
 }
@@ -456,6 +457,41 @@ body {
 #hero .btn-get-started:hover {
   background: #247cf0;
 }
+
+.filebox label {
+  display: inline-block;
+  padding: .5em .75em;
+  color: #fff;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #87CEEB;
+  cursor: pointer;
+  border: 1px solid #87CEEB;
+  border-radius: .25em;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+}
+
+.filebox label:hover {
+  background-color: #6ed36e;
+}
+
+.filebox label:active {
+  background-color: #367c36;
+}
+
+.filebox input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 .btn {
   display: inline-block;
   font-weight: 400;
@@ -501,14 +537,33 @@ body {
 }
 .btn-primary:hover {
   color: #fff;
-  background-color: #4bb7e2;
-  border-color: #4bb7e2;
+  background-color: #6ed36e;
+  border-color: #6ed36e;
 }
-
+.btn-primary:active {
+  background-color: #367c36;
+}
 .btn-search {
   position: absolute;
   top: 0;
   left: -90px;
+}
+
+/* 마이페이지 버튼 */
+.btn-secondary {
+  color: #fff;
+  background-color: #767979;
+  border-color: #767979;
+}
+.btn-secondary:hover {
+  color: #fff;
+  background-color: #575858;
+  border-color: #575858;
+}
+.btn-search2 {
+  position: absolute;
+  top: 0;
+  left: -130px;
 }
 
 /* 메인 검색 폼 */
@@ -2418,7 +2473,7 @@ select.list-dt:focus {
   	  border-color: #106eea;
   	  background-color: #106eea;
   	  
-      right: 243px;
+      right: 110px;
       top: -2px;
 }
 
@@ -2496,3 +2551,110 @@ select.list-dt:focus {
 	font-weight : bold;
 }
 
+/*--------------------------------------------------------------
+# 회원가입 모달 창
+--------------------------------------------------------------*/
+#joinModal{
+	width: 500px;
+	height: 450px;
+	left: 50%;
+	top:50%;
+	transform: translate(-50%, -50%);
+}
+
+/*--------------------------------------------------------------
+# 가입 방식 버튼 
+--------------------------------------------------------------*/
+#joinMethod {
+  text-align: center;
+  position: relative;
+  margin-top: 20px;
+}
+#joinMethod .social-singup-wrap .socialBtn{
+  border: none;
+  background: none;
+  width: 70px;
+  height: 70px;
+  background: rgb(255, 255, 255);
+  border-radius: 100%;
+  overflow: hidden;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+#joinMethod .social-singup-wrap .socialBtn :last-child{
+  margin-right: 0;
+}
+#joinMethod .social-singup-wrap .socialBtn img{
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+}
+
+/*--------------------------------------------------------------
+# usermodify
+--------------------------------------------------------------*/
+.modify-btn-group{
+	margin-top: 20px;
+}
+
+/*회원수정 폼*/
+.select-detail-wrap{
+  margin-bottom: 30px;
+}
+.modify-form .input-box{
+  position: relative;
+}
+.modify-form .btn-add{
+  border-radius: 100%;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: -180px;
+  text-align: center;
+  border: none;
+}
+.modify-form .ex{
+  float: left;
+  margin-right: 10px;
+  color: #666;
+}
+.modify-form ul{
+  float: left;
+}
+.modify-form ul li{
+  padding: 0 10px;
+}
+.modify-form ul li span{
+  font-weight: 600;
+  border-bottom: 1px solid #666;
+}
+
+.modify-form .btn-add{
+  border-radius: 100%;
+  width: 35px;
+  height: 35px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: -300px;
+  text-align: center;
+  border: none;
+}
+
+.modify-form #inputDisease{
+	width: 300px;
+}
+.modify-form #inputDrug{
+	width: 300px;
+}
+
+/*--------------------------------------------------------------
+# 헤더 폰트
+--------------------------------------------------------------*/
+@font-face {
+     font-family: 'headerFont';
+     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');
+     font-weight: normal;
+     font-style: normal;
+}
