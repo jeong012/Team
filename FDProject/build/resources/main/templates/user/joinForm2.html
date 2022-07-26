@@ -35,7 +35,6 @@
 	                  </button>
 	                </div>
 	              </div>
-	
 	              <div id="selectedDrug" class="disease-kind">
 	                <span class="ex">(최대 5개)</span>
 	                <ul id="selectedDrug">
@@ -169,7 +168,7 @@
 				
 				$('#inputDisease').click(function() {
 					if(diseaseMap.size === 3){
-						alert("최대 3개만 입력 가능합니다.");
+						showModal("최대 3개만 입력 가능합니다.", "확인");
 					}
 				});
 				
@@ -183,7 +182,7 @@
 				
 				function addDisease(){
 					if($("#inputDisease").val() === "" || diseaseNameList.indexOf(diseaseName) === -1){
-						alert("등록할 수 없습니다.");
+						showModal("등록할 수 없습니다.", "확인");
 					}else{
 						for(var i = 0; i < diseaseNameList.length; i++) {
 							if(diseaseNameList[i] === diseaseName)  {
@@ -201,9 +200,9 @@
 							diseaseNo = `${key}`;
 							
 							data += "<li>"
-								 + "	<span>" + diseaseName + "</span>"
-				                 + "	<a href='javascript:delDisease("+ diseaseNo + ");'>x</a>"
-				                 + "</li>";
+								 +  "	<span>" + diseaseName + "</span>"
+				                 +  "	<a href='javascript:delDisease("+ diseaseNo + ");'>x</a>"
+				                 +  "</li>";
 						});
 						$("ul[id=selectedDisease]").append(data);
 						$("input[type=text][id=inputDisease]").val("");
@@ -225,9 +224,9 @@
 						diseaseNo = `${key}`;
 						
 						data += "<li>"
-							 + "	<span>" + diseaseName + "</span>"
-			                 + "	<a href='javascript:delDisease("+ diseaseNo + ");'>x</a>"
-			                 + "</li>";
+							 +  "	<span>" + diseaseName + "</span>"
+			                 +  "	<a href='javascript:delDisease("+ diseaseNo + ");'>x</a>"
+			                 +  "</li>";
 					});
 					$("ul[id=selectedDisease]").append(data);
 					$("input[type=text][id=inputDisease]").val("");
@@ -236,7 +235,7 @@
 				
 				$('#inputDrug').click(function() {
 					if(drugMap.size === 5){
-						alert("최대 5개만 입력 가능합니다.");
+						showModal("최대 5개만 입력 가능합니다.", "확인");
 					}
 				});
 				
@@ -250,7 +249,7 @@
 
 				function addDrug(){
 					if($("#inputDrug").val() === "" || drugNameList.indexOf(drugName) === -1){
-						alert("등록할 수 없습니다.");
+						showModal("등록할 수 없습니다.", "확인");
 					}else{
 						for(var i = 0; i < drugNameList.length; i++) {
 							if(drugNameList[i] === drugName)  {
@@ -268,9 +267,9 @@
 							drugNo = `${key}`;
 							
 							data += "<li>"
-								 + "	<span>" + drugName + "</span>"
-				                 + "	<a href='javascript:delDrug("+ drugNo + ");'>x</a>"
-				                 + "</li>";
+								 +  "	<span>" + drugName + "</span>"
+				                 +  "	<a href='javascript:delDrug("+ drugNo + ");'>x</a>"
+				                 +  "</li>";
 						});
 						$("ul[id=selectedDrug]").append(data);
 						$("input[type=text][id=inputDrug]").val("");
@@ -292,9 +291,9 @@
 						drugNo = `${key}`;
 						
 						data += "<li>"
-							 + "	<span>" + drugName + "</span>"
-			                 + "	<a href='javascript:delDrug("+ drugNo + ");'>x</a>"
-			                 + "</li>";
+							 +  "	<span>" + drugName + "</span>"
+			                 +  "	<a href='javascript:delDrug("+ drugNo + ");'>x</a>"
+			                 +  "</li>";
 					});
 					$("ul[id=selectedDrug]").append(data);
 					$("input[type=text][id=inputDrug]").val("");
@@ -303,12 +302,12 @@
 				
 				function join(){
 					if(isChecked){
-						var params = "";
+						var params = '{ "userDTO" : ' + JSON.stringify(/*[[${userDTO}]]*/);
 						
 						if(diseaseMap.size === 0){
-							params += '{"diseaseMap" : [],';
+							params += ',"diseaseMap" : [],';
 						} else{
-							params += '{"diseaseMap" : [';
+							params += ',"diseaseMap" : [';
 										 
 							diseaseMap.forEach( (value, key, map) => {
 								diseaseName = `${value}`;
@@ -344,7 +343,7 @@
 							
 							params += ']}';
 						}
-						
+					
 						$.ajax({
 							url : "/user/join.do",
 							type : "post",
@@ -353,13 +352,9 @@
 							contentType: "application/json; charset=utf-8",
 							success : function(json) {
 								if(json.result === 'success'){
-									$("#myModal").modal("show");
-								    $("#modalLabel").text("회원가입에 성공하였습니다.");
-								    $("#btnModal").text("로그인하기");
+									showModal("회원가입에 성공하였습니다.", "로그인하기");
 								} else{
-									$("#myModal").modal("show");
-								    $("#modalLabel").text("회원가입에 실패하였습니다.");
-								    $("#btnModal").text("다시 가입하기");
+									showModal("회원가입에 실패하였습니다.", "다시 가입하기");
 								}
 							},
 							error : function(error) {
@@ -367,18 +362,22 @@
 						    }
 						});
 					} else{
-						$("#myModal").modal("show");
-					    $("#modalLabel").text("약관 동의가 필요합니다.");
-					    $("#btnModal").text("확인");
+						showModal("약관 동의가 필요합니다.", "확인");
 					}
 				};
+				
+				function showModal(labelMessage, btnMessage){
+					$("#myModal").modal("show");
+				    $("#modalLabel").text(labelMessage);
+				    $("#btnModal").text(btnMessage);
+				}
 				
 				function clickModal(){
 					var flag = $("#btnModal").text();
 					if(flag === '로그인하기'){
-						location.href = "/user/loginForm.do";
+						location.replace("/user/loginForm.do");
 					} else if(flag == '다시 가입하기'){
-						location.href = "/user/joinForm.do";
+						location.replace("/user/joinForm.do");
 					} else{
 						$("#myModal").modal("hide");
 					}

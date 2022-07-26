@@ -7,37 +7,24 @@
     <section id="list-page">
         <div class="container" data-aos="fade-up">
 
-            <th:block layout:fragment="search">
-                <div th:replace="fragments/mypage-common :: search">
-                </div>
-            </th:block>
-
             <div class="container py-3">
                 <div class="row list-page">
                     <div class="flex-shrink-0 p-3 bg-white" style="width: 200px;" data-aos="fade-right">
                         <ul class="border-top"></ul>
-                        <ul class="list-unstyled ps-0">
-                            <li class="mb-1">
-                                <form method="get" th:action="@{/mypage/disease.do}">
-                                    <button class="dropdown-none-toggle" type="submit">
-                                        관심 질병 리스트
-                                    </button>
-                                </form>
-                            </li>
-                            <li class="mb-1">
-                                <form method="get" th:action="@{/mypage/myDrug.do}">
-                                    <button class="dropdown-none-toggle" style="color:blue;" type="submit">
-                                        관심 약 리스트
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                        </ul>
+                        <th:block layout:fragment="mypagebar">
+			                <div th:replace="fragments/common :: mypagebar"></div>
+			            </th:block>
                     </div>
 
                     <div class="col-lg-10 mx-auto" style="margin-top: 15px;">
+                        <div class="pagetitle m-2">약 찜 리스트</div>
+
+			            <th:block layout:fragment="search">
+			                <div th:replace="fragments/mypage-common :: search">
+			                </div>
+			            </th:block>
                         <!-- List group-->
-                        <ul class="list-group shadow">
+                        <ul class="list-group shadow" style="margin-top:30px;">
                             <!-- list group item-->
                             <li class="list-group-item" th:if="${not #lists.isEmpty(drugList)}"
                                 th:each="item : ${drugList}">
@@ -46,9 +33,10 @@
                                     <div class="media-body order-2 order-lg-1">
                                         <img src="https://i.imgur.com/KFojDGa.jpg" id="drug-image">
                                         <div>
-                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a
-                                                    th:href="|@{/drug/view.do}${params.makeQueryString(params.currentPageNo)}&id=test&takeYn=${params.takeYn}&no=${item.drugNo}|"
-                                                    th:text="${item.drugName}"></a></h5>
+                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline">
+                                            <a	style="color:black;"
+                                                th:href="|@{/drug/view.do}${params.makeQueryString(params.currentPageNo)}&id=test&takeYn=${params.takeYn}&no=${item.drugNo}|"
+                                                th:text="${item.drugName}"></a></h5>
                                             <p class="font-italic text-muted mb-0 small" style="display: inline-block"
                                                th:text="${item.manufacturer}"></p>
                                         </div>
@@ -88,6 +76,26 @@
         <nav th:replace="fragments/common :: drugPagination">
         </nav>
     </th:block>
+    
+    <!--  Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!--  Modal content -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">아프면찾아조</h4>
+				</div>
+
+				<div class="modal-body">
+					<label id="modalLabel">키워드를 입력해 주세요.</label>
+				</div>
+
+				<div class="modal-footer">
+					<button class="btn btn-info" onclick="closeModal()">확인</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
     <th:block layout:fragment="script">
         <script th:inline="javascript">
@@ -105,7 +113,7 @@
 
                 var searchKeyword = document.getElementById("sub-myDrug-searchForm");
                 if (searchKeyword.value == "") {
-                    alert("키워드를 입력해 주세요.")
+                    $("#myModal").modal('show');
                     searchKeyword.focus();
                     return false;
                 }
@@ -114,6 +122,10 @@
                 form.searchKeyword.value = searchKeyword.value;
                 form.submit();
 
+            }
+            
+            function closeModal(){
+                $("#myModal").modal('hide');
             }
 
             /*]]>*/
