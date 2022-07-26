@@ -50,16 +50,17 @@ public class DrugController extends UiUtils {
     @GetMapping(value = "/list.do")
     public String getDrugList(@ModelAttribute("params") DrugDTO params, Principal principal, @RequestParam(value = "takeYn", required = false) String takeYn, Model model) {
 
-        String id = principal.getName();
+        String id= null;
 
-    	if (GrammerUtils.isStringEmpty(id) == true) {
+        if (principal != null) {
+            id = principal.getName();
             List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
             model.addAttribute("drugList", drugList);
+            model.addAttribute("id", id);
             return "drug/list";
         }
         List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
         model.addAttribute("drugList", drugList);
-        model.addAttribute("id", id);
 
         return "drug/list";
     }
@@ -68,9 +69,7 @@ public class DrugController extends UiUtils {
     @GetMapping(value = "/view.do")
     public String getDrug(@ModelAttribute(value = "params") DrugDTO params, Principal principal, @RequestParam(value = "takeYn", required = false) String takeYn, @RequestParam(value = "no", required = false) int drugNo, Model model) {
 
-        String id = principal.getName();
-
-    	if (GrammerUtils.isStringEmpty(id) == true) {
+    	if (principal == null) {
             return showMessageWithRedirect("접근 권한이 없습니다.", "/drug/list.do", Method.GET, null, model);
         }
         DrugDTO drug = drugService.getDrug(drugNo);
