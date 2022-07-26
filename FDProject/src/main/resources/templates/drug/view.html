@@ -34,7 +34,7 @@
                                 <h5>
                                     제조사
                                 </h5>
-                                <p class="collapse" id="manufacturer-collapse" th:text="${drug.manufacturer}"></p>
+                                <p id="manufacturer-collapse" th:text="${drug.manufacturer}"></p>
                             </div>
                         </li>
                         <li>
@@ -43,7 +43,7 @@
                                 <h5>
                                     주성분
                                 </h5>
-                                <p class="collapse" id="basis-collapse" th:text="${drug.basis}"></p>
+                                <p id="basis-collapse" th:text="${drug.basis}"></p>
                             </div>
                         </li>
                         <li>
@@ -52,7 +52,7 @@
                                 <h5>
                                     효능
                                 </h5>
-                                <p class="collapse" id="effect-collapse" th:text="${drug.effect}"></p>
+                                <p id="effect-collapse" th:text="${drug.effect}"></p>
                             </div>
                         </li>
                         <li>
@@ -64,7 +64,7 @@
                                         복용방법
                                     </button>
                                 </h5>
-                                <p class="collapse" id="method-collapse" th:text="${drug.method}"></p>
+                                <p id="method-collapse" th:text="${drug.method}"></p>
                             </div>
                         </li>
                         <li th:if="${#strings.isEmpty(drug.warning1)}">
@@ -76,7 +76,7 @@
                                         주의사항1
                                     </button>
                                 </h5>
-                                <p class="collapse" id="warning1-collapse" th:text="${drug.warning1}"></p>
+                                <p id="warning1-collapse" th:text="${drug.warning1}"></p>
                             </div>
                         </li>
                         <li th:if="${#strings.isEmpty(drug.warning2)}">
@@ -88,7 +88,7 @@
                                         주의사항2
                                     </button>
                                 </h5>
-                                <p class="collapse" id="warning2-collapse" th:text="${drug.warning2}"></p>
+                                <p id="warning2-collapse" th:text="${drug.warning2}"></p>
                             </div>
                         </li>
                         <li th:if="${#strings.isEmpty(drug.sideEffect)}">
@@ -102,7 +102,7 @@
                                         </button>
                                     </h5>
                                 </h5>
-                                <p class="collapse" id="sideEffect-collapse" th:text="${drug.sideEffect}"></p>
+                                <p id="sideEffect-collapse" th:text="${drug.sideEffect}"></p>
                             </div>
                         </li>
                         <li th:if="${#strings.isEmpty(drug.storage)}">
@@ -116,7 +116,7 @@
                                         </button>
                                     </h5>
                                 </h5>
-                                <p class="collapse" id="storage-collapse" th:text="${drug.storage}"></p>
+                                <p id="storage-collapse" th:text="${drug.storage}"></p>
                             </div>
                         </li>
                     </ul>
