@@ -16,9 +16,9 @@ public class MvcConfiguration implements WebMvcConfigurer {
 		registry.addInterceptor(new LoggerInterceptor())
 		.excludePathPatterns("/css/**", "/fonts/**", "/plugin/**", "/scripts/**");
 		
-		registry.addInterceptor(new LoginInterceptor())
-		.addPathPatterns() // 적용 경로
-		.excludePathPatterns(); // 제외 경로
+//		registry.addInterceptor(new LoginInterceptor())
+//		.addPathPatterns() // 적용 경로
+//		.excludePathPatterns(); // 제외 경로
 		
 		registry.addInterceptor(new AdminInterceptor())
 		.addPathPatterns("/admin/**")
