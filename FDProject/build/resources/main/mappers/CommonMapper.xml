@@ -88,6 +88,7 @@
     <when test="diseaseField != null and diseaseField != ''">
     	AND disease_Field =#{diseaseField}
     </when>
+    
    </choose> 
   </sql>
   
