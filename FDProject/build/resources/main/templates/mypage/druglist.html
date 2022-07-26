@@ -17,18 +17,18 @@
 	  				</div>
 			    
 			        <div class="col-lg-10 mx-auto" style="margin-top: 15px;">
-			        <div class="pagetitle m-2">복용약 관리 페이지</div>
+			        <div class="pagetitle m-1">복용약 관리 페이지</div>
 			            <!-- List group-->
-			            <ul class="list-group shadow">
-			                <!-- list group item-->
-			                <li class="list-group-item" th:if="${not #lists.isEmpty(userdrugList)}"
+			            <ul class="list-group shadow m-2" th:if="${not #lists.isEmpty(userdrugList)}"
                                 th:each="item : ${userdrugList}">
+			                <!-- list group item-->
+			                <li class="list-group-item">
                                 <!-- Custom content-->
                                 <div class="media align-items-lg-center flex-column flex-lg-row p-2">
                                     <div class="media-body order-2 order-lg-1">
                                         <img src="https://i.imgur.com/KFojDGa.jpg" id="drug-image">
                                         <div>
-                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a th:href="@{/drug/myview.do(no=${item.drugNo},id=${not #strings.isEmpty(id) ? id : ''})}" th:text="${item.drugName}"></a></h5>
+                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline"><a style="color:black;" th:href="@{/drug/myview.do(no=${item.drugNo},id=${not #strings.isEmpty(id) ? id : ''})}" th:text="${item.drugName}"></a></h5>
                                             <p class="font-italic text-muted mb-0 small" style="display: inline-block"
                                                th:text="${item.manufacturer}"></p>
                                         </div>
@@ -46,6 +46,18 @@
                                 </div> <!-- End -->
                             </li> <!-- End -->
                         </ul> <!-- End -->
+                        <ul class="list-group shadow m-1" th:unless="${not #lists.isEmpty(userdrugList)}">
+                                <!-- Custom content-->
+                                <li>
+                                <div class="media align-items-lg-center flex-column flex-lg-row p-4">
+                                    <div class="media-body order-2 order-lg-1">
+                                            <h4 class="mt-0 font-weight-bold"> 저장된 정보가 없습니다. </h4>
+		                           			<h6> - 회원 정보 수정 페이지에서 정보를 추가하실 수 있습니다.</h6>
+				                    </div>
+			                    </div>
+			                    </li>
+	                    </ul>
+                    
                     </div>
                 </div>
             </div>

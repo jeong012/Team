@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fdproject.mapper.RecipeMapper">
+
+	<sql id="recipeColumns">
+		<![CDATA[
+		recipe_No,
+		disease_Field,
+		title,
+		writer,
+		food_Ingredients,
+		step,
+		img_File,
+		reg_Date,
+		hit,
+		cart_Count,
+		delete_Yn,
+		storage,
+		tip,
+		RANDOM_IMG_FILE,
+		MOD_DATE,
+		DEL_DATE
+		]]>
+	</sql>
+
+	<sql id="recipeColumns2">
+		<![CDATA[
+		r.recipe_No,
+		r.disease_Field,
+		r.title,
+		r.writer,
+		r.food_Ingredients,
+		r.step,
+		r.img_File,
+		r.reg_Date,
+		r.hit,
+		r.cart_Count,
+		r.delete_Yn,
+		r.storage,
+		r.tip,
+		r.RANDOM_IMG_FILE,
+		r.MOD_DATE,
+		r.DEL_DATE
+		]]>
+	</sql>
+
+	<sql id="deleteYN">
+		<![CDATA[
+		and delete_YN != 'Y'		
+		]]>
+	</sql>
+
+	<sql id="r_deleteYN">
+		<![CDATA[
+		and r.delete_YN != 'Y'		
+		]]>
+	</sql>
+	
+	<sql id="commentColumns">
+		<![CDATA[
+			COMMENT_NO,
+			RECIPE_NO, 
+			WRITER, 
+			CONTENT, 
+			REF, 
+			PARENT_NO,
+			POS,
+			DEPTH, 
+			REG_DATE, 
+			MOD_DATE,
+			DEL_DATE,
+			DEL_MEMO
+		]]>
+	</sql>
+	
+	<sql id="recipeRecommendedColumns">
+		<![CDATA[
+			RECIPE_RECOMMENDED_NO,
+			RECIPE_NO,
+			USER_ID
+		]]>
+	</sql>
+    
+    <sql id="userRecipeColumns">
+        r.RECIPE_NO,
+        r.TITLE,
+        r.REG_DATE,
+        r.MOD_DATE,
+        r.DEL_DATE
+    </sql>
+    
+    <sql id="userCommentColumns">
+    	c.COMMENT_NO,
+    	c.RECIPE_NO,
+    	c.CONTENT,
+		c.REG_DATE,
+		c.MOD_DATE,
+		c.DEL_DATE 
+    </sql>
+	
+	<resultMap id="comment" type="CommentDTO">
+        <id property="commentNo" column="comment_no"/>
+        <result property="recipeNo" column="recipe_no"/>
+        <result property="writer" column="writer"/>
+        <result property="content" column="content"/>
+        <result property="ref" column="ref"/>
+        <result property="parentNo" column="parent_no"/>
+        <result property="pos" column="pos"/>
+        <result property="depth" column="depth"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="modDate" column="mod_date"/>
+        <result property="delDate" column="del_date"/>
+        <result property="delMemo" column="del_memo"/>
+        <result property="name" column="name"/>
+	</resultMap>
+	
+	<resultMap id="recipeRecommended" type="RecipeRecommendedDTO">
+        <id property="recipeRecommendedNo" column="recipe_recommended_no"/>
+        <result property="recipeNo" column="recipe_no"/>
+        <result property="userId" column="user_id"/>
+	</resultMap>
+
+     <resultMap id="userRecipe" type="RecipeDTO">
+        <id property="recipeNo" column="recipe_no"/>
+        <result property="title" column="title"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="modDate" column="mod_date"/>
+        <result property="delDate" column="del_date"/>
+    </resultMap>
+    
+     <resultMap id="userComment" type="CommentDTO">
+        <id property="commentNo" column="comment_no"/>
+        <result property="recipeNo" column="recipe_no"/>
+        <result property="content" column="content"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="modDate" column="mod_date"/>
+        <result property="delDate" column="del_date"/>
+    </resultMap>
+    
+	<!-- new -->
+	<select id="selectRecipeList" resultType="RecipeDTO">
+		<include refid="CommonMapper.pagingHeader" />
+		SELECT
+		<include refid="recipeColumns" />
+		FROM
+		recipes
+		where
+		1=1
+		and disease_field is not null
+		<include refid="CommonMapper.search_R" />
+		<include refid="deleteYN" />
+		order by title asc
+		<include refid="CommonMapper.pagingFooter" />
+	</select>
+
+	<select id="selectWriterRecipeList" resultType="RecipeDTO"> <!-- 사용자 작성 -->
+		<include refid="CommonMapper.pagingHeader" />
+		SELECT
+		<include refid="recipeColumns" />
+		FROM
+		recipes
+		where
+		1=1
+		<include refid="deleteYN" />
+		and writer != '[Manager]'
+		<include refid="CommonMapper.search_R" />
+		order by title asc
+		<include refid="CommonMapper.pagingFooter" />
+	</select>
+
+	<select id="selectMyWriteRecipeList" resultType="RecipeDTO"> <!-- 본인이 작성한 -->
+		<include refid="CommonMapper.pagingHeader" />
+		SELECT
+		<include refid="recipeColumns" />
+		FROM
+		recipes
+		where
+		1=1
+		<include refid="deleteYN" />
+		and writer =#{writer}
+		<include refid="CommonMapper.search_R" />
+		order by title asc
+		<include refid="CommonMapper.pagingFooter" />
+	</select>
+
+	<select id="getMyRecipeList" parameterType="RecipeDTO"
+		resultType="RecipeDTO">
+		<include refid="CommonMapper.pagingHeader" />
+		select
+		c.recipe_CART_NO,
+		<include refid="recipeColumns2" />
+		from
+		Recipes r, Recipes_cart c
+		where r.recipe_NO = c.recipe_NO
+		and c.USER_ID = #{cartDTO.userId}
+		<include refid="r_deleteYN" />
+		<include refid="CommonMapper.search_R" />
+		order by title asc
+		<include refid="CommonMapper.pagingFooter" />
+	</select>
+	<!-- 찜 레시피 리스트 -->
+	<select id="selectMyRecipeTotalCount" parameterType="RecipeDTO"
+		resultType="int">
+		select
+		COUNT(<![CDATA[*]]>)
+		from Recipes_CART c, recipes r
+		where
+		c.recipe_NO = r.recipe_NO
+		and USER_ID = #{cartDTO.userId}
+		<include refid="deleteYN" />
+		<include refid="CommonMapper.search_R" />
+	</select>
+	<!-- 유저들이 작성한 리스트 -->
+	<select id="selectWriterRecipeTotalCount" parameterType="RecipeDTO"
+		resultType="int">
+        <![CDATA[ 
+        	SELECT
+	        COUNT(*)
+	        FROM
+	        recipes
+	        where
+	        1=1
+	    ]]>
+	    and writer != '[Manager]'
+		<include refid="deleteYN" />
+		<include refid="CommonMapper.search_R" />
+	</select>  
+	<!-- 내가 작성한 리스트 -->
+	<select id="selectMyWriterRecipeTotalCount" parameterType="RecipeDTO"
+		resultType="int">
+        <![CDATA[ 
+        	SELECT
+	        COUNT(*)
+	        FROM
+	        recipes
+	        where
+	        1=1
+	    ]]>
+	    and writer=#{writer}
+		<include refid="deleteYN" />
+		<include refid="CommonMapper.search_R" />
+	</select>
+	<!-- 기본 레시피 리스트 -->
+	<select id="selectRecipeTotalCount" parameterType="RecipeDTO"
+		resultType="int">
+        <![CDATA[ 
+        	SELECT
+	        COUNT(*)
+	        FROM
+	        recipes
+	        where
+	        1=1
+	    ]]>
+		<include refid="deleteYN" />
+		<include refid="CommonMapper.search_R" />
+	</select>
+
+	<select id="selectRecipeInfo" parameterType="String"
+		resultType="RecipeDTO">
+		SELECT
+		<include refid="recipeColumns" />
+		FROM recipes
+		WHERE Recipe_no = #{Recipe_no}
+	</select>
+
+	<select id="selectMyRecipe" parameterType="RecipesCartDTO"
+		resultType="RecipesCartDTO">
+		select
+		*
+		from
+		recipes_cart rc
+		where rc.recipe_no = #{recipeNo}
+		and rc.user_id = #{userId}
+	</select>
+
+	<update id="UpdateUphit" parameterType="String">
+		UPDATE recipes
+
+		SET hit =
+		hit + 1
+
+		WHERE Recipe_no =
+		#{Recipe_no}
+	</update>
+
+
+	<select id="myRecipeList" parameterType="String"
+		resultType="RecipesCartDTO">
+		select
+		Recipe_CART_NO,
+		Recipe_NO,
+		USER_ID
+		from
+		Recipes_CART
+		where
+		USER_ID = #{userId}
+	</select>
+
+	<insert id="addCart" parameterType="RecipesCartDTO">
+		<selectKey keyProperty="recipeCartNo" resultType="int"
+			order="BEFORE">
+			select SEQ_RECIPES_CART_NO.NEXTVAL from dual
+		</selectKey>
+		insert into RECIPES_CART (RECIPE_CART_NO, RECIPE_NO, USER_ID)
+		values (#{recipeCartNo}, #{recipeNo}, #{userId})
+	</insert>
+
+	<delete id="deleteCart">
+		delete
+		from RECIPES_CART
+		where RECIPE_NO = #{recipeNo}
+	</delete>
+
+	<update id="updateCartCount"
+		parameterType="RecipesCartDTO">
+		update recipes
+		set Cart_Count = Cart_Count + 1
+		where recipe_no = #{recipeNo}
+	</update>
+
+	<update id="minusCartCount"
+		parameterType="RecipesCartDTO">
+		update recipes
+		set Cart_Count = Cart_Count - 1
+		where recipe_no = #{recipeNo}
+	</update>
+
+	<select id="checkAuthority" parameterType="RecipesCartDTO"
+		resultType="int">
+		select count(*)
+		from recipes_cart
+		where recipe_no = #{recipeNo}
+		and user_id = #{userId}
+	</select>
+
+	<insert id="uploadRecipe" parameterType="RecipeDTO">
+		insert into recipes(recipe_no, title, writer, food_ingredients, step, reg_Date, hit, cart_count,
+							delete_yn, storage, tip, img_file, random_img_file, mod_date, del_date)
+		values(#{recipeNo}, #{title}, #{writer},#{foodIngredients}, #{step}, sysdate, #{hit}, #{cartCount},
+		'N', #{storage}, #{tip}, #{imgFile}, #{randomImgFile}, #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE})
+	</insert>
+
+	<update id="modifyRecipe" parameterType="RecipeDTO">
+		update recipes
+		set title = #{title}, writer = #{writer}, food_ingredients = #{foodIngredients},
+		step = #{step}, reg_Date = sysdate, cart_count = #{cartCount}, storage = #{storage},
+		tip = #{tip}, img_file = #{imgFile}, random_img_file = #{randomImgFile}, mod_date = sysdate
+		where recipe_no = #{recipeNo}
+	</update>
+
+	<select id="getRecipeNo" resultType="int">
+		select max(r.recipe_no)
+		from
+		recipes r
+	</select>
+
+	<update id="deleteYNRecipe" parameterType="String">
+		update recipes
+		set delete_yn = 'Y', del_date = sysdate
+		where recipe_no =#{recipeNo}
+	</update>
+	
+	<select id="getCommentList" parameterType="int" resultMap="comment">
+		SELECT c.*, u.NAME 
+		FROM COMMENTS c, USERS u 
+		WHERE RECIPE_NO = #{recipeNo}
+		AND c.WRITER = u.USER_ID 
+		ORDER BY REF, POS, DEPTH
+	</select>
+	
+	<insert id="postComment" parameterType="commentDTO">
+        <selectKey keyProperty="commentNo" resultType="int" order="BEFORE">
+			SELECT SEQ_COMMENTS_NO.NEXTVAL FROM DUAL
+        </selectKey>
+		INSERT INTO COMMENTS (<include refid="commentColumns" />)
+		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{commentNo}, #{commentNo}, 1, 0, SYSDATE, #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE}, #{delMemo, jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="deleteComment" parameterType="map">
+		UPDATE COMMENTS
+		SET DEL_MEMO = #{memo}, DEL_DATE = SYSDATE
+		WHERE COMMENT_NO = #{commentNo}
+	</update>
+    
+    <update id="deleteCommentByRecipe" parameterType="int">
+        UPDATE COMMENTS
+		SET DEL_DATE = SYSDATE
+		WHERE RECIPE_NO = #{recipeNo}
+    </update>
+	
+	<select id="getComment" parameterType="int" resultMap="comment">
+		SELECT c.*, u.NAME 
+		FROM COMMENTS c, USERS u 
+		WHERE COMMENT_NO = #{commentNo}
+		AND c.WRITER = u.USER_ID 
+	</select>
+	
+	<insert id="replyComment" parameterType="commentDTO">
+        <selectKey keyProperty="commentNo" resultType="int" order="BEFORE">
+            SELECT SEQ_COMMENTS_NO.NEXTVAL FROM DUAL
+        </selectKey>
+		INSERT INTO COMMENTS (<include refid="commentColumns" />)
+		VALUES(#{commentNo}, #{recipeNo}, #{writer}, #{content}, #{ref}, #{parentNo}, #{pos}+1, #{depth}, SYSDATE,  #{modDate, jdbcType=DATE}, #{delDate, jdbcType=DATE}, #{delMemo, jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="getPosGap" parameterType="int" resultType="String">
+		SELECT to_number(endPos) - to_number(startPos) gap
+		FROM (SELECT pos startPos 
+	   		  FROM ( SELECT * FROM COMMENTS WHERE PARENT_NO = #{parentNo} AND DEPTH = #{depth} ORDER BY POS)
+	   		  WHERE ROWNUM = 1) s,
+	  		 (SELECT pos endPos
+	   		  FROM ( SELECT * FROM COMMENTS WHERE PARENT_NO = #{parentNo} AND DEPTH = #{depth} ORDER BY POS DESC)
+	   		  WHERE ROWNUM = 1) e
+	</select>
+	
+	<update id="updatePlusPos" parameterType="commentDTO">
+		UPDATE COMMENTS
+		SET POS = POS+1
+		WHERE POS > #{pos}
+		AND REF = #{ref}
+    </update>
+    
+    <select id="getPos" parameterType="int" resultType="map">
+    	SELECT count(*) countParentCount, NVL(MIN(POS),0) pos
+		FROM COMMENTS
+		WHERE PARENT_NO = #{parentNo}
+		AND DEPTH = #{depth}
+    </select>
+    
+	<select id="getCommentCnt" parameterType="int" resultType="int">
+		SELECT NVL(count(*),0) commentCnt
+		FROM COMMENTS
+		WHERE RECIPE_NO = #{recipeNo}
+	</select>
+	
+	<update id="updateComment" parameterType="commentDTO">
+		UPDATE COMMENTS
+		SET CONTENT = #{content}, MOD_DATE = SYSDATE
+		WHERE COMMENT_NO = #{commentNo}
+	</update>
+	
+	<select id="getIsRecommended" parameterType="recipeRecommendedDTO" resultMap="recipeRecommended">
+		SELECT *
+		FROM RECIPES_RECOMMENDED
+		WHERE RECIPE_NO = #{recipeNo}
+		AND USER_ID = #{userId}
+	</select>
+	
+	<select id="getRecommendedCnt" parameterType="int" resultType="int">
+		SELECT NVL(count(*),0) recommendedCount
+		FROM RECIPES_RECOMMENDED
+		WHERE RECIPE_NO = #{recipeNo}
+	</select>
+	
+	<insert id="addRecommended" parameterType="recipeRecommendedDTO">
+	 	<selectKey keyProperty="recipeRecommendedNo" resultType="int" order="BEFORE">
+            SELECT SEQ_RECIPES_RECOMMENDED_NO.NEXTVAL FROM DUAL
+        </selectKey>
+		INSERT INTO RECIPES_RECOMMENDED (<include refid="recipeRecommendedColumns" />)
+		VALUES(#{recipeRecommendedNo}, #{recipeNo}, #{userId})
+	</insert>
+	
+	<delete id="removeRecommended" parameterType="recipeRecommendedDTO">
+	 	DELETE FROM RECIPES_RECOMMENDED
+		WHERE RECIPE_NO = #{recipeNo}
+		AND USER_ID = #{userId}
+	</delete>
+    
+    <select id="getUserRecipe" parameterType="int" resultMap="userRecipe">
+    	SELECT <include refid="userRecipeColumns"/> 
+		FROM RECIPES r, USERS u
+		WHERE u.USER_NO = #{userNo}
+		AND r.WRITER = u.USER_ID
+    </select>
+	
+	<select id="getUserComment" parameterType="int" resultMap="userComment">
+		SELECT <include refid="userCommentColumns"/> 
+		FROM COMMENTS c , USERS u 
+		WHERE u.USER_NO = #{userNo}
+		AND c.WRITER = u.USER_ID
+	</select>
+	
+</mapper>

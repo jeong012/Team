@@ -38,6 +38,34 @@
      class="text-center">
     <ul class="pagination justify-content-center">
             <li class="page-item disabled" th:if="*{hasPreviousPage == true}"
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(1)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]], , [[ ${params.diseaseName}]])">
+                <a class="page-link" href="javascript:void(0)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+            </li>
+            <li class="page-item disabled" th:if="*{hasPreviousPage == true}"
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.firstPage - 1)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]] , [[ ${params.diseaseName}]])">
+                <a class="page-link" href="javascript:void(0)" aria-label="Previous"><span aria-hidden="true">&lsaquo;</span></a>
+            </li>
+            <li class="page-item" th:each="pageNo : *{#numbers.sequence( firstPage, lastPage )}"
+                th:class="${pageNo == params.currentPageNo} ? 'page-item active'">
+                <a class="page-link" href="javascript:void(0)" th:text="${pageNo}"
+                   th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(pageNo)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]] , [[ ${params.diseaseName}]])"></a>
+            </li>
+            <li class="page-item" th:if="*{hasNextPage == true}"
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.lastPage + 1)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]] , [[ ${params.diseaseName}]])">
+                <a class="page-link" href="javascript:void(0)" aria-label="Next"><span aria-hidden="true">&rsaquo;</span></a>
+            </li>
+            <li class="page-item" th:if="*{hasNextPage == true}"
+                th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.totalPageCount)} ]], [[ ${params.diseaseField}]] , [[ ${params.writer}]] , [[ ${params.diseaseName}]])">
+                <a class="page-link" href="javascript:void(0)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+            </li>
+        </ul>
+</nav>
+
+<nav th:fragment="userPagination" th:if="${params != null and params.paginationInfo.totalRecordCount > 0}"
+     th:object="${params.paginationInfo}" th:with="info=${params.paginationInfo}" aria-label="Page navigation"
+     class="text-center" style="margin-bottom:100px;">
+    <ul class="pagination justify-content-center">
+    	<li class="page-item disabled" th:if="*{hasPreviousPage == true}"
                 th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(1)} ]])">
                 <a class="page-link" href="javascript:void(0)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
             </li>
@@ -58,7 +86,7 @@
                 th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${params.makeQueryString(info.totalPageCount)} ]])">
                 <a class="page-link" href="javascript:void(0)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
             </li>
-        </ul>
+    </ul>
 </nav>
 
 <!-- for drug-->
@@ -72,7 +100,7 @@
         <input type="hidden" name="takeYn" th:value="${params.takeYn}"/>
         <input type="hidden" name="id" th:value="${not #strings.isEmpty(id) ? id : ''}"/>
         <div>
-            <select name="searchType" class="btn btn-primary btn-search" id="searchType">
+            <select name="searchType" class="btn btn-primary btn-search" id="searchType" style = "text-align : justify">
                 <option value="" th:selected="${#strings.isEmpty( params.searchType )}">전체</option>
                 <option value="drugName" th:selected="${#strings.equals( params.searchType, 'drugName' )}">약</option>
                 <option value="effect" th:selected="${#strings.equals( params.searchType, 'effect' )}">증상</option>
@@ -88,13 +116,13 @@
 <!-- for recipe-->
 <div th:fragment="search_R" class="sub-search-box">
 <!--    <input type="text" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" placeholder=""/>-->
-    <form id="searchForm" th:action="@{/recipe/list}" method="get" th:onsubmit="return searchRecipe(this)" class=""
+    <form id="searchForm" th:action="@{/recipe/list.do}" method="get" th:onsubmit="return searchRecipe(this)" class=""
           role="form">
         <input type="hidden" name="currentPageNo" value="1"/>
         <input type="hidden" name="recordsPerPage" th:value="${params.recordsPerPage}"/>
         <input type="hidden" name="pageSize" th:value="${params.pageSize}"/>
-        <div class="" style="">
-            <select name="searchType" class="btn btn-primary btn-search" style = "text-align : justify">
+        <div>
+            <select name="searchType" class="btn btn-primary btn-search2" style = "text-align : justify">
                 <option value="" th:selected="${#strings.isEmpty( params.searchType )}">전체</option>
                 <option value="title" th:selected="${#strings.equals( params.searchType, 'title' )}">요리 이름</option>
                 <option value="diseaseField" th:selected="${#strings.equals( params.searchType, 'diseaseField' )}">아픈 부위</option>
@@ -103,12 +131,12 @@
         <div>
         	<input type="text" name="searchKeyword" class="search-form" id="sub-searchForm" th:value="${params.searchKeyword}" />
         </div>
-        <!--<button type="submit" class="btn btn-primary" onclick="searchRecipe(null)">검색</button> -->
+        <button type="submit" class="btn btn-primary" onclick="searchRecipe(null)">검색</button>
     </form>
 </div>
 
 <div th:fragment="recipe_write" class="sub-search-box">
-	<form method="get" action="/recipe/writeForm">
+	<form method="get" action="/recipe/writeForm.do">
 		<button type="submit" class="btn btn-primary btn-write">레시피 작성</button>
 	</form>
 </div>
@@ -117,21 +145,21 @@
 	<ul class="list-unstyled ps-0" >
 	<li class="mb-1 btn-group-vertical" >
 		<form method="get" th:action="@{/mypage/user.do}">
-			<button class="dropdown-none-toggle" type="submit" id="1">
-					회원 정보 수정
+			<button class="dropdown-none-toggle" type="submit">
+				회원 정보 수정
 			</button>
 		</form>
 		</li>
 		<li class="mb-1">
 			<form method="get" th:action="@{/mypage/drug.do}">
-				<button class="dropdown-none-toggle active" type="submit" id="2">
+				<button class="dropdown-none-toggle" type="submit">
  					약 관리
 				</button>
 			</form>
 		</li>
 		<li class="mb-1">
 			<form method="get" th:action="@{/mypage/disease.do}">
-				<button class="dropdown-none-toggle" type="submit" id="3">
+				<button class="dropdown-none-toggle" type="submit">
  					질병 관리
 				</button>
 			</form>
@@ -143,9 +171,9 @@
           </button>
           <div class="collapse" id="userDrug-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                  <li ><a th:href="@{/drug/list.do}" class="link-dark d-inline-flex text-decoration-none rounded">
+                  <li ><a th:href="@{/mypage/myDrug.do}" class="link-dark d-inline-flex text-decoration-none rounded">
                       약 찜 리스트</a></li>
-                  <li><a th:href="@{/drug/list.do}" class="link-dark d-inline-flex text-decoration-none rounded">
+                  <li><a th:href="@{/mypage/myRecipe.do}" class="link-dark d-inline-flex text-decoration-none rounded">
                       레시피 찜 리스트</a></li>
               </ul>
           </div>
