@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/basic">
+	
+	<div layout:fragment="content">
+		<section id="list-page">
+     	 <div class="container" data-aos="fade-up">
+			<div class="container py-3">
+			    <div class="row">
+					<div class="flex-shrink-0 p-3 bg-white" style="width: 200px;">	
+		     	 		<ul class="border-top"></ul>
+		     	 		<th:block layout:fragment="mypagebar">
+			                <div th:replace="fragments/common :: mypagebar"></div>
+			            </th:block>
+	  				</div>  
+			        <div class="col-lg-10 mx-auto" style="margin-top: 15px;">
+					<div class="pagetitle m-2">질병 관리 페이지</div>
+			            <!-- List group-->
+			            <ul class="list-group shadow m-2" th:if="${not #lists.isEmpty(diseaseList)}"
+			                	th:each="item : ${diseaseList}">
+			                <!-- list group item-->
+			                <li class="list-group-item">
+			                    <!-- Custom content-->
+			                    <div class="media align-items-lg-center flex-column flex-lg-row p-4">
+			                        <div class="media-body order-2 order-lg-1">
+			                            <h4 class="mt-0 font-weight-bold mb-2" th:text="${item.diseaseName}" style="display:inline;"></h4>
+			                            <i class="text-muted mb-0 small" th:text="'|'+${item.diseaseField}" style="display:inline;"></i>
+			                            <div class="d-flex align-items-center justify-content-between mt-2">
+			                            <ul class="d-grid gap-3" style="list-style:none;padding-left:none;">
+			                            <li>
+			                           <details open>
+										    <summary class="mt-1 ml-5 font-weight-bold mx-n5 my-2">질병 정보</summary>
+										    <div th:text="${item.description}"></div>									    
+										</details>
+										</li>
+										<li>
+										<details>
+										    <summary class="mt-1 font-weight-bold my-2">증상</summary>
+										    <div th:text="${item.symptom}"></div>									    
+										</details> 
+										</li>
+										</ul>          
+			                            </div>
+			                        </div>
+			                    </div> <!-- End -->
+			                </li> <!-- End -->
+			            </ul> <!-- End -->
+			        </div>
+			    </div>
+			    </div>
+			</div>
+		</section>
+	</div>
+</html>

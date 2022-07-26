@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/basic">
+	
+	<div layout:fragment="content">
+	    <!-- ======= Hero Section ======= -->
+		<section id="hero" class="d-flex align-items-center">
+		    <div class="container" data-aos="zoom-out" data-aos-delay="100">
+		      <h1>Welcome to <span>FDProject</span></h1>
+		      <h2>We are team of talented designers making websites with Bootstrap</h2>
+		
+		      <!-- main-searchForm input-->
+		      <form class="form-subscribe" id="contactFormFooter" data-sb-form-api-token="API_TOKEN">
+		        <div class="row">
+		            <div class="col">
+		                <input class="form-control form-control-lg" id="main-searchForm" type="text" placeholder="증상 / 약" />
+		            </div>
+		            <div class="col-auto"><button class="btn btn-primary" id="submitButton" type="submit">검색</button></div>
+		        </div>
+		
+		        <div class="d-none" id="submitSuccessMessage">
+		            <div class="text-center mb-3">
+		                <div class="fw-bolder">Form submission successful!</div>
+		                <p>To activate this form, sign up at</p>
+		                <a class="text-white" href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
+		            </div>
+		        </div>
+		        
+		        <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
+		    </form>
+		    </div>
+		</section><!-- End Hero -->
+
+        <main id="main">
+		    <!-- ======= Featured Services Section ======= -->
+		    <section id="featured-services" class="featured-services">
+		      <div class="container" data-aos="fade-up">
+		
+		        <div class="row">
+		          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+					<a th:href="@{/drug/list.do}">
+			          <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
+			              <div class="icon"><i class='bx bxs-capsule'></i></div>
+			              <h4 class="title" style="color: black;">약</h4>
+			          </div>
+			          </a>			          
+		          </div>
+		
+		          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+			      	<a th:href="@{/recipe/list}">
+			          <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
+			              <div class="icon"><i class='bx bxs-food-menu' ></i></div>
+			              <h4 class="title" style="color: black;">레시피</h4>
+			          </div>
+			        </a>
+		          </div>
+		
+		          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+					<a th:href="@{/drug/store.do}">
+			          <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
+			              <div class="icon"><i class='bx bx-first-aid'></i></div>
+			              <h4 class="title" style="color: black;">상비약 리스트</h4>
+			          </div>
+			        </a>
+		          </div>
+		
+		          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+					<a th:href="@{/drug/pharmacy.do}">
+			          <div class="icon-box" data-aos="fade-up" data-aos-delay="400">
+			              <div class="icon"><i class='bx bx-map' ></i></div>
+			              <h4 class="title" style="color: black;">내 주변 약국</h4>
+			          </div>
+					</a>
+		          </div>
+		
+		        </div>
+		
+		      </div>
+		    </section><!-- End Featured Services Section -->
+		  </main><!-- End #main -->
+	</div>
+	
+</html>

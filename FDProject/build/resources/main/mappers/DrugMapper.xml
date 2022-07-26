@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fdproject.mapper.DrugMapper">
+    <resultMap id="drug" type="DrugDTO">
+        <id property="drugNo" column="drug_no"/>
+        <result property="drugName" column="drug_name"/>
+        <result property="manufacturer" column="manufacturer"/>
+        <result property="basis" column="basis"/>
+        <result property="effect" column="effect"/>
+        <result property="method" column="method"/>
+        <result property="warning1" column="warning1"/>
+        <result property="warning2" column="warning2"/>
+        <result property="sideEffect" column="side_effect"/>
+        <result property="storage" column="storage"/>
+        <result property="houseYn" column="HOUSE_YN"/>
+        <result property="imgFile" column="img_file"/>
+        <result property="keyword" column="keyword"/>
+    </resultMap>
+
+    <resultMap id="myDrug" type="DrugsCartDTO">
+        <id property="drugCartNo" column="DRUG_CART_NO"/>
+        <result property="drugNo" column="DRUG_NO"/>
+        <result property="userId" column="USER_ID"/>
+    </resultMap>
+
+    <sql id="drugColumns">
+        d
+        .
+        DRUG_NO
+        ,
+        d.DRUG_NAME,
+        d.MANUFACTURER,
+        d.BASIS,
+        d.EFFECT,
+        d.METHOD,
+        d.WARNING1,
+        d.WARNING2,
+        d.SIDE_EFFECT,
+        d.STORAGE,
+        d.HOUSE_YN,
+        d.IMG_FILE,
+        d.KEYWORD
+    </sql>
+
+    <sql id="riskDrug">
+        <if test="params != null and params != ''">
+            <choose>
+                <when test="takeYn != null and takeYn != ''">
+                    <choose>
+                        <when test='takeYn.equals("Y")'>
+                            and NOT REGEXP_LIKE(temp.WARNING, #{params})
+                        </when>
+                        <when test='takeYn.equals("N")'>
+                            and REGEXP_LIKE(temp.WARNING, #{params})
+                        </when>
+                    </choose>
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+    <select id="drugList" parameterType="DrugDTO" resultMap="drug">
+        <include refid="CommonMapper.pagingHeader"/>
+        select
+        temp.DRUG_NO,
+        temp.DRUG_NAME,
+        temp.MANUFACTURER,
+        temp.BASIS,
+        temp.EFFECT,
+        temp.METHOD
+        from
+        (select
+        <include refid="drugColumns"/>
+        ,d.WARNING1 || d.WARNING2 WARNING
+        from
+        drugs d) temp
+        where
+        1=1
+        <include refid="riskDrug"/>
+        <include refid="CommonMapper.search_o"/>
+        order by drug_name asc
+        <include refid="CommonMapper.pagingFooter"/>
+    </select>
+
+    <select id="selectDrugTotalCount" parameterType="DrugDTO" resultType="int">
+        select
+        COUNT(<![CDATA[*]]>)
+        from
+        (select
+        <include refid="drugColumns"/>
+        ,d.WARNING1 || d.WARNING2 WARNING
+        from
+        drugs d) temp
+        where
+        1=1
+        <include refid="riskDrug"/>
+        <include refid="CommonMapper.search_o"/>
+    </select>
+
+    <select id="selectKeywords" parameterType="UserDrugDTO" resultType="String">
+        select d.KEYWORD
+        from DRUGS d,
+             USER_DRUGS u
+        where d.DRUG_NO = u.DRUG_NO
+          and u.USER_ID = #{userId}
+    </select>
+
+    <select id="housedrugList" parameterType="DrugDTO" resultMap="drug">
+        select
+        <include refid="drugColumns"/>
+        from
+        drugs d
+        where
+        d.HOUSE_YN = 'Y'
+    </select>
+    
+
+    <select id="getDrugDetail" parameterType="DrugDTO" resultMap="drug">
+        select
+        <include refid="drugColumns"/>
+        from
+        drugs d
+        where
+        d.DRUG_NO = #{drugNo}
+    </select>
+
+    <select id="getMyDrugList" parameterType="DrugDTO" resultMap="drug">
+        <include refid="CommonMapper.pagingHeader"/>
+        select
+        c.DRUG_CART_NO,
+        <include refid="drugColumns"/>
+        from
+        DRUGS d, DRUGS_CART c
+        where d.DRUG_NO = c.DRUG_NO
+        and c.USER_ID = #{cartDTO.userId}
+        <include refid="CommonMapper.search_o"/>
+        order by drug_name asc
+        <include refid="CommonMapper.pagingFooter"/>
+    </select>
+
+    <select id="getMyDrug" parameterType="int" resultMap="myDrug">
+        select
+            c.DRUG_CART_NO,
+            c.DRUG_NO,
+            c.USER_ID
+        from
+            DRUGS_CART c,
+            DRUGS d
+        where
+            c.DRUG_NO = d.DRUG_NO
+          and
+            c.DRUG_NO = #{drugNo}
+    </select>
+
+    <select id="myDrugList" parameterType="String" resultMap="myDrug">
+        select
+            DRUG_CART_NO,
+            DRUG_NO,
+            USER_ID
+        from
+            DRUGS_CART
+        where
+            USER_ID = #{userId}
+    </select>
+
+    <select id="selectMyDrugTotalCount" parameterType="DrugDTO" resultType="int">
+        select
+        COUNT(<![CDATA[*]]>)
+        from DRUGS_CART c, DRUGS d
+        where
+        d.DRUG_NO = c.DRUG_NO
+        and USER_ID = #{cartDTO.userId}
+        <include refid="CommonMapper.search_o"/>
+    </select>
+
+    <select id="getSearchKeyword" parameterType="String" resultType="String">
+        <![CDATA[
+        select SEARCH_SYMPTOM keyword
+        from SEARCH
+        where SEARCH_SYMPTOM like '%' || #{searchKeyword} || '%'
+        order by SEARCH_SYMPTOM asc
+        ]]>
+    </select>
+
+    <select id="getNameKeyword" parameterType="String" resultType="String">
+        <![CDATA[
+        select drug_name
+        from DRUGS
+        where drug_name like '%' || #{searchKeyword} || '%'
+        order by drug_name asc
+        ]]>
+    </select>
+
+    <insert id="addCart" parameterType="DrugsCartDTO">
+        <selectKey keyProperty="drugCartNo" resultType="int" order="BEFORE">
+            select SEQ_DRUGS_CART_NO.NEXTVAL from dual
+        </selectKey>
+        insert into DRUGS_CART (DRUG_CART_NO, DRUG_NO, USER_ID)
+        values (#{drugCartNo}, #{drugNo}, #{userId})
+    </insert>
+    
+    
+    <select id="getUserDrug" parameterType="UserDrugDTO" resultType="String">
+        select
+        drug_no as drugNo
+        from USER_DRUGS
+        where USER_ID = #{userId}
+    </select>
+    
+
+    <select id="userdrugList" parameterType="DrugDTO" resultMap="drug">
+        select
+        <include refid="drugColumns"/>
+      	FROM DRUGS d
+		WHERE d.drug_no = any(${cart})
+    </select>
+    
+    
+    <delete id="deleteCart">
+        delete
+        from DRUGS_CART
+        where DRUG_NO = #{drugNo}
+    </delete>
+    
+    <select id="joinDrugList" resultMap="drug">
+        <![CDATA[
+	       	SELECT DRUG_NO, DRUG_NAME
+	        FROM DRUGS
+	        WHERE 1=1
+	        ORDER BY DRUG_NO
+        ]]>
+    </select>
+
+</mapper>

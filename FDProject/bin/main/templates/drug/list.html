@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/basic">
+
+<div layout:fragment="content">
+    <section id="list-page">
+        <div class="container" data-aos="fade-up">
+
+            <th:block layout:fragment="search">
+                <div th:replace="fragments/common :: search">
+                </div>
+            </th:block>
+
+            <div class="container py-3">
+                <div class="row list-page">
+                    <div class="flex-shrink-0 p-3 bg-white" style="width: 200px; float: left;" data-aos="fade-right">
+                        <ul class="border-top"></ul>
+                        <ul class="list-unstyled ps-0">
+                            <li class="mb-1">
+                                <!--    <form method="get" th:action="@{/drug/list.do}">
+                                        <button class="dropdown-none-toggle" type="submit">
+                                            모든 약
+                                        </button>
+                                    </form>-->
+                                <a th:href="@{/drug/list.do}" class="dropdown-none-toggle">모든 약</a>
+                            </li>
+
+                            <li class="mb-1">
+                                <button class="dropdown-toggle" data-bs-toggle="collapse"
+                                        data-bs-target="#userDrug-collapse" aria-expanded="false">
+                                    내 맞춤
+                                </button>
+                                <div class="collapse" id="userDrug-collapse">
+                                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                        <li><a th:href="|@{/drug/list.do}?id=test&takeYn=Y|"
+                                               class="link-dark d-inline-flex text-decoration-none rounded">복용
+                                            가능 약</a></li>
+                                        <li><a th:href="|@{/drug/list.do}?id=test&takeYn=N|"
+                                               class="link-dark d-inline-flex text-decoration-none rounded">복용
+                                            금지 약</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-10 mx-auto" style="margin-top: 15px;">
+                    	<th:block th:if="${params.takeYn eq 'Y'}">
+							<h4>복용 가능 약에 대한 리스트입니다.</h4>
+						</th:block>
+						
+                   	 	<th:block th:if="${params.takeYn eq 'N'}">
+							<h4>복용 금지 약에 대한 리스트입니다.</h4>
+						</th:block>
+                    
+                        <!-- List group-->
+                        <ul class="list-group shadow">
+                            <!-- list group item-->
+                            <li class="list-group-item" th:if="${not #lists.isEmpty(drugList)}"
+                                th:each="item : ${drugList}">
+                                <!-- Custom content-->
+                                <div class="media align-items-lg-center flex-column flex-lg-row p-2">
+                                    <div class="media-body order-2 order-lg-1">
+                                        <img src="https://i.imgur.com/KFojDGa.jpg" id="drug-image">
+                                        <div>
+                                            <h5 class="mt-0 font-weight-bold mb-2" style="display: inline">
+                                            <a  style="color:black;"
+                                                    th:href="|@{/drug/view.do}${params.makeQueryString(params.currentPageNo)}&id=${not #strings.isEmpty(id) ? id : ''}&takeYn=${params.takeYn}&no=${item.drugNo}|"
+                                                    th:text="${item.drugName}"></a></h5>
+                                            <p class="font-italic text-muted mb-0 small" style="display: inline-block"
+                                               th:text="${item.manufacturer}"></p>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between mt-1">
+                                            <!--                                            <h6 class="font-weight-bold my-2"></h6>-->
+                                            <ul class="list-inline small">
+                                                <li class="list-inline-item m-0">효능: <i class="fa fa-star text-start"
+                                                                                        th:text="${item.effect}"
+                                                                                        style="font-style: normal"></i>
+                                                </li>
+                                                <li class="list-inline-item m-0">복용밥법: <i class="fa fa-star text-start"
+                                                                                          th:text="${item.method}"
+                                                                                          style="font-style: normal"></i>
+                                                </li>
+                                                <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i>
+                                                </li>
+                                                <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i>
+                                                </li>
+                                                <li class="list-inline-item m-0"><i class="fa fa-star-o text-gray"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div> <!-- End -->
+                            </li> <!-- End -->
+                        </ul> <!-- End -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <th:block layout:fragment="paging">
+        <nav th:replace="fragments/common :: drugPagination">
+        </nav>
+    </th:block>
+    
+    <!--  Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!--  Modal content -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">아프면찾아조</h4>
+				</div>
+
+				<div class="modal-body">
+					<label id="modalLabel">키워드를 입력해 주세요.</label>
+				</div>
+
+				<div class="modal-footer">
+					<button class="btn btn-info" onclick="closeModal()">확인</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            function movePage(uri, queryString, id, takeYn) {
+                if (id == null) {
+                    id = "";
+                    location.href = uri + queryString + "&id=" + id + "&takeYn=" + takeYn;
+                }
+                location.href = uri + queryString + "&id=" + id + "&takeYn=" + takeYn;
+            }
+
+            function searchDrug(form) {
+                /*[- 드롭다운이 아닌 메인 검색 키워드로 검색했을 때 -]*/
+                var searchKeyword = document.getElementById("sub-drug-searchForm");
+                if (searchKeyword.value == "") {
+                    $("#myModal").modal('show');
+                    searchKeyword.focus();
+                    return false;
+                }
+
+                form = document.getElementById("searchForm");
+                form.searchKeyword.value = searchKeyword.value;
+                form.submit();
+            }
+            
+            function closeModal(){
+                $("#myModal").modal('hide');
+            }
+
+//             $(function () { //화면 다 뜨면 시작
+//                 //DB쿼리 조작 없이 초성 검색을 하기 위해서는 우선 DB에 있는 항목들을 다 가지고 와야한다.
+//                 //즉 너무 많은 수가 있으면 클라이언트 측이 느려질 수 있다는 점.
+//                 //하지만 DB쿼리를 조작해서 서버에서 초성검색을 하는 방식에 비해 서버에는 무리가 없다.
+//                 // ajax로 미리 검색어 목록을 다 가지고 온다.
+//
+//                 var keyword = {
+//                     keyword: $("#searchInput").val()
+//                 };
+//
+//                 $.ajax({
+//                     type: "get",
+//                     url: "/drug/search",
+//                     dataType: "json",
+//                     //request.term = $("#autocomplete").val()
+//                     data: keyword,
+//                     success: function (data) {
+//                         //현재 data 상태
+//                         //data = ["김치 볶음밥","신라면","진라면","라볶이","팥빙수","너구리","삼양라면","안성탕면","불닭볶음면","짜왕","라면사리"];
+//
+//                         //이부분이 초성 검색이 가능하게 만들어 주는 부분
+//                         let source = $.map(data, function (item) { //json[i] 번째 에 있는게 item 임.
+//                             chosung = "";
+//                             //Hangul.d(item, true) 을 하게 되면 item이 분해가 되어서
+//                             //["ㄱ", "ㅣ", "ㅁ"],["ㅊ", "ㅣ"],[" "],["ㅂ", "ㅗ", "ㄲ"],["ㅇ", "ㅡ", "ㅁ"],["ㅂ", "ㅏ", "ㅂ"]
+//                             //으로 나오는데 이중 0번째 인덱스만 가지고 오면 초성이다.
+//
+//                             full = Hangul.disassemble(item).join("").replace(/ /gi, "");	//공백제거된 ㄱㅣㅁㅊㅣㅂㅗㄲㅇㅡㅁㅂㅏㅂ
+//
+//                             Hangul.d(item, true).forEach(function (strItem, index) {
+//
+//                                 if (strItem[0] != " ") {	//띄어 쓰기가 아니면
+//                                     chosung += strItem[0];//초성 추가
+//
+//                                 }
+//                             });
+//
+//
+//                             return {
+//                                 label: chosung + "|" + (item).replace(/ /gi, "") + "|" + full, //실제 검색어랑 비교 대상 ㄱㅊㅂㅇㅂ|김치볶음밥|ㄱㅣㅁㅊㅣㅂㅗㄲㅇㅡㅁㅂㅏㅂ 이 저장된다.
+//                                 value: item, //김치 볶음밥
+//                                 chosung: chosung,	//ㄱㅊㅂㅇㅂ,
+//                                 full: full
+//                             }
+//                         });
+//
+//
+//                         $("#searchInput").autocomplete({
+//                             source: source,	// source 는 자동 완성 대상
+//                             select: function (event, ui) {	//아이템 선택시
+//                                 console.log(ui.item.label + " 선택 완료");
+//
+//                             },
+//                             focus: function (event, ui) {	//포커스 가면
+//                                 return false;//한글 에러 잡기용도로 사용됨
+//                             },
+// // 					search : function( value, event ) {
+// // // 						value.delegateTarget.value
+// // // 						input = value.delegateTarget.value;
+//
+// // 						//$( "#searchInput" ).autocomplete( "search", Hangul.disassemble(input).join("").replace(/ /gi, "") );
+// // // 		 				return Hangul.disassemble(input).join("").replace(/ /gi, "");
+// // 					}
+//
+//                         }).autocomplete("instance")._renderItem = function (ul, item) {
+//                             //.autocomplete( "instance" )._renderItem 설절 부분이 핵심
+//                             return $("<li>")    //기본 tag가 li로 되어 있음
+//                                 .append("<div>" + item.value + "</div>")    //여기에다가 원하는 모양의 HTML을 만들면 UI가 원하는 모양으로 변함.
+//                                 .appendTo(ul);	//웹 상으로 보이는 건 정상적인 "김치 볶음밥" 인데 내부에서는 ㄱㅊㅂㅇㅂ,김치 볶음밥 에서 검색을 함.
+//                         };
+//                     },
+//
+//                 });
+//
+//
+//                 //여기가 한글 초중종성 검색 방법
+//                 $("#searchInput").on("keyup", function () {	//검색창에 뭔가가 입력될 때마다
+//                     input = $("#searchInput").val();	//입력된 값 저장
+//                     $("#searchInput").autocomplete("search", Hangul.disassemble(input).join("").replace(/ /gi, ""));	//자모 분리후 띄어쓰기 삭제
+//                 })
+//             });
+
+            $(document).ready(function() {
+                $( "#searchInput" ).autocomplete({
+                    source : function( request, response ) {
+                        $.ajax({
+                            url: "autoSearch",
+                            dataType: "json",
+                            data: {
+                                searchValue: request.term
+                            },
+                            success: function( result ) {
+                                response(
+                                    $.map( result, function( item ) {
+
+                                        return {
+                                            label: item.data,
+                                            value: item.data
+                                        }
+                                    })
+                                );
+                            }
+                        });
+                    },
+                    select: function( event, ui ) {},
+                    minLength: 1
+                });
+            });
+
+            /*]]>*/
+        </script>
+    </th:block>
+</div>
+</html>

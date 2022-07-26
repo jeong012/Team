@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/basic">
+
+<div layout:fragment="content">
+    <section id="about" class="about section-bg">
+        <div th:class="container" data-aos="fade-up">
+         <div class="section-title">
+                <h2>About</h2>
+                <h3><span></span></h3>
+                <p></p>
+            </div>
+        
+        
+            <div class="row">
+                <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
+                    <img th:src="|@{/assets/img/drugimages/}${mydrug.imgFile}|" class="img-fluid" alt="" style="width:auto; height:400px;">
+                </div>
+                <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up"
+                     data-aos-delay="100">
+                    <div>
+                        <input type="hidden" id="drugNo" th:value="${mydrug.drugNo}"/>
+                        <input type="hidden" id="userId" th:value="${id}"/>
+                        <h3 style="display: inline" th:text="${mydrug.drugName}"></h3>
+                    </div>
+                    <ul>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                            <h5> 제조사 </h5>
+                                <p th:text="${mydrug.manufacturer}"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5> 주성분 </h5>
+                                <p th:text="${mydrug.basis}"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5>효능</h5>
+                                <p th:text="${mydrug.effect}"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5>복용방법</h5>
+                                <p th:text="${mydrug.method}"></p>
+                            </div>
+                        </li>
+                        <li  th:if="${not #strings.isEmpty(mydrug.warning1)}">
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5 >주의사항1</h5>
+                                <p th:text="${mydrug.warning1}"></p>
+                            </div>
+                        </li>
+                        <li th:if="${not #strings.isEmpty(mydrug.warning2)}">
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5>주의사항2</h5>
+                                <p th:text="${mydrug.warning2}"></p>
+                            </div>
+                        </li>
+                        <li th:if="${not #strings.isEmpty(mydrug.sideEffect)}">
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5>부작용</h5>
+                                <p th:text="${mydrug.sideEffect}"></p>
+                            </div>
+                        </li>
+                        <li th:if="${not #strings.isEmpty(mydrug.storage)}">
+                            <i class="bx bx-file"></i>
+                            <div>
+                                <h5>보관방법</h5>
+                                <p th:text="${mydrug.storage}"></p>
+                            </div>
+                        </li>
+                    </ul>
+                    <p>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+</html>
