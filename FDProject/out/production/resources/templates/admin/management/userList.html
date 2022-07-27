@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/basic">
+
+	<div layout:fragment="content">
+		<section id="list-page">
+			<div class="container">
+			
+				<div class="row">
+			        <div class="col-md-12">
+				        <div class="pagetitle m-2">회원 관리</div>
+				        <div class="table-responsive" style="margin-top:30px;">
+				        	<table id="userTable" class="table table-bordred table-striped" style="text-align:center;">
+								<thead>
+									<tr>
+										<th>번호</th>
+					                    <th>아이디</th>
+					                    <th>성별</th>
+					                    <th>생년월일</th>
+					                    <th>삭제여부</th>
+					                    <th>세부조회</th>
+					                    <th>삭제</th>
+					                </tr>
+								</thead>
+				    			<tbody id="tableBody">
+				    				<th:block th:each="user, index : ${userList}">
+									    <tr>
+										    <td th:text="${user.userNo}"></td>
+										    <td th:text="${user.userId}"></td>
+										    <td th:text="${user.sex}"></td>
+										    <td th:text="${user.birthDate}"></td>
+										    <th:block th:if="${user.delDate ne null}">
+											    <td th:text="Y"></td>
+											</th:block>
+											<th:block th:unless="${user.delDate ne null}">
+											    <td th:text="N"></td>
+											</th:block>
+											
+								    		<td>
+								    			<th:block th:if="${(index.index+1) % 2 eq 0}">
+								    				<button th:onclick="detailUser([[${user.userNo}]])" style="border:0px; outline:0px; background:white;">
+								    			</th:block>
+								    			<th:block th:unless="${(index.index+1) % 2 eq 0}">
+								    				<button th:onclick="detailUser([[${user.userNo}]])" style="border:0px; outline:0px; background:#F5F5F5;">
+								    			</th:block>
+								    				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+													  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+													</svg>
+								    			</button>
+								    		</td>
+										    <td>
+										   	 	<th:block th:if="${(index.index+1) % 2 eq 0}">
+											    	<th:block th:if="${user.delDate eq null}">
+										    			<button th:onclick="showModal([[${user.userNo}]],'N')" style="border:0px; outline:0px; background:white;">
+										    		</th:block>
+											    	<th:block th:unless="${user.delDate eq null}">
+										    			<button th:onclick="showModal([[${user.userNo}]],'Y')" style="border:0px; outline:0px; background:white;">
+										    		</th:block>
+											    </th:block>
+											    
+								    			<th:block th:unless="${(index.index+1) % 2 eq 0}">
+											    	<th:block th:if="${user.delDate eq null}">
+										    			<button th:onclick="showModal([[${user.userNo}]],'N')" style="border:0px; outline:0px; background:#F5F5F5;">
+										    		</th:block>
+											    	<th:block th:unless="${user.delDate eq null}">
+										    			<button th:onclick="showModal([[${user.userNo}]],'Y')" style="border:0px; outline:0px; background:#F5F5F5;">
+										    		</th:block>
+								    			</th:block>
+											    	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+		  												<path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+													</svg>
+												</button>
+											</td>
+									    </tr>
+				    				</th:block>
+		    					</tbody>
+							</table>
+		            	</div>
+	        		</div>
+				</div>
+			</div>
+		</section>
+	
+		<th:block layout:fragment="paging">
+			<nav th:replace="/fragments/common :: userPagination"></nav>
+		</th:block>
+		
+		<div id="modal" class="modal fade" role="dialog">	
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">				
+						<h4 class="modal-title">아프면찾아조</h4>			
+					</div>
+					<div class="modal-body">
+						<label id="modalLabel"></label>				
+					</div>				
+					<div class="modal-footer" id="modalFooter">					
+					</div>			
+				</div>		
+			</div>	
+		</div>
+	</div>
+  
+	<th:block layout:fragment="script">
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+				function detailUser(userNo, flag){
+					$.ajax({
+						url : "/admin/management/getUserDetail.do",
+						type : "post",
+						data : {userNo: userNo},
+						dataType: "json",
+						success : function(json) {
+							var userDTO = json.userDTO;
+							var userDrugs = json.userDrugs;
+							var userDiseases = json.userDiseases;
+							var userRecipeList = json.userRecipeList;
+							var userCommentList = json.userCommentList;
+
+							$(".modal-backdrop").remove();							
+							$("#userModal").remove();
+							var modalForm = '<div id="userModal" class="modal fade" role="dialog">'
+										  + '	<div class="modal-dialog">'
+										  +	'		<div class="modal-content">'
+										  +	'			<div class="modal-header">'				
+										  +	'				<h4 class="modal-title">아프면찾아조</h4>'			
+										  + '			</div>'		
+										  +	'			<div class="modal-body">'	
+										  +	'				<ul class="nav nav-tabs">'
+										  +	'					<li class="nav-item">'
+										  +	'  						<a id="info" class="nav-link" onclick="detailUser(' + userNo + ',\'info\')">정보</a>'
+										  +	'					</li>'
+										  +	'					<li class="nav-item">'
+										  + ' 						<a id="recipe" class="nav-link" onclick="detailUser(' + userNo + ',\'recipe\')">레시피</a>'
+										  +	'					</li>'
+										  +	'					<li class="nav-item">'
+										  +	'						<a id="comment" class="nav-link" onclick="detailUser(' + userNo + ',\'comment\')">댓글</a>'
+										  +	'					</li>'
+										  +	'				</ul>'	
+										  + '				<table class="table table-bordered" style="text-align:center; margin-top:20px;">';
+										  
+							if(flag == 'recipe') {
+								var recipeForm = userRecipe(userRecipeList);
+								modalForm += recipeForm;
+							} else if(flag == 'comment') {
+								var commentForm = userComment(userCommentList);
+								modalForm += commentForm;	
+								
+							} else {
+								var infoForm = userInfo(userDTO, userDrugs, userDiseases);
+								modalForm += infoForm;	
+							}
+							
+							modalForm += '					</table>'				
+									  +	 '				</div>'		
+									  +	 '				<div class="modal-footer">'	
+									  +	 '					<button class="btn btn-info" onclick="closeModal()">확인</button>'	
+									  +	 '				</div>'
+									  +	 '			</div>'	
+									  +	 '		</div>'
+									  +	 '	</div>';
+									  
+							$("#modal").after(modalForm);
+							
+							$('#userModal').modal({backdrop: 'static', keyboard: false});
+							$("#userModal").modal("show");
+							
+							if(flag == 'recipe') {
+								$("#info").attr('class', 'nav-link');
+								$("#recipe").attr('class', 'nav-link active');
+								$("#comment").attr('class', 'nav-link');
+							} else if(flag == 'comment') {
+								$("#info").attr('class', 'nav-link');
+								$("#recipe").attr('class', 'nav-link');
+								$("#comment").attr('class', 'nav-link active');	
+							} else {
+								$("#info").attr('class', 'nav-link active');
+								$("#recipe").attr('class', 'nav-link');
+								$("#comment").attr('class', 'nav-link');	
+							}
+						},
+						error : function(error) {
+							console.error(error);
+					    }
+					});
+				}			  
+				
+				function userInfo(userDTO, userDrugs, userDiseases){
+					var infoForm = '<tbody>'
+								 + '	<tr>'
+						  		 + '		<th scope="row">번호</th>'								
+						  		 + '		<td>' + userDTO.userNo+ '</td>'
+								 + '	</tr>'
+								 + '	<tr>'
+								 + '		<th scope="row">아이디</th>'  	
+								 + '		<td>' + userDTO.userId + '</td>'							
+								 + '	</tr>'							
+								 + '	<tr>'  							
+								 + '		<th scope="row">이름</th>'  							
+								 + '		<td>' + userDTO.name + '</td>'							
+								 + '	</tr>'		
+								 + '	<tr>'
+								 + '		<th scope="row">휴대폰 번호</th>'								
+								 + '		<td>' + userDTO.phoneNumber + '</td>'
+								 + '	</tr>'
+								 + '	<tr>'
+								 + '		<th scope="row">성별</th>'								
+								 + '		<td>' + userDTO.sex + '</td>'
+								 + '	</tr>'
+								 + '	<tr>'
+								 + '		<th scope="row">생년월일</th>'  					
+								 + '		<td>' + userDTO.birthDate + '</td>'						
+								 + '	</tr>'							
+								 + '	<tr>'  							
+								 + '		<th scope="row">가입 경로</th>'  					
+								 + '		<td>' + userDTO.registrationId + '</td>'						
+								 + '	</tr>'						
+								 + '	<tr>'  							
+								 + '		<th scope="row">권한</th>'  					
+								 + '		<td>' + userDTO.authority + '</td>'						
+								 + '	</tr>'							
+								 + '	<tr>'  							
+								 + '		<th scope="row">삭제 여부</th>';
+								 
+					if(userDTO.delDate != null){
+						infoForm += '		<td>Y&nbsp;(' + userDTO.delDate +')</td>';
+					}else{
+						infoForm += '		<td>N</td>';
+					}
+					
+					infoForm += '		</tr>'			
+							 + 	'		<tr>'	
+							 + 	'			<th scope="row">복용중인 약</th>'  							
+							 + 	'			<td id="userDrugs" style="white-space:pre;"> ' + userDrugs + ' </td>'	
+							 + 	'		</tr>'	
+							 + 	'		<tr>'	
+							 +	'			<th scope="row">앓고있는 지병</th>'  							
+							 + 	'			<td id="userDiseases" style="white-space:pre;"> ' + userDiseases + '</td>'	
+						 	 + 	'		</tr>'					
+							 + 	'	</tbody>';
+					
+					return infoForm;
+				}
+				
+				function userRecipe(userRecipeList){
+					var recipeForm = "";
+					if(userRecipeList.length == 0){
+						recipeForm += '<tbody>'
+								   +  '	<tr>'
+								   +  '		<td>'
+								   +  '			<ul class="list-group shadow">'
+								   +  '				<li class="list-group-item">'
+								   +  '				등록된 레시피가 없습니다.'				
+								   +  '				</li>'
+								   +  '			</ul>'
+						 	 	   +  '		</td>'
+						 	 	   +  '	</tr>'
+						 	 	   +  '</tbody>';
+					}else{
+						recipeForm += '<thead>'
+					      			+  '	<tr>'
+					      			+  '		<th>번호</th>'
+					      			+  '		<th>제목</th>'
+					      			+  '		<th>등록일</th>'
+					      			+  '		<th>수정 여부</th>'
+					      			+  '		<th>삭제 여부</th>'
+					      			+  '	</tr>'
+					    			+  '</thead>'
+									+  '<tbody>';
+						for(var i=0; i<userRecipeList.length; i++){
+							recipeForm	+= '<tr>'
+				        				+  '	<td><a href="/admin/management/recipeView.do?recipeNo=' + userCommentList[i].recipeNo + '" target="_blank">' + userRecipeList[i].recipeNo + '</a></td>'
+				        				+  '	<td>' + userRecipeList[i].title + '</td>'
+				        				+  '	<td>' + userRecipeList[i].regDate + '</td>';
+				        	if(userRecipeList[i].modDate != null){
+				        		recipeForm += '<td>Y&nbsp;(' + userRecipeList[i].modDate + ')</td>';
+				        	} else{
+				        		recipeForm += '<td>N</td>';
+				        	}
+				        	
+				        	if(userRecipeList[i].delDate != null){
+				        		recipeForm += '<td>Y&nbsp;(' + userRecipeList[i].delDate + ')</td>';
+				        	} else{
+				        		recipeForm += '<td>N</td>';
+				        	}
+				        	recipeForm += '</tr>';
+						}
+						recipeForm += '</tbody>';
+					}
+					
+					return recipeForm;
+				}
+				
+				function userComment(userCommentList){
+					var commentForm = "";
+					if(userCommentList.length == 0){
+						commentForm += '<tbody>'
+									+  '	<tr>'
+									+  '		<td>'
+									+  '		<ul class="list-group shadow">'
+						 	 		+  '			<li class="list-group-item">'
+						 	 		+  '			등록된 댓글이 없습니다.'				
+						 	 		+  '			</li>'
+						 	 		+  '		</ul>'
+						 	 		+  '		</td>'
+						 	 		+  '	</tr>'
+						 	 		+  '</tbody>';
+					}else{
+						commentForm += '<thead>'
+					      			+  '	<tr>'
+					      			+  '		<th>번호</th>'
+					      			+  '		<th>내용</th>'
+					      			+  '		<th>등록일</th>'
+					      			+  '		<th>수정 여부</th>'
+					      			+  '		<th>삭제 여부</th>'
+					      			+  '	</tr>'
+					    			+  '</thead>'
+									+  '<tbody>';
+						for(var i=0; i<userCommentList.length; i++){
+							commentForm	+= '<tr>'
+				        				+  '	<td><a href="/admin/management/recipeView.do?recipeNo=' + userCommentList[i].recipeNo + '" target="_blank">' + userCommentList[i].commentNo + '</a></td>'
+				        				+  '	<td>' + userCommentList[i].content + '</td>'
+				        				+  '	<td>' + userCommentList[i].regDate + '</td>';
+				        	if(userCommentList[i].modDate != null){
+				        		commentForm += '<td>Y&nbsp;(' + userCommentList[i].modDate + ')</td>';
+				        	} else{
+				        		commentForm += '<td>N</td>';
+				        	}
+				        	
+				        	if(userCommentList[i].delDate != null){
+				        		commentForm += '<td>Y&nbsp;(' + userCommentList[i].delDate + ')</td>';
+				        	} else{
+				        		commentForm += '<td>N</td>';
+				        	}
+				        	commentForm += '</tr>';
+						}
+						commentForm += '</tbody>';
+					}
+					
+					return commentForm;
+				}
+				
+				function showModal(userNo, deleteYn){
+					$("#modal").modal("show");
+					$("#modalFooter").empty();
+					
+					if(deleteYn == 'Y'){
+						$("#modalLabel").text("이미 삭제된 회원입니다.");
+						$("#modalFooter").append('<button class="btn btn-info" onclick="closeModal()">확인</button>');
+					} else{
+						$("#modalLabel").text("삭제하시겠습니까?");
+						$("#modalFooter").append('<button class="btn btn-info" onclick="deleteUser(' + userNo + ')">삭제</button>'
+												+ '<button class="btn btn-info" onclick="closeModal()">취소</button>'
+						);
+					}
+				}
+				
+				function deleteUser(userNo){
+					var params = {
+						userNo: userNo,
+						currentPageNo: /*[[${currentPageNo}]]*/
+					};
+					
+					$.ajax({
+						url : "/admin/management/deleteUser.do",
+						type : "post",
+						data : params,
+						dataType: "json",
+						success : function(json) {
+							var result = json.result;
+							
+							if(result == 'success'){
+								$("#modalLabel").text("회원이 삭제되었습니다.");
+							} else{
+								$("#modalLabel").text("회원 삭제에 실패했습니다.");
+							}
+							
+							$("#modalFooter").empty();
+							$("#modalFooter").append('<button class="btn btn-info" onclick="closeModal()">확인</button>');
+							$("#modal").modal("show");
+
+							$("#tableBody").empty();
+							
+							var data = '';
+							var userList = json.userList;
+							for(var i=0; i<userList.length; i++){
+								data += '<tr>'
+									 +  '	<td>' + userList[i].userNo +'</td>'
+								     +	'	<td>' + userList[i].userId + '</td>'
+								     +	'	<td>' + userList[i].sex + '</td>'
+								     +	'	<td>' + userList[i].birthDate + '</td>';
+								
+								if(userList[i].delDate != null){
+								    data += '<td id="deleteYn">Y</td>';
+								} else{
+									data += '<td id="deleteYn">N</td>';
+								}  
+								
+								data += '	 <td>';
+								if((i+1)%2 == 0){
+					    			data += '	<button onclick="detailUser(' + userList[i].userNo + ')" style="border:0px; outline:0px; background:white;">'
+								} else{
+									data += '	<button onclick="detailUser(' + userList[i].userNo + ')" style="border:0px; outline:0px; background:#F5F5F5;">'
+								}
+								data += '			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">'
+								  	 +	'				<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>'
+									 +	'			</svg>'
+			    					 +	'	 	</button>'
+			    					 + 	'	 </td>';
+			    					 
+			    				data += '	 <td>';
+			    				if((i+1)%2 == 0){
+			    					if(userList[i].delDate == null){
+			    						data += '	<button onclick="showModal(' + userList[i].userNo + ',\'N\'' + ')" style="border:0px; outline:0px; background:white;">';
+			    					} else{
+				    					data += '	<button onclick="showModal(' + userList[i].userNo + ',\'Y\'' + ')" style="border:0px; outline:0px; background:white;">';
+			    					}
+								} else{
+									if(userList[i].delDate == null){
+			    						data += '	<button onclick="showModal(' + userList[i].userNo + ',\'N\'' + ')" style="border:0px; outline:0px; background:#F5F5F5;">';
+			    					} else{
+				    					data += '	<button onclick="showModal(' + userList[i].userNo + ',\'Y\'' + ')" style="border:0px; outline:0px; background:#F5F5F5;">';
+			    					}
+								}
+			    				data += '				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">'
+									 +	'					<path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>'
+									 +	'				</svg>'
+									 +	'			</button>'
+									 +	'	 <td>'
+							    	 + 	'</tr>';
+							}
+
+							$("#tableBody").append(data);
+						},
+						error : function(error) {
+							console.error(error);
+					    }
+					});
+				}
+				
+				function closeModal(){
+					$(".modal-backdrop").remove();
+					$("body").removeClass("modal-open");
+					$("body").css('overflow','');
+					$("body").css('padding-right','');
+					$("#userModal").remove();
+					$("#modal").modal("hide");
+				}
+				
+				function movePage(uri, queryString, diseaseField, writer) {
+					var url = uri + queryString;
+	
+					if (writer != null)
+						url += "&writer=" + writer;
+	
+					if (diseaseField != null)
+						url += "&diseaseField=" + diseaseField;
+	
+					location.href = url;
+				}
+			/*]]*/
+		</script>
+	</th:block>
+</html>

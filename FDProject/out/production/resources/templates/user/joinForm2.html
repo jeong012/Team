@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/basic">
+	
+	<div layout:fragment="content">
+	    <section class="bg-light">
+	      <div class="container">
+	          <!-- 회원가입 폼 -->
+			  <div class="join-form2">
+	            <h4>- 선택 항목 입력</h4>
+	            <div class="row select-detail-wrap">
+	              <div class="mb-3 row">
+	                <label for="inputDisease" class="col-4 col-form-label"><span>●</span> 앓고 있는 지병이 있으신가요?</label>
+	                <div class="col-2 input-box">
+	                  <input type="text" class="form-control" id="inputDisease">
+	                  <button class="btn-add btn-primary" onclick="addDisease()">
+	                    <i class='bx bx-plus'></i>
+	                  </button>
+	                </div>
+	              </div>
+	
+	              <div id="selectedDisease" class="disease-kind">
+	                <span class="ex">(최대 3개)</span>
+	                <ul id="selectedDisease">
+	                </ul>
+	              </div>
+	
+	              <div class="mb-3 row">
+	                <label for="inputDrug" class="col-4 col-form-label"><span>●</span> 복용 중인 약이 있으신가요?</label>
+	                <div class="col-2 input-box">
+	                  <input type="text" class="form-control" id="inputDrug">
+	                  <button class="btn-add btn-primary" onclick="addDrug()">
+	                    <i class='bx bx-plus'></i>
+	                  </button>
+	                </div>
+	              </div>
+	              <div id="selectedDrug" class="disease-kind">
+	                <span class="ex">(최대 5개)</span>
+	                <ul id="selectedDrug">
+	                </ul>
+	              </div>
+	            </div>
+	            <div class="agree-wrap">
+	              <h4>
+	                - 약관 동의
+	                
+	              </h4>
+	              <div class="agree-content" >
+		        	<pre>
+제1조 (목적)
+① 이용자 약관(이하 "이 약관"이라 합니다)은 이용자가 아프면찾아조(이하 "회사"라 합니다)에서 제공하는 인터넷 관련 서비스(이하 "서비스"라 합니다)를 이용함에 있어 이용자 (이하 "회원"이라 합니다.)와 회사의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.
+② 회원이 되고자 하는 자가 회사가 정한 소정의 절차를 거쳐서 "등록하기" 단추를 누르면 본 약관에 동의하는 것으로 간주합니다. 본 약관에 정하는 이외의 회원과 회사의 권리, 의무 및 책임사항에 관해서는 전기통신 사업법 기타 대한민국의 관련 법령과 상관습에 의합니다.
+제2조 (약관의 효력 및 변경)
+① 이 약관은 서비스를 통하여 이를 공지함으로서 효력이 발생됩니다.
+② 회사는 사정상 중요한 사유가 발생될 경우 사전 고지 없이 이 약관의 내용을 변경할 수 있으며, 변경된 약관은 제1항과 같은 방법으로 공지 또는 통지함으로써 효력이 발생됩니다.
+③ 회원은 변경된 약관에 동의하지 않을 경우 회원 탈퇴를 요청할 수 있으며, 변경된 약관의 효력 발생일 이후에도 서비스를 계속 사용할 경우 약관의 변경 사항에 동의한 것으로 간주됩니다.
+제3조 (약관 외 준칙)
+이 약관에 명시되지 않은 사항이 관계 법령에 규정되어 있을 경우에는 그 규정에 따릅니다.
+제4조 (용어의 정의)
+이 약관에서 사용하는 주요한 용어의 정의는 다음과 같습니다.
+1. 몰 : 아프면찾아조가 재화 또는 용역(이하 '재화등'이라 함)을 이용자에게 제공하기 위하여 컴퓨터등 정보통신설비를 이용하여 재화등을 거래할 수 있도록 설정한 가상의 영업장을 말하며, 아울러 사이버몰을 운영하는 사업자의 의미로도 사용합니다.
+2. 이용자 : '몰'에 접속하여 이 약관에 따라 '몰'이 제공하는 서비스를 받는 회원 및 비회원을 말합니다.
+3. 회원 : 회사와 서비스 이용 계약을 체결하고 이용자 아이디(ID)를 부여받은 자를 말합니다.
+4. 비회원: 함은 회원에 가입하지 않고 '몰'이 제공하는 서비스를 이용하는 자를 말합니다.
+5. 아이디 : 회원의 식별과 회원의 서비스 이용을 위하여 회원이 선정하고 회사가 승인하는 문자나 숫자 혹은 그 조합을 말합니다(이하 "ID"라 합니다).
+6. 비밀번호 : 회원이 부여받은 ID와 일치된 회원임을 확인하고, 회원 자신의 비밀을 보호하기 위하여 회원이 정한 문자와 숫자의 조합을 말합니다.
+7. 해지 : 회사 또는 회원이 서비스 사용 후 이용계약을 해약하는 것을 말합니다.
+제5조 (약관등의 명시와 설명 및 개정)
+1. 회사는 이 약관의 내용과 상호 및 대표자 성명, 영업소 소재지 주소(소비자의 불만을 처리할 수 있는 곳의 주소를 포함), 전화번호·모사전송번호·전자우편주소, 사업자등록번호, 통신판매업신고번호, 개인정보관리책임자등을 이용자가 쉽게 알 수 있도록 '몰'의 초기 서비스화면(전면)에 게시합니다. 다만, 약관의 내용은 이용자가 연결화면을 통하여 볼 수 있도록 할 수 있습니다.
+2. 회사는 이용자가 약관에 동의하기에 앞서 약관에 정하여져 있는 내용 중 청약철회·배송책임·환불조건 등과 같은 중요한 내용을 이용자가 이해할 수 있도록 별도의 연결화면 또는 팝업화면 등을 제공하여 이용자의 확인을 구하여야 합니다.
+3. 회사는 전자상거래등에서의소비자보호에관한법률, 약관의규제에관한법률, 전자거래기본법, 전자서명법, 정보통신망이용촉진등에관한법률, 방문판매등에관한법률, 소비자보호법 등 관련법을 위배하지 않는 범위에서 이 약관을 개정할 수 있습니다.
+4. 회사는 약관을 개정할 경우에는 적용일자 및 개정사유를 명시하여 현행약관과 함께 몰의 초기화면에 그 적용일자 7일이전부터 적용일자 전일까지 공지합니다.
+다만, 이용자에게 불리하게 약관내용을 변경하는 경우에는 최소한 30일 이상의 사전 유예기간을 두고 공지합니다. 이 경우 '몰'은 개정전 내용과 개정후 내용을 명확하게 비교하여 이용자가 알기 쉽도록 표시합니다.
+5. 회사는 약관을 개정할 경우에는 그 개정약관은 그 적용일자 이후에 체결되는 계약에만 적용되고 그 이전에 이미 체결된 계약에 대해서는 개정전의 약관조항이 그대로 적용됩니다. 다만 이미 계약을 체결한 이용자가 개정약관 조항의 적용을 받기를 원하는 뜻을 제3항에 의한 개정약관의 공지기간내에 ‘몰'에 송신하여 '몰'의 동의를 받은 경우에는 개정약관 조항이 적용됩니다.
+6. 이 약관에서 정하지 아니한 사항과 이 약관의 해석에 관하여는 전자상거래등에서의소비자보호에관한법률, 약관의규제등에관한법률, 공정거래위원회가 정하는 전자상거래등에서의소비자보호지침 및 관계법령 또는 상관례에 따릅니다.
+
+(시행일) 이 약관은 2022년 7월 28일부터 시행합니다.
+(경과조치) 이 약관 시행전의 이용약관에 따라 가입한 고객은 변경된 시행일부터 이 약관의 적용을 받습니다.
+		              </pre>
+	              </div>
+	              
+	              <div class="form-check">
+	                <input class="form-check-input" type="checkbox" id="agreeCheck">
+	                <label class="form-check-label" for="agreeCheck">서비스 약관에 동의합니다.</label>
+	              </div>
+	            </div>
+	              
+	            <div class="form-group">
+	                <div class="d-grid gap-2">
+                  		<button type="submit" class="btn btn-primary btn-join" onclick="join()">회원 가입</button>
+                	</div>
+	            </div>
+	            
+	            <!--  Modal -->
+	           	<div id="myModal" class="modal fade" role="dialog">
+	           		<div class="modal-dialog">
+	           			<!--  Modal content -->
+	           			<div class="modal-content">
+	           				<div class="modal-header">
+	           					<h4 class="modal-title">아프면찾아조</h4>
+	           				</div>
+	           				
+	           				<div class="modal-body">
+	           					<label id="modalLabel"> 회원가입에 성공하였습니다. </label>
+	           				</div>
+	           				
+	           				<div class="modal-footer">
+	           					<button id='btnModal' class="btn btn-info" onclick="clickModal()"></button>
+	           				</div>
+	           			</div>
+	           		</div>
+	           	</div>
+	              
+			  </div>
+	        </div>
+	    </section>
+	</div>
+
+	<th:block layout:fragment="script">
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+ 		<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+				var diseaseNameList = new Array();
+				var diseaseNoList = new Array();
+				var diseaseNo;
+				var diseaseName;
+				var diseaseMap = new Map();
+				
+				var drugNameList = new Array();
+				var drugNoList = new Array();
+				var drugNo;
+				var drugName;
+				var drugMap = new Map();
+				
+				var isChecked = false;
+				
+				$(document).ready(function() {
+					$.ajax({
+						url : "/user/join/getDiseaseList.do",
+						type : "get",
+						dataType : "json",
+						success : function(json) {
+							var diseaseList = json.diseaseList;
+							diseaseList.forEach(function(arg){
+								diseaseNameList.push(arg.diseaseName);
+						    });
+							
+							diseaseList.forEach(function(arg){
+								diseaseNoList.push(arg.diseaseNo);
+						    });
+						},
+						error : function(error) {
+							console.error(error);
+					    }
+					});
+
+					$.ajax({
+						url : "/user/join/getDrugList.do",
+						type : "get",
+						dataType : "json",
+						success : function(json) {
+							var drugList = json.drugList;
+							drugList.forEach(function(arg){
+								drugNameList.push(arg.drugName);
+						    });
+							
+							drugList.forEach(function(arg){
+								drugNoList.push(arg.drugNo);
+						    });
+						},
+						error : function(error) {
+							console.error(error);
+					    }
+					});
+					
+					$("#agreeCheck").change(function(){
+				        if($("#agreeCheck").is(":checked")){
+				        	isChecked = true;
+				        }else{
+				        	isChecked = false;
+				        }
+				    });
+				});
+				
+				$('#inputDisease').click(function() {
+					if(diseaseMap.size === 3){
+						showModal("최대 3개만 입력 가능합니다.", "확인");
+					}
+				});
+				
+				$("#inputDisease").autocomplete({
+					source : diseaseNameList,
+					select : function(event, ui) {
+						diseaseName = ui.item.value;
+			            diseaseNo = diseaseNoList[diseaseNameList.indexOf(diseaseName)];
+		            }
+				});
+				
+				function addDisease(){
+					if($("#inputDisease").val() === "" || diseaseNameList.indexOf(diseaseName) === -1){
+						showModal("등록할 수 없습니다.", "확인");
+					}else{
+						for(var i = 0; i < diseaseNameList.length; i++) {
+							if(diseaseNameList[i] === diseaseName)  {
+								diseaseNameList.splice(i, 1);
+								diseaseNoList.splice(i, 1);
+								i--;
+							}
+						}
+
+						var data = "";
+						$("ul[id=selectedDisease]").empty();
+						diseaseMap.set(diseaseNo, diseaseName);
+						diseaseMap.forEach( (value, key, map) => {
+							diseaseName = `${value}`;
+							diseaseNo = `${key}`;
+							
+							data += "<li>"
+								 +  "	<span>" + diseaseName + "</span>"
+				                 +  "	<a href='javascript:delDisease("+ diseaseNo + ");'>x</a>"
+				                 +  "</li>";
+						});
+						$("ul[id=selectedDisease]").append(data);
+						$("input[type=text][id=inputDisease]").val("");
+						diseaseName = "";
+					}
+				};
+				
+				function delDisease(diseaseNo){
+					diseaseName = diseaseMap.get(diseaseNo);
+					diseaseNameList.push(diseaseName);
+					diseaseNoList.push(diseaseNo);
+					
+					diseaseMap.delete(diseaseNo);
+
+					var data = "";;
+					$("ul[id=selectedDisease]").empty();
+					diseaseMap.forEach( (value, key, map) => {
+						diseaseName = `${value}`;
+						diseaseNo = `${key}`;
+						
+						data += "<li>"
+							 +  "	<span>" + diseaseName + "</span>"
+			                 +  "	<a href='javascript:delDisease("+ diseaseNo + ");'>x</a>"
+			                 +  "</li>";
+					});
+					$("ul[id=selectedDisease]").append(data);
+					$("input[type=text][id=inputDisease]").val("");
+					diseaseName = "";
+				};				
+				
+				$('#inputDrug').click(function() {
+					if(drugMap.size === 5){
+						showModal("최대 5개만 입력 가능합니다.", "확인");
+					}
+				});
+				
+				$("#inputDrug").autocomplete({
+					source : drugNameList,
+					select : function(event, ui) {
+						drugName = ui.item.value;
+			            drugNo = drugNoList[drugNameList.indexOf(drugName)];
+		            }
+				});
+
+				function addDrug(){
+					if($("#inputDrug").val() === "" || drugNameList.indexOf(drugName) === -1){
+						showModal("등록할 수 없습니다.", "확인");
+					}else{
+						for(var i = 0; i < drugNameList.length; i++) {
+							if(drugNameList[i] === drugName)  {
+								drugNameList.splice(i, 1);
+								drugNoList.splice(i, 1);
+								i--;
+							}
+						}
+
+						var data = "";
+						$("ul[id=selectedDrug]").empty();
+						drugMap.set(drugNo, drugName);
+						drugMap.forEach( (value, key, map) => {
+							drugName = `${value}`;
+							drugNo = `${key}`;
+							
+							data += "<li>"
+								 +  "	<span>" + drugName + "</span>"
+				                 +  "	<a href='javascript:delDrug("+ drugNo + ");'>x</a>"
+				                 +  "</li>";
+						});
+						$("ul[id=selectedDrug]").append(data);
+						$("input[type=text][id=inputDrug]").val("");
+						drugName = "";
+					}
+				};
+				
+				function delDrug(drugNo){
+					drugName = drugMap.get(drugNo);
+					drugNameList.push(drugName);
+					drugNoList.push(drugNo);
+					
+					drugMap.delete(drugNo);
+
+					var data = "";;
+					$("ul[id=selectedDrug]").empty();
+					drugMap.forEach( (value, key, map) => {
+						drugName = `${value}`;
+						drugNo = `${key}`;
+						
+						data += "<li>"
+							 +  "	<span>" + drugName + "</span>"
+			                 +  "	<a href='javascript:delDrug("+ drugNo + ");'>x</a>"
+			                 +  "</li>";
+					});
+					$("ul[id=selectedDrug]").append(data);
+					$("input[type=text][id=inputDrug]").val("");
+					drugName = "";
+				};
+				
+				function join(){
+					if(isChecked){
+						var params = '{ "userDTO" : ' + JSON.stringify(/*[[${userDTO}]]*/);
+						
+						if(diseaseMap.size === 0){
+							params += ',"diseaseMap" : [],';
+						} else{
+							params += ',"diseaseMap" : [';
+										 
+							diseaseMap.forEach( (value, key, map) => {
+								diseaseName = `${value}`;
+								diseaseNo = `${key}`;
+								
+								params += '{"diseaseNo" : ' + diseaseNo + ', '
+									   +  '	"diseaseName" : "' + diseaseName + '"},';
+							});
+							
+							if(params.charAt(params.length-1) === ','){
+								params = params.slice(0,-1);
+							}
+
+							params += '],';
+						}
+							
+						if(drugMap.size === 0){
+							params += '"drugMap" : []}';
+						} else{
+							params += '"drugMap" : [';
+							
+							drugMap.forEach( (value, key, map) => {
+								drugName = `${value}`;
+								drugNo = `${key}`;
+								
+								params += '{"drugNo" : ' + drugNo + ','
+									   +  '	"drugName" : "' + drugName + '"},';
+							});
+							
+							if(params.charAt(params.length-1) === ','){
+								params = params.slice(0,-1);
+							}
+							
+							params += ']}';
+						}
+					
+						$.ajax({
+							url : "/user/join.do",
+							type : "post",
+							data : params,
+							dataType : "json",
+							contentType: "application/json; charset=utf-8",
+							success : function(json) {
+								if(json.result === 'success'){
+									showModal("회원가입에 성공하였습니다.", "로그인하기");
+								} else{
+									showModal("회원가입에 실패하였습니다.", "다시 가입하기");
+								}
+							},
+							error : function(error) {
+								console.error(error);
+						    }
+						});
+					} else{
+						showModal("약관 동의가 필요합니다.", "확인");
+					}
+				};
+				
+				function showModal(labelMessage, btnMessage){
+					$("#myModal").modal("show");
+				    $("#modalLabel").text(labelMessage);
+				    $("#btnModal").text(btnMessage);
+				}
+				
+				function clickModal(){
+					var flag = $("#btnModal").text();
+					if(flag === '로그인하기'){
+						location.replace("/user/loginForm.do");
+					} else if(flag == '다시 가입하기'){
+						location.replace("/user/joinForm.do");
+					} else{
+						$("#myModal").modal("hide");
+					}
+				}
+			/*]]*/
+		</script>
+ 	</th:block>
+ 	
+</html>

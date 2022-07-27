@@ -58,9 +58,10 @@ public class DrugController extends UiUtils {
                 model.addAttribute("drugList", drugList);
                 model.addAttribute("id", id);
                 return "drug/list";
-        } else if (principal == null && takeYn == null){
+        } else if (principal == null && (takeYn == null || takeYn == "")){
             List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
             model.addAttribute("drugList", drugList);
+            model.addAttribute("id", id);
             return  "drug/list";
         }
 

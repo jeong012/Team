@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="/layout/basic"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<div layout:fragment="content">
+		<section class="breadcrumbs">
+			<div class="container">
+				<div class="d-flex justify-content-between align-items-center">
+					<h2 style="display: inline" th:text="${Recipe_info.title}"></h2>
+					<input type="hidden" id="recipeNo" th:value="${Recipe_info.recipeNo}" />
+					<input type="hidden" id="userId" th:value="${#authentication.principal.userId}" />
+					<button class="btn btn-primary ajax2" th:onclick="addCart([[${ Recipe_info.cartDTO }]])">
+						<img th:if="${Recipe_info.cartDTO == null}" src="/assets/img/star.svg" class="cart" />
+						<img th:unless="${Recipe_info.cartDTO == null}" src="/assets/img/star-fill.svg" class="cart" />
+					</button>
+					<ol>
+						<li style="display: inline; " th:text="조회수"></li>
+						<li style="display: inline; " th:text="${Recipe_info.hit}"></li>
+						<li style="display: inline" th:text="찜수"></li>
+						<li id = "like" style="display: inline" th:text="${Recipe_info.cartCount}"></li>
+					</ol>
+					<ol>
+						<li><a th:href="@{/}">홈</a></li> <!--  홈 링크 -->
+						<li><a th:href="@{/recipe/list.do}">레시피</a></li> <!--  레시피 리스트링크 -->
+						<li>상세 페이지</li>
+					</ol>
+				</div>
+			</div>
+		</section><!-- Breadcrumbs Section -->
+	
+		<!-- ======= Portfolio Details Section ======= -->
+		<section id="portfolio-details" class="portfolio-details">
+			<div class="container">
+				<div class="row gy-4">
+					<div class="col-lg-8">
+						<div class="portfolio-details-slider swiper">
+							<div class="swiper-wrapper align-items-center">
+	
+							</div>
+							<section id="about" class="about section-bg" style="padding: 10px">
+								<div class="container" data-aos="fade-up">
+									<div>
+										<div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center"
+											data-aos="fade-up" data-aos-delay="100">
+											<ul>
+												<th:block th:if="${Recipe_info.diseaseField != null}">
+													<li>
+														<i class="bx bx-check" ></i>
+														<div>
+															<h5>질병 카테고리 </h5>
+															<p style="font-size:20px;" th:text="${Recipe_info.diseaseField}"></p>
+														</div>
+													</li>
+												</th:block>
+											
+												<li>
+													<i class="bx bx-camera"></i>
+													<div>
+														<h5>음식 사진 </h5>
+														<img th:src="|@{/assets/img/recipeimages/}${Recipe_info.randomImgFile}|"
+															alt="" style="width: 400px; height: 400px;">
+														<br><br>
+													</div>
+												</li>
+												<th:block th:if="${Recipe_info.storage != null}">
+													<li>
+														<i class="bx bx-store"></i>
+														<div>
+															<h5>음식 보관법 </h5>
+															<p th:text="${Recipe_info.storage}"></p>
+														</div>
+													</li>
+												</th:block>
+												<th:block th:each="recipe_step, status : ${AL_rs_split}">
+													<li>
+														<i class="bx bx-food-menu"></i>
+														<div>
+															<h5 th:text="${status.index + 1}"></h5>
+															<p th:text="${recipe_step}" style="width:700px; word-wrap:break-word;"></p>
+														</div>
+													</li>
+												</th:block>
+												<th:block th:if="${Recipe_info.tip != null}">
+													<li>
+														<i class="bx bx-bulb"></i>
+														<div>
+															<h5>꿀팁</h5>
+															<p th:text="${Recipe_info.tip}"></p>
+														</div>
+													</li>
+												</th:block>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</section><!-- End About Section -->
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="portfolio-info">
+							<div>
+								<h3 style="display:inline-block;">&nbsp;구성 재료 &amp; 조리 영상 </h3>
+							</div>
+							<ul>
+								<th:block th:each="split : ${AL_ri_split}">
+									<li th:text="${split}"></li>
+								</th:block>
+							</ul>
+						</div> <!-- 수정하기 -->
+						<th:block sec:authorize="hasAnyRole('ROLE_MEMBER')">
+							<th:block th:if="${#authentication.principal.userId == Recipe_info.writer}">
+	
+								<a th:href="@{/recipe/writeForm.do(Recipe_No = ${Recipe_info.recipeNo})}" type="button"
+									class="btn btn-primary" id="btn_First"
+									style="font-size : 15px; position: relative; top: 15px; left: 0px;">수정 하기</a>
+	
+								<button id="btn_First" onclick="btn_delete();" type="button" class="btn btn-primary"
+									style="font-size : 15px; position: relative; top: 15px; left: 0px;">삭제 하기</button>
+							</th:block>
+					</div>
+					
+					<div>
+						<button type="button" id="recommendedBtn" style="border:0px; outline:0px; background:white;">
+							<th:block th:if="${isRecommended == true}">
+								<img id="recommendedImg" src="/assets/img/fullRecommend.png">
+							</th:block>
+							<th:block th:if="${isRecommended == false}">
+								<img id="recommendedImg" src="/assets/img/emptyRecommend.png">
+							</th:block>
+						</button>
+						<span th:text="${recommendedCnt}" id="recommendedCnt"></span>
+						&emsp;
+						<button type="button" id="commentBtn" style="border:0px; outline:0px; background:white;"><img src="/assets/img/chat.png"></button>
+						<span th:text="${commentCnt}" id="commentCnt"></span>
+					</div>
+					
+					<div class="commentList">
+						<div class="form-floating" style="width:1220px; display: inline-block;">
+	  						<textarea class="form-control" placeholder="Leave a comment here" id="content" style="height:100px;"></textarea>
+	  						<label for="floatingTextarea">댓글을 남겨주세요</label>
+						</div>
+						<button type="button" class="btn btn-primary" id="postBtn" style="margin-bottom:40px; margin-left:10px;">등록</button>
+					</div>
+					
+				</div>
+			</div>
+		</section><!-- End Portfolio Details Section -->
+		
+		<!--  Modal -->
+       	<div id="modal" class="modal fade" role="dialog">
+       		<div class="modal-dialog">
+       			<!--  Modal content -->
+       			<div class="modal-content">
+          				<div class="modal-header">
+          					<h4 class="modal-title">아프면찾아조</h4>
+          				</div>
+          				
+          				<div class="modal-body">
+          					<label id="modalLabel"></label>
+          				</div>
+          				
+          				<div class="modal-footer" id="footer" style="height:60px;">
+          					
+          				</div>
+          			</div>
+       		</div>
+       	</div>
+	</div>
+		
+	<th:block layout:fragment="script">
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+				$(document).ready(function() {
+					$(".commentList").hide();
+		
+					$('#modal').modal({backdrop: 'static', keyboard: false});
+					$("#modal").modal("hide");
+					
+				});
+			
+				var userId = $("#userId").val(); 
+			
+				function btn_delete() {
+					var Recipe_No = /*[[${Recipe_info.recipeNo}]]*/					
+					
+					$.ajax({
+						url: "/recipe/delete.do",
+						type: "post",
+						data: JSON.stringify(Recipe_No),
+						dataType: "text",
+						success: function (value) {
+							if("" == /*[[${prev}]]*/){
+								showModal("레시피가 삭제되었습니다", "/recipe/list.do");
+							} else if("writer" == /*[[${prev}]]*/){
+								showModal("레시피가 삭제되었습니다.", "/recipe/list.do?writer=writer");
+							}
+							else{
+								showModal("레시피가 삭제되었습니다.", "/recipe/list.do?diseaseField=" + /*[[${prev}]]*/);
+							}
+						},
+						error: function (request, status, error) {
+							console.error("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+						}
+					});
+				};
+				
+				var i = 0;
+				function addCart(myRecipe) {
+					if (myRecipe == null && i == 0) {
+						// json 형식으로 데이터 set
+						var params = {
+							recipeNo: $("#recipeNo").val()
+						}
+	
+						$.ajax({
+							url: "/cart/addRecipe.do",
+							type: "post",
+							data: params,
+							dataType: "json",
+							cache: false,
+							success: function (isExist) {
+								if (isExist == true) {
+									$('.cart').attr('src', '/assets/img/star-fill.svg');
+									showModal("추가 성공");
+									var like = $('#like').text();
+									like = Number(like) + 1;
+									$('#like').text(like);
+									i++;
+								} else {
+									showModal("추가 실패");
+								}
+							},
+							error: function (XHR, status, error) {
+								console.error(status + " : " + error);
+							}
+						});
+					} else if (myRecipe == null && i == 1) {
+						var params = {
+							recipeNo: $("#recipeNo").val()
+						}
+	
+						$.ajax({
+							url: "/cart/deleteRecipe.do",
+							type: "post",
+							data: params,
+							dataType: "json",
+							success: function (isExist) {
+								if (isExist == true) {
+									$('.cart').attr('src', '/assets/img/star.svg');
+									showModal("삭제 성공")
+									var like = $('#like').text();
+									like = Number(like) - 1;
+									$('#like').text(like);
+									i--;
+								} else {
+									showModal("삭제 실패");
+								}
+							},
+							error: function (XHR, status, error) {
+								console.error(status + " : " + error);
+							}
+						});
+					} else if (myRecipe != null && i == 0) {
+						var params = {
+							recipeNo: $("#recipeNo").val()
+						}
+	
+						$.ajax({
+							url: "/cart/deleteRecipe.do",
+							type: "post",
+							data: params,
+							dataType: "json",
+							success: function (isExist) {
+								if (isExist == true) {
+									$('.cart').attr('src', '/assets/img/star.svg');
+									showModal("삭제 성공")
+									var like = $('#like').text();
+									like = Number(like) - 1;
+									$('#like').text(like);
+									i++;
+								} else {
+									showModal("삭제 실패");
+								}
+							},
+							error: function (XHR, status, error) {
+								console.error(status + " : " + error);
+							}
+						});
+					} else {
+						var params = {
+							recipeNo: $("#recipeNo").val()
+						}
+	
+						$.ajax({
+							url: "/cart/addRecipe.do",
+							type: "post",
+							data: params,
+							dataType: "json",
+							cache: false,
+							success: function (isExist) {
+								if (isExist == true) {
+									$('.cart').attr('src', '/assets/img/star-fill.svg');
+									showModal("추가 성공")
+									var like = $('#like').text();
+									like = Number(like) + 1;
+									$('#like').text(like);
+									i--;
+								} else {
+									showModal("추가 실패");
+								}
+							},
+							error: function (XHR, status, error) {
+								console.error(status + " : " + error);
+							}
+						});
+					}
+				}		
+				
+				$("#commentBtn").click(function(){
+					$.ajax({
+						url: "/recipe/comment/getList.do",
+						type: "post",
+						data: {recipeNo : $("#recipeNo").val()},
+						dataType: "json",
+						success: function(json) {
+							var commentList = json.commentList;	
+							showComment('', commentList);
+						},
+						error : function(error) {
+							console.error(error);
+					    }
+					});
+				});
+				
+				$("#postBtn").click(function(){
+					var content = $("#content").val();
+					if(content == ''){
+						showModal("내용을 입력하세요.");
+					} else{
+						params = {
+							recipeNo: $("#recipeNo").val(),
+							writer: userId,
+							content: content
+						}
+						
+						$.ajax({
+							url: "/recipe/comment/post.do",
+							type: "post",
+							data: params,
+							dataType: "json",
+							success: function (json) {
+								var result = json.result;
+								var commentList = json.commentList;
+								
+								if(result == 'success'){
+									showComment('댓글이 등록되었습니다.', commentList);
+									
+								} else{
+									showModal("댓글 등록에 실패했습니다.");
+								}
+							},
+							error : function(error) {
+								console.error(error);
+						    }
+						});
+					}
+				});
+				
+				function replyComment(parentNo){
+					var replyContent = $("#replyContent").val();
+					
+					if(replyContent == ''){
+						showModal('내용을 입력하세요.');
+					} else{
+						var params = {
+								recipeNo: $("#recipeNo").val(),
+								writer: userId,
+								content: replyContent,
+								parentNo: parentNo
+						}
+						
+						$.ajax({
+							url: "/recipe/comment/reply.do",
+							type: "post",
+							data: params,
+							dataType: "json",
+							success: function (json) {
+								var result = json.result;
+								var commentList = json.commentList;
+								
+								if(result == 'success'){
+									closeReplyModal();
+									showComment('답변이 등록되었습니다.', commentList);
+								} else{
+									showModal("답변 등록에 실패했습니다.");
+								}
+								
+							},
+							error : function(error) {
+								console.error(error);
+						    }
+						});
+					}
+				}
+				
+				function showDeleteModal(commentNo){
+					$("#footer").empty();	
+					var footer = '<button class="btn btn-info" onclick="deleteComment(' + commentNo + ')">예</button>'
+							   + '<button class="btn btn-info" onclick="closeDeleteModal()">아니오</button>';
+					$("#footer").append(footer);
+					
+					$("#modal").modal("show");
+					$("#modalLabel").text("삭제하시겠습니까?");
+				}
+				
+				function closeDeleteModal(){
+					$("#footer").empty();
+					$("#modal").modal("hide");
+				} 
+				
+				function deleteComment(commentNo){
+					var params = {
+							commentNo: commentNo,
+							recipeNo: $("#recipeNo").val()
+					}
+					
+					$.ajax({
+						url: "/recipe/comment/delete.do",
+						type: "post",
+						data: params,
+						dataType: "json",
+						success: function (json) {
+							var result = json.result;
+							var commentList = json.commentList;
+							
+							if(result == 'success'){
+								showComment('댓글이 삭제되었습니다.', commentList);
+							} else{
+								showModal("댓글 삭제에 실패했습니다.");
+							}
+						},
+						error : function(error) {
+							console.error(error);
+					    }
+					});
+				}
+				
+				function showReply(commentNo){
+					var parentNo = commentNo;
+					$.ajax({
+						url: "/recipe/comment/get.do",
+						type: "post",
+						data: {commentNo: commentNo},
+						dataType: "json",
+						success: function (json) {
+							var commentDTO = json.commentDTO;
+							var modalForm = '';
+							modalForm += '<div id="replyModal" class="modal fade" role="dialog">'
+									  +	 '	<div class="modal-dialog">'
+						   			  +	 '		<div class="modal-content">'
+						   			  +	 '			<div class="modal-header">'
+						   			  +	 '				<h4 class="modal-title">아프면찾아조</h4>'
+				       				  +	 '				<button onclick="closeReplyModal()" style="border:0; background-color:#FFF">X</button>'
+						   			  +	 '			</div>'
+						   			  +	 '			<div class="modal-body">'
+						   			  +	 '				<form>'
+						   			  +	 '					<table class="table table-bordered" style="text-align:center;">'
+						   			  +  '						<tbody>'
+						   			  +	 '							<tr>'
+									  +  '  							<th scope="row">작성자</th>'
+									  +  '								<td>' + commentDTO.name + '</td>'
+									  +  '  							<th scope="row">작성일자</th>'
+									  +  '  							<td>' + commentDTO.regDate + '</td>'
+									  +  '							</tr>'
+									  +  '							<tr style="height:200px;">'
+									  +  '  							<th scope="row" style="padding:100px 0;">내용</th>'
+									  +  '  							<td colspan="3" style=text-align:left;">' + commentDTO.content + '</td>'
+									  +  '							</tr>'
+									  +  '						</tbody>'
+									  +  '					</table>'
+						   		  	  +	 '					<div class="form-floating">'
+				  					  +	 '						<textarea class="form-control" placeholder="Leave a comment here" id="replyContent" style="height:150px;"></textarea>'
+				  					  +	 '						<label for="floatingTextarea">답변을 입력하세요</label>'
+									  +	 '					</div>'
+						   			  +	 '				</form>'
+						   			  +	 '			</div>'
+						   			  +  '			<div class="modal-footer">'
+						   			  +  '			<button class="btn btn-info" onclick="replyComment(' + parentNo + ')">등록</button>'
+						   			  +  '			</div>'
+						   			  +	 '		</div>'
+						   			  +  '	</div>'
+						   			  +  '</div>';
+				   			  
+							$("#portfolio-details").after(modalForm);
+							$('#replyModal').modal({backdrop: 'static', keyboard: false});
+							$("#replyModal").modal("show");
+						},
+						error : function(error) {
+							console.error(error);
+					    }
+					});
+				}
+				
+				function showUpdate(commentNo){
+					$.ajax({
+						url: "/recipe/comment/get.do",
+						type: "post",
+						data: {commentNo: commentNo},
+						dataType: "json",
+						success: function (json) {
+							var commentDTO = json.commentDTO;
+							var modalForm = '';
+							modalForm += '<div id="updateModal" class="modal fade" role="dialog">'
+									  +	 '	<div class="modal-dialog">'
+						   			  +	 '		<div class="modal-content">'
+						   			  +	 '			<div class="modal-header">'
+						   			  +	 '				<h4 class="modal-title">아프면찾아조</h4>'
+				       				  +	 '				<button onclick="closeUpdateModal()" style="border:0; background-color:#FFF">X</button>'
+						   			  +	 '			</div>'
+						   			  +	 '			<div class="modal-body">'
+						   			  +	 '				<form>'
+						   			  +	 '					<table class="table table-bordered" style="text-align:center;">'
+						   			  +  '						<tbody>'
+						   			  +	 '							<tr style="font-size: 15px;">'
+									  +  '  							<th scope="row">작성자</th>'
+									  +  '								<td>' + commentDTO.name + '</td>'
+									  +  '  							<th scope="row">작성일자</th>'
+									  +  '  							<td>' + commentDTO.regDate + '</td>'
+									  +  '							</tr>'
+									  +  '							<tr style="height:200px;">'
+									  +  '  							<th scope="row" style="padding:100px 0;">내용</th>'
+									  +  '  							<td colspan="3" style=text-align:left;">' 
+									  +  '									<textarea class="form-control" id="updateContent" style="height:200px;">' + commentDTO.content + '</textarea>'
+									  + '								</td>'
+									  +  '							</tr>'
+									  +  '						</tbody>'
+									  +  '					</table>'
+						   			  +	 '				</form>'
+						   			  +	 '			</div>'
+						   			  +  '			<div class="modal-footer">'
+						   			  +  '			<button class="btn btn-info" onclick="updateComment(' + commentNo + ')">등록</button>'
+						   			  +  '			</div>'
+						   			  +	 '		</div>'
+						   			  +  '	</div>'
+						   			  +  '</div>';
+				   			  
+							$("#portfolio-details").after(modalForm);
+							$('#updateModal').modal({backdrop: 'static', keyboard: false});
+							$("#updateModal").modal("show");
+						},
+						error : function(error) {
+							console.error(error);
+					    }
+					});
+				}
+				
+				function updateComment(commentNo){
+					var updateContent = $("#updateContent").val();
+					
+					if(updateContent == ''){
+						showModal('내용을 입력하세요.');
+					} else{
+						var params = {
+								recipeNo: $("#recipeNo").val(),
+								commentNo: commentNo,
+								content: updateContent
+						}
+						
+						$.ajax({
+							url: "/recipe/comment/update.do",
+							type: "post",
+							data: params,
+							dataType: "json",
+							success: function (json) {
+								var result = json.result;
+								var commentList = json.commentList;
+								
+								if(result == 'success'){
+									closeReplyModal();
+									$("#updateModal").modal("hide");
+									showComment('댓글이 수정되었습니다.', commentList);
+								} else{
+									showModal("댓글 수정에 실패했습니다.");
+								}
+							},
+							error : function(error) {
+								console.error(error);
+						    }
+						});
+					}
+				}
+	
+				function closeUpdateModal(){
+					$("#updateModal").modal("hide");
+				}
+				
+				function showComment(message, commentList){
+					if(message != ''){
+						showModal(message);	
+					}
+					$("#commentCnt").text(commentList.length);
+					
+					$(".commentList").show();
+					$(".list-group").remove();
+					if(commentList.length == 0){
+						var data = ''; 
+						data += '<ul class="list-group shadow">'
+							 +  '	<li class="list-group-item">'
+							 +  '		등록된 댓글이 없습니다.'				
+							 +  '	</li>'
+							 +  '</ul>';
+					}else{
+						var data = '<ol class="list-group">';
+						for (var i=0; i<commentList.length; i++){
+							if(commentList[i].depth == 0){
+								data += '<li class="list-group-item d-flex justify-content-between align-items-start">'
+									 +	'<div class="ms-2 me-auto">'
+									 + 	'<div class="fw-bold">' + commentList[i].name;
+		
+								if(commentList[i].modDate != null){
+									data += '&ensp;(수정됨)';
+								}
+								
+								data += '</div>';
+	
+								if(commentList[i].delDate == null){
+									data +=	commentList[i].content;
+								} else{
+									data +=	'<span style="color:#808080;">' + commentList[i].delMemo + '</span>';	
+								}
+								
+								data +=	'<p class="text-muted" style="margin-bottom:5px; font-size:13px;">' + commentList[i].regDate;
+								
+							} else{
+								data += '<div class="fw-bold">';
+								
+								for(var j=0; j<commentList[i].depth-1; j++){
+									data += '&emsp;'
+								}
+								
+								data += '↳&nbsp;' + commentList[i].name;
+								if(commentList[i].modDate != null){
+									data += '&ensp;(수정됨)';
+								}
+								data +=	'</div>';
+								
+								for(var k=0; k<commentList[i].depth; k++){
+									data += '&emsp;';
+								}
+								if(commentList[i].delDate == null){
+									data += commentList[i].content; 	
+								} else{
+									data += '<span style="color:#808080;">' + commentList[i].delMemo + '</span>';	
+								}
+								
+								data +=	'<p class="text-muted" style="margin-bottom:5px; font-size:13px;">';
+								for(var l=0; l<commentList[i].depth; l++){
+									data += '&emsp;&nbsp;';
+								}
+								data += commentList[i].regDate;
+							}
+							
+							if(commentList[i].delDate == null){
+								data +=	'&ensp;'
+									 + 	'<a href="javascript:showReply(' + commentList[i].commentNo + ')" style="color:blue;">답변</a>';	
+							}
+								 
+							if(commentList[i].writer == userId && commentList[i].delDate == null){
+								data += '&ensp;'
+									 +	'<a href="javascript:showUpdate(' + commentList[i].commentNo + ')" style="color:green;">수정</a>'
+									 +	'&ensp;'
+						 			 +	'<a href="javascript:showDeleteModal(' + commentList[i].commentNo + ')" style="color:red;">삭제</a>';
+							}
+							
+						 	data += '</p>';
+						 	
+						 	if(i == commentList.length || (i+1 != commentList.length && commentList[i+1].pos == 1)){
+							 	data += '</div>'
+						  		 	 + 	'</li>';	
+						 	}
+						}
+						data +=	'</ol>';
+					}
+					
+					$(".commentList").append(data);
+					$("#content").val("");
+				} 
+	
+				function closeReplyModal(){
+					$("#replyModal").modal("hide");
+				}
+				
+				function showModal(message, href){
+					$("#footer").empty();	
+					var footer = '<button class="btn btn-info" id="isOk" onclick="closeModal(\'' + href + '\')">확인</button>';
+					$("#footer").append(footer);
+					
+					$("#modalLabel").text(message);
+					$("#modal").modal("show");
+				}
+				
+				function closeModal(href){
+					$("#modal").modal("hide");
+					if(href != 'undefined'){
+						location.href = href;
+					}
+				}
+				
+				$("#recommendedBtn").click(function(){
+					var params = {
+							recipeNo: $("#recipeNo").val(),
+							userId: userId
+					}
+					
+					var src = jQuery('#recommendedImg').attr("src");
+					if(src == "/assets/img/emptyRecommend.png"){
+						$.ajax({
+							url: "/recipe/recommended/add.do",
+							type: "post",
+							data: params,
+							dataType: "json",
+							success: function(json) {
+								var result = json.result;
+								if(result == 'success'){
+									showModal("레시피를 추천했습니다.");
+									
+									$("#recommendedCnt").text(json.recommendedCnt);
+									$("#recommendedImg").attr("src", "/assets/img/fullRecommend.png");
+								}else{
+									showModal("레시피 추천에 실패했습니다.");
+								}
+							},
+							error : function(error) {
+								console.error(error);
+						    }
+						});
+					} else{
+						$.ajax({
+							url: "/recipe/recommended/remove.do",
+							type: "post",
+							data: params,
+							dataType: "json",
+							success: function(json) {
+								var result = json.result;
+								if(result == 'success'){
+									showModal("레시피 추천을 취소했습니다.");
+									
+									$("#recommendedCnt").text(json.recommendedCnt);
+									$("#recommendedImg").attr("src", "/assets/img/emptyRecommend.png");
+								}else{
+									showModal("레시피 추천 취소를 실패했습니다.");
+								}
+							},
+							error : function(error) {
+								console.error(error);
+						    }
+						});
+					}
+				});
+			/*]]*/
+	</script>
+ </th:block>
+</html>

@@ -43,7 +43,7 @@ public class DrugServiceImpl implements DrugService {
             UserDrugDTO userDrug = new UserDrugDTO();
             userDrug.setUserId(id);
                 List<String> value = drugMapper.selectKeywords(userDrug);
-                if(value.isEmpty() == true && takeYn != null){
+                if(value.isEmpty() == true && takeYn != null && takeYn != ""){
                     return drugList;
                 }
                 System.out.println(value);
