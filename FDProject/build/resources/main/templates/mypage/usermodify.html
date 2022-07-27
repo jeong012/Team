@@ -90,7 +90,7 @@
 								<div class="modify-form select-form" style="margin-top:50px;">
 									<div class="row select-detail-wrap">
 										<div class="mb-3 row">
-							                <label for="inputDisease" style="margin-bottom:5px;"><span>●</span> 앓고 있는 지병이 있으신가요?&emsp;(최대 3개)</label>
+							                <label for="inputDisease" style="margin-bottom:5px;"><span>●</span> 앓고 있는 지병이 있으신가요?</label>
 							                <div class="col-2 input-box">
 							                  <input type="text" class="form-control" id="inputDisease" style="margin-left:15px;">
 							                  <button class="btn-add btn-primary" onclick="addDisease()">
@@ -290,10 +290,10 @@
 								i--;
 							}
 						}
+						
+						diseaseMap.set(diseaseNo, diseaseName);
+						setDisease();
 					}
-					
-					diseaseMap.set(diseaseNo, diseaseName);
-					setDisease();
 				};
 				
 				function delDisease(diseaseNo){
@@ -320,7 +320,7 @@
 				});
 	
 				function addDrug(){
-					if($("#inputDrug").val() === "" || drugNameList.indexOf(drugName) === -1){
+					if($("#inputDrug").val() === "undefined" || drugNameList.indexOf(drugName) === -1){
 						showModal("등록할 수 없습니다.");
 					}else{
 						for(var i = 0; i < drugNameList.length; i++) {
@@ -330,9 +330,10 @@
 								i--;
 							}
 						}
+						
+						drugMap.set(drugNo, drugName);
+						setDrug();
 					}
-					drugMap.set(drugNo, drugName);
-					setDrug();
 				};
 				
 				function delDrug(drugNo){
@@ -466,6 +467,7 @@
 			function showModal(message, href){
 				$("#myModal").modal("show");
 			    $("#modalLabel").text(message);
+			    $(".modal-footer").empty();
 			    $(".modal-footer").append("<button id='btnModal' class=\"btn btn-info\" onclick=\"closeModal('" + href + "')\">확인</button>");
 			}
 	
