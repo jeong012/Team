@@ -261,6 +261,7 @@
 		<include refid="recipeColumns" />
 		FROM recipes
 		WHERE Recipe_no = #{Recipe_no}
+		AND DELETE_YN = 'N'
 	</select>
 
 	<select id="selectMyRecipe" parameterType="RecipesCartDTO"

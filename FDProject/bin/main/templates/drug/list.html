@@ -34,10 +34,10 @@
                                 </button>
                                 <div class="collapse" id="userDrug-collapse">
                                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                        <li><a th:href="|@{/drug/list.do}?id=test&takeYn=Y|"
+                                        <li><a th:href="|@{/drug/list.do}?takeYn=Y|"
                                                class="link-dark d-inline-flex text-decoration-none rounded">복용
                                             가능 약</a></li>
-                                        <li><a th:href="|@{/drug/list.do}?id=test&takeYn=N|"
+                                        <li><a th:href="|@{/drug/list.do}?takeYn=N|"
                                                class="link-dark d-inline-flex text-decoration-none rounded">복용
                                             금지 약</a></li>
                                     </ul>
@@ -63,11 +63,12 @@
                                 <!-- Custom content-->
                                 <div class="media align-items-lg-center flex-column flex-lg-row p-2">
                                     <div class="media-body order-2 order-lg-1">
+
                                         <img style="width:130px; height:130px;" th:src="|@{/assets/img/drugimages/}${item.imgFile}|" onerror="this.src='/assets/img/drugimages/white.jpg'" id="drug-image">
                                         <div>
                                             <h5 class="mt-0 font-weight-bold mb-2" style="display: inline">
                                             <a  style="color:black;"
-                                                    th:href="|@{/drug/view.do}${params.makeQueryString(params.currentPageNo)}&id=${not #strings.isEmpty(id) ? id : ''}&takeYn=${params.takeYn}&no=${item.drugNo}|"
+                                                    th:href="|@{/drug/view.do}${params.makeQueryString(params.currentPageNo)}&takeYn=${params.takeYn}&no=${item.drugNo}|"
                                                     th:text="${item.drugName}"></a></h5>
                                             <p class="font-italic text-muted mb-0 small" style="display: inline-block"
                                                th:text="${item.manufacturer}"></p>
