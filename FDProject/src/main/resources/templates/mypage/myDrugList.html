@@ -31,7 +31,7 @@
                                 <!-- Custom content-->
                                 <div class="media align-items-lg-center flex-column flex-lg-row p-2" data-aos="zoom-in">
                                     <div class="media-body order-2 order-lg-1">
-                                        <img src="https://i.imgur.com/KFojDGa.jpg" id="drug-image">
+                                        <img th:src="|@{/assets/img/drugimages/}${item.imgFile}|" id="drug-image" onerror="this.src='/assets/img/drugimages/white.png'">
                                         <div>
                                             <h5 class="mt-0 font-weight-bold mb-2" style="display: inline">
                                             <a	style="color:black;"

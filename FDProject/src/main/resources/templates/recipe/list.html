@@ -121,7 +121,7 @@
 													<!-- 이미지 부분 -->
 													<div style="padding:0px;">
 														<img th:src="|@{/assets/img/recipeImages/}${Recipe.randomImgFile}|"
-															style="width:230px; height:240px; margin: 19px;">
+															style="width:230px; height:240px; margin: 19px;" onerror="this.src='/assets/img/drugimages/white.png'">
 													</div>
 													<!-- 버튼 부분 -->
 													<div class="btn-wrap" style="background-color:#FFFFFF;">

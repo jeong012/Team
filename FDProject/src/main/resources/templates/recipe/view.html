@@ -60,7 +60,7 @@
 													<div>
 														<h5>음식 사진 </h5>
 														<img th:src="|@{/assets/img/recipeimages/}${Recipe_info.randomImgFile}|"
-															alt="" style="width: 400px; height: 400px;">
+															alt="" style="width: 400px; height: 400px;" onerror="this.src='/assets/img/drugimages/white.png'">
 														<br><br>
 													</div>
 												</li>

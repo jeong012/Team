@@ -67,7 +67,8 @@
         temp.MANUFACTURER,
         temp.BASIS,
         temp.EFFECT,
-        temp.METHOD
+        temp.METHOD,
+        temp.IMG_FILE
         from
         (select
         <include refid="drugColumns"/>
