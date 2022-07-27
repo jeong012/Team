@@ -183,6 +183,7 @@
                         success: function (isExist) {
                             if (isExist == true) {
                             	showModal("추가 성공");
+                                $('.cart').attr('src', '/assets/img/star-fill.svg');
                                 i++;
                             }else {
                             	showModal("추가 실패");

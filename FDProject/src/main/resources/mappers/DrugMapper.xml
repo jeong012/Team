@@ -113,7 +113,6 @@
         where
         d.HOUSE_YN = 'Y'
     </select>
-    
 
     <select id="getDrugDetail" parameterType="DrugDTO" resultMap="drug">
         select

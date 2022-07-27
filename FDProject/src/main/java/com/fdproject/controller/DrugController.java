@@ -54,15 +54,17 @@ public class DrugController extends UiUtils {
 
         if (principal != null) {
             id = principal.getName();
+                List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
+                model.addAttribute("drugList", drugList);
+                model.addAttribute("id", id);
+                return "drug/list";
+        } else if (principal == null && takeYn == null){
             List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
             model.addAttribute("drugList", drugList);
-            model.addAttribute("id", id);
-            return "drug/list";
+            return  "drug/list";
         }
-        List<DrugDTO> drugList = drugService.getDrugList(id, params, takeYn);
-        model.addAttribute("drugList", drugList);
 
-        return "drug/list";
+        return showMessageWithRedirect("접근 권한이 없습니다.", "/drug/list.do", Method.GET, null, model);
     }
 
     //약 상세정보
