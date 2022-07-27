@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="/layout/basic">
+	layout:decorate="/layout/basic"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 	<div layout:fragment="content">
 		<section class="breadcrumbs">
 			<div class="container">
 				<div class="d-flex justify-content-between align-items-center">
+					<input type="hidden" id="userId" th:value="${#authentication.principal.userId}" />
 					<label for="InputForm1" style="font-size:18px;">음식 제목을 입력하세요</label>
 					<th:block th:if="${Recipe_info == null}">
 						<input type="text" class="form-control" id="Title" placeholder="해물 파전" style="width:800px;">
@@ -188,7 +190,7 @@
 					</div>
 	
 					<div class="modal-footer">
-						<button class="btn btn-info" onclick="closeModal()">확인</button>
+						
 					</div>
 				</div>
 			</div>
@@ -295,8 +297,7 @@
 					enctype: 'multipart/form-data',
 					dataType: "text", // controller에서 return하는 데이터의 타입.
 					success: function (json) {
-						showModal("레시피가 등록되었습니다");
-						location.href = "/recipe/list.do";
+						showModal("레시피가 등록되었습니다", "/recipe/list.do?writer="+$("#userId").val());
 					},
 					error: function (request, status, error) {
 						console.error("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -304,12 +305,18 @@
 				}); //ajax
 			}; //function	
 			
-			function showModal(message){
+			function showModal(message, href){
 				$("#myModal").modal("show");
 				$("#modalLabel").text(message);
-			}
-			function closeModal(){
-				$("#myModal").modal("hide");		
+				$(".modal-footer").empty();
+				$(".modal-footer").append('<button class="btn btn-info" onclick="closeModal(\'' + href + '\')">확인</button>');		
+			}	
+			
+			function closeModal(href){
+				$("#myModal").modal("hide");	
+				if(href != 'undefined'){
+					location.href = href;
+				}
 			}
 			/*]]>*/
 		</script>

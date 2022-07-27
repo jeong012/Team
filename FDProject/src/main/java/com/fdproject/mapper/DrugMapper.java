@@ -54,5 +54,7 @@ public interface DrugMapper {
 	
 	/** 회원 관리 - 사용자 복용중인 약 조회 */
 	List<Map<String,Object>> getUserDrugByAdmin(int userNo);
+
+	List<String> selectDiseases(String userId);
     
 }
