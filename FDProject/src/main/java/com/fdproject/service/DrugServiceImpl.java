@@ -42,35 +42,41 @@ public class DrugServiceImpl implements DrugService {
         if (GrammerUtils.isStringEmpty(id) == false) {
             UserDrugDTO userDrug = new UserDrugDTO();
             userDrug.setUserId(id);
-            List<String> value = drugMapper.selectKeywords(userDrug);
+                List<String> value = drugMapper.selectKeywords(userDrug);
+                if(value.isEmpty() == true && takeYn != null){
+                    return drugList;
+                }
+                System.out.println(value);
 
-            String keywords = GrammerUtils.str(value);
-            String[] strArr = keywords.split(",");
-            HashSet<String> arr = new HashSet<String>(Arrays.asList(strArr));
-            List<String> result = new ArrayList<String>(arr);
-            
-            String str = GrammerUtils.str(result);
-            str = str.replaceAll(",", "|");
-            params.setParams(str);
-            if (GrammerUtils.isStringEmpty(takeYn) == false && takeYn.equals("Y")) {
-                params.setTakeYn(takeYn);
-            } else if (GrammerUtils.isStringEmpty(takeYn) == false && takeYn.equals("N")) {
-                params.setTakeYn(takeYn);
-            } else {
-                System.out.println("errorMessage!");
-            }
-            drugTotalCount = drugMapper.selectDrugTotalCount(params);
+                String keywords = GrammerUtils.str(value);
+                String[] strArr = keywords.split(",");
+                HashSet<String> arr = new HashSet<String>(Arrays.asList(strArr));
+                List<String> result = new ArrayList<String>(arr);
 
-            paginationInfo.setTotalRecordCount(drugTotalCount);
+                String str = GrammerUtils.str(result);
+                str = str.replaceAll(",", "|");
+                params.setParams(str);
+                if (GrammerUtils.isStringEmpty(takeYn) == false && takeYn.equals("Y")) {
+                    params.setTakeYn(takeYn);
+                } else if (GrammerUtils.isStringEmpty(takeYn) == false && takeYn.equals("N")) {
+                    params.setTakeYn(takeYn);
+                } else {
+                    System.out.println("errorMessage!");
+                }
 
-            params.setPaginationInfo(paginationInfo);
+                drugTotalCount = drugMapper.selectDrugTotalCount(params);
+
+                paginationInfo.setTotalRecordCount(drugTotalCount);
+
+                params.setPaginationInfo(paginationInfo);
+                drugList = drugMapper.drugList(params);
+                return drugList;
+            } //
+            params.setTakeYn("");
             drugList = drugMapper.drugList(params);
-            return drugList;
-        }
-        params.setTakeYn("");
-        drugList = drugMapper.drugList(params);
 
-        return drugList;
+            return drugList;
+
     }
     
     //상비약
@@ -230,4 +236,11 @@ public class DrugServiceImpl implements DrugService {
 		
 		return userDrugs;
 	}
+
+    @Override
+    public List<String> getMyDrug(String id) {
+        UserDrugDTO userDrug = new UserDrugDTO();
+        userDrug.setUserId(id);
+        return drugMapper.selectKeywords(userDrug);
+    }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fdproject.domain.DrugDTO;
 import com.fdproject.domain.DrugsCartDTO;
+import com.fdproject.domain.UserDrugDTO;
 import com.google.gson.JsonArray;
 
 public interface DrugService {
@@ -40,5 +41,7 @@ public interface DrugService {
 	
 	/** 회원 관리 - 사용자 복용중인 약 조회 */
 	String getUserDrugByAdmin(int userNo);
+
+    List<String> getMyDrug(String id);
 	
 }
