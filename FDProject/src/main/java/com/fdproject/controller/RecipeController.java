@@ -184,7 +184,7 @@ public class RecipeController extends UiUtils {
 	@PostMapping(value = "/add.do")
 	public String addRecipe(@RequestPart(value = "File", required = false) MultipartFile file,
 			@RequestPart(value = "Data") Map<String, Object> data, Principal principal) throws Exception {
-
+		
 		recipeService.uploadRecipe(file, data, principal);
 		return "ok";
 	}

@@ -257,5 +257,11 @@
 		AND ud.DRUG_NO = d.DRUG_NO
     </select>
     
+    <select id="selectDiseases" parameterType="String" resultType="String">
+        SELECT d.DISEASE_NAME 
+		FROM USER_DISEASES ud , DISEASES d 
+		WHERE ud.DISEASE_NO = d.DISEASE_NO 
+		AND ud.USER_ID = #{userId}
+    </select>
 
 </mapper>

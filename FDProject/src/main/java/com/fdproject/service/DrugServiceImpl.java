@@ -50,7 +50,17 @@ public class DrugServiceImpl implements DrugService {
             List<String> result = new ArrayList<String>(arr);
             
             String str = GrammerUtils.str(result);
+            
+            List<String> diseaseList = drugMapper.selectDiseases(id);
+            String diseases = GrammerUtils.str(diseaseList);
+            String[] diseaseArr = diseases.split(",");
+            HashSet<String> hashset = new HashSet<String>(Arrays.asList(diseaseArr));
+            List<String> resultList = new ArrayList<String>(hashset);
+            
+            String userDiseases = GrammerUtils.str(resultList);
+            str = str + "|" + userDiseases;
             str = str.replaceAll(",", "|");
+            
             params.setParams(str);
             if (GrammerUtils.isStringEmpty(takeYn) == false && takeYn.equals("Y")) {
                 params.setTakeYn(takeYn);

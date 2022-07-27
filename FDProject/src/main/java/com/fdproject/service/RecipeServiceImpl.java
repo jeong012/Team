@@ -1,6 +1,7 @@
 package com.fdproject.service;
 
 import java.io.File;
+import java.net.URL;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
@@ -140,7 +141,14 @@ public class RecipeServiceImpl implements RecipeService {
 	@Override
 	public boolean uploadRecipe(MultipartFile file, Map<String, Object> data, Principal principal) throws Exception {
 		// 파일 처리
-		String uploadFolder = "C:\\Users\\i\\Documents\\workspace-spring-tool-suite-4-4.14.1.RELEASE\\Team\\Team\\FDProject\\src\\main\\resources\\static\\assets\\img\\recipeImages\\";
+		//String uploadFolder = "C:\\Users\\i\\Documents\\workspace-spring-tool-suite-4-4.14.1.RELEASE\\Team\\Team\\FDProject\\src\\main\\resources\\static\\assets\\img\\recipeImages\\";
+		
+		URL r = this.getClass().getResource("");
+		String path = r.getPath();
+		path = path.substring(0, path.indexOf("FDProject")+ "FDProject".length());
+		
+		String uploadFolder = path + "/src/main/resources/static/assets/img/recipeImages";
+		
 		String uploadFileName = file.getOriginalFilename();
 		String savedName = randomFileName(uploadFileName, file.getBytes());
 
@@ -190,7 +198,14 @@ public class RecipeServiceImpl implements RecipeService {
 		UUID uid = UUID.randomUUID();
 
 		String savedName = uid.toString() + "_" + uploadFileName;
-		String uploadPath = "C:\\Users\\i\\Documents\\workspace-spring-tool-suite-4-4.14.1.RELEASE\\Team\\Team\\FDProject\\src\\main\\resources\\static\\assets\\img\\recipeImages\\";
+		//String uploadPath = "C:\\Users\\i\\Documents\\workspace-spring-tool-suite-4-4.14.1.RELEASE\\Team\\Team\\FDProject\\src\\main\\resources\\static\\assets\\img\\recipeImages\\";
+
+		URL r = this.getClass().getResource("");
+		String path = r.getPath();
+		path = path.substring(0, path.indexOf("FDProject")+ "FDProject".length());
+		
+		String uploadPath = path + "/src/main/resources/static/assets/img/recipeImages";
+		
 		File target = new File(uploadPath, savedName);
 		FileCopyUtils.copy(file, target);
 
