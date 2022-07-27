@@ -7,7 +7,8 @@ import java.util.List;
 
 public class GrammerUtils {
     public static boolean isStringEmpty(String str) {
-        return str == null || str.isEmpty();
+
+        return str == null ? true : false;
     }
 
     public static String str(List<String> list) {

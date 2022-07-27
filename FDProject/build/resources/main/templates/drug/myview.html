@@ -6,9 +6,16 @@
 <div layout:fragment="content">
     <section id="about" class="about section-bg">
         <div th:class="container" data-aos="fade-up">
+         <div class="section-title">
+                <h2>About</h2>
+                <h3><span></span></h3>
+                <p></p>
+            </div>
+        
+        
             <div class="row">
                 <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
-                    <img th:src="|@{/assets/img/drugimages/}${mydrug.imgFile}|" class="img-fluid" alt="">
+                    <img th:src="|@{/assets/img/drugimages/}${mydrug.imgFile}|" class="img-fluid" alt="" style="width:auto; height:400px;">
                 </div>
                 <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up"
                      data-aos-delay="100">
