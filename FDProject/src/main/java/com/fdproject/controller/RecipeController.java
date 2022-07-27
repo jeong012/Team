@@ -19,16 +19,18 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fdproject.constant.Method;
 import com.fdproject.domain.CommentDTO;
 import com.fdproject.domain.DiseaseDTO;
 import com.fdproject.domain.RecipeDTO;
 import com.fdproject.domain.RecipeRecommendedDTO;
 import com.fdproject.service.DiseaseService;
 import com.fdproject.service.RecipeService;
+import com.fdproject.util.UiUtils;
 
 @Controller
 @RequestMapping("/recipe")
-public class RecipeController {
+public class RecipeController extends UiUtils {
 
 	// private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -65,8 +67,11 @@ public class RecipeController {
 		
 		// recipe_info
 		RecipeDTO Recipe_info = recipeService.getRecipeInfo(Recipe_No, principal);
+		if(Recipe_info == null) {
+			return showMessageWithRedirect("잘못된 접근입니다.", "/recipe/list.do", Method.GET, null, model);
+		}
 		model.addAttribute("Recipe_info", Recipe_info);
-
+		
 		// foodIngredients split해서 배열에 차곡차곡 넣음
 		if (Recipe_info.getFoodIngredients() != null) {
 			String recipe_ingredients = Recipe_info.getFoodIngredients();
