@@ -511,7 +511,6 @@
 							data : "to=" + to,
 							dataType : "json",
 							success : function(data) {
-								data = "";
 								const checkNum = data;
 					            //인증하기 버튼 클릭 이벤트
 								$('#messageFormCheck').click(function(){
@@ -536,6 +535,7 @@
 								console.error(error);
 							}
 						});
+						data = "";
 					}
 				});
 			/*]]*/
